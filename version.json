@@ -1,12 +1,12 @@
 {
-  "version": "v260417.02 2:50a",
-  "release": 2,
-  "sha": "dc9694e",
-  "fullSha": "dc9694e2d92f739df499bcb798147f90d26919e8",
+  "version": "v260912.01 11:49p",
+  "release": 1,
+  "sha": "3898dbb",
+  "fullSha": "3898dbbb6eb8f29cbfd09fd732416d73e8f56656",
   "actor": "chloeprent",
   "source": "cloudflare-pages-deploy",
   "model": "ci",
-  "machine": "runnervm35a4x",
-  "pushedAt": "2026-04-16T22:50:06-04:00",
-  "commits": [{"sha":"dc9694e","message":"Add daily receipt forwarder to bookkeeper","author":"Chloe Prentoulis"}]
+  "machine": "runnervmlun5p",
+  "pushedAt": "2026-09-12T18:49:36-05:00",
+  "commits": [{"sha":"3898dbb","message":"Remove leaked upstream template Bitwarden config","author":"Chloe Prentoulis"}]
 }
