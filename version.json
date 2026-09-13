@@ -1,12 +1,12 @@
 {
-  "version": "v260913.01 12:27a",
-  "release": 1,
-  "sha": "3af28e7",
-  "fullSha": "3af28e70e591247c0b67605e5bfafdc0b289be6f",
+  "version": "v260913.02 1:06a",
+  "release": 2,
+  "sha": "923cf0b",
+  "fullSha": "923cf0ba70c9cfddc40de270f237d0adaf1b4e1b",
   "actor": "chloeprent",
   "source": "cloudflare-pages-deploy",
   "model": "ci",
   "machine": "runnervmlun5p",
-  "pushedAt": "2026-09-12T19:27:07-05:00",
-  "commits": [{"sha":"3af28e7","message":"Add ENM quiz placeholder page","author":"Chloe Prentoulis"}]
+  "pushedAt": "2026-09-12T20:06:34-05:00",
+  "commits": [{"sha":"923cf0b","message":"Deploy ENM quiz (fast path: static site, existing Supabase backend)","author":"Chloe Prentoulis"}]
 }
