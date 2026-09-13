@@ -1,0 +1,9 @@
+#!/bin/bash
+# Retrieves the Bitwarden master password from macOS Keychain and returns
+# an unlocked session token on stdout. Usage: export BW_SESSION=$(scripts/bw-unlock)
+set -euo pipefail
+
+export BW_PASSWORD
+BW_PASSWORD=$(security find-generic-password -a "chloeprent@gmail.com" -s "bitwarden-cli" -w)
+
+bw unlock --passwordenv BW_PASSWORD --raw

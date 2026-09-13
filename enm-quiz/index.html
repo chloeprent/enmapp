@@ -769,6 +769,25 @@
        the first question has already rendered, so both paths re-render. */
     const admin = { active: false, items: [], feedback: new Map(), refreshQuestion: () => {} };
 
+    /* ── Funnel analytics ──────────────────────────────────────────────────── */
+    /* One tiny row per step: page_view, start, question_answered (1..N), gate,
+       result. Read by the admin analytics page at /quiz on in.swoon.coach.
+       Fire-and-forget — a tracking failure must never touch the quiz itself. */
+    function track(event, meta = {}, questionNumber = null) {
+      supabase.from('enm_quiz_events').insert({
+        run_id: state.runId,
+        event,
+        question_number: questionNumber,
+        meta,
+        referrer: document.referrer || null,
+        user_agent: navigator.userAgent,
+      }).then(({ error }) => {
+        if (error) console.error('[enm-quiz] event failed', event, error);
+      }).catch(e => console.error('[enm-quiz] event failed', event, e));
+    }
+
+    track('page_view', { invite: !!state.inviteToken });
+
     function show(screenId) {
       document.querySelectorAll('.screen').forEach(s => s.classList.toggle('active', s.id === screenId));
       window.scrollTo({ top: 0, behavior: 'instant' });
@@ -788,6 +807,7 @@
     $('startBtn').addEventListener('click', () => {
       state.startedAt = new Date();
       state.current = 0;
+      track('start');
       renderQuestion();
       show('screenQuestion');
       $('quizFooter').hidden = false;
@@ -867,6 +887,9 @@
     }
 
     function advance() {
+      /* Question state.current was just completed; re-answers dedupe downstream
+         by counting distinct run_ids per question. */
+      track('question_answered', {}, state.current + 1);
       if (state.current < QUIZ.questions.length - 1) {
         state.current += 1;
         renderQuestion();
@@ -965,6 +988,7 @@
       state.finalTotal = total;
 
       show('screenGate');
+      track('gate');
     }
 
     /* ── Email gate ────────────────────────────────────────────────────────── */
@@ -1069,6 +1093,7 @@
         }
 
         $('saveNote').textContent = 'Your result has been saved.';
+        track('result', { result_uid: winner.uid, result_title: winner.title });
 
         /* Arrived from a partner's invite link — tie the two runs together. */
         if (state.inviteToken) {

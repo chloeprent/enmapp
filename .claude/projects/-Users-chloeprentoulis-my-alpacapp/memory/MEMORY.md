@@ -1,0 +1,1 @@
+- [Chloe — Coach Profile & Content Strategy](user_chloe_coach.md) — Relationship coach at swoon.coach, pre-ENM conversation niche, 13yr open marriage, not technical, story-driven voice

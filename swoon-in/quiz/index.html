@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Analytics — Swoon Admin</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="../favicon-r.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #faf8f5;
+      --card: #ffffff;
+      --text: #2d2926;
+      --muted: #6b5f58;
+      --faint: #9b8d85;
+      --border: #e8dde0;
+      --blush: #e8c4b8;
+      --blush-light: #f5e1d9;
+      --rose: #c9907e;
+      --burgundy: #7a3b2e;
+      --deep-rose: #b5725e;
+      --green: #2f9e5f;
+      --red: #b3261e;
+      --shadow: 0 8px 24px rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.03);
+      --radius: 12px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    [hidden] { display: none !important; }
+    html, body { min-height: 100%; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+      font-size: 15px;
+      -webkit-font-smoothing: antialiased;
+    }
+    h1, h2, h3 { font-family: 'Playfair Display', Georgia, serif; font-weight: 500; }
+
+    /* ── Header ── */
+    .topbar {
+      position: sticky; top: 0; z-index: 10;
+      background: rgba(250, 248, 245, 0.94);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+    .topbar-inner {
+      max-width: 1080px; margin: 0 auto;
+      padding: 16px 20px;
+      display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    }
+    .topbar .title { font-size: 1.25rem; color: var(--burgundy); flex: 1 1 auto; }
+    .topbar .title span { font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 500;
+      color: var(--muted); display: block; letter-spacing: 0.02em; }
+    .controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    select, .btn-soft {
+      font-family: inherit; font-size: 0.8125rem; font-weight: 500; color: var(--text);
+      background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+      padding: 8px 12px; cursor: pointer;
+    }
+    .btn-plain {
+      font-family: inherit; font-size: 0.8125rem; font-weight: 500; color: var(--muted);
+      background: none; border: none; cursor: pointer; text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .btn-plain:hover { color: var(--burgundy); }
+
+    main { max-width: 1080px; margin: 0 auto; padding: 26px 20px 80px; }
+
+    /* ── Sign-in / notices ── */
+    .gate-card {
+      max-width: 380px; margin: 12vh auto 0;
+      background: var(--card); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 2.25rem 2rem; text-align: center;
+    }
+    .gate-card h1 { font-size: 1.35rem; margin-bottom: 0.4rem; }
+    .gate-card p.sub { color: var(--muted); font-size: 0.875rem; margin-bottom: 1.6rem; }
+    .btn-google {
+      display: flex; align-items: center; justify-content: center; gap: 0.75rem;
+      width: 100%; padding: 0.7rem 1.5rem;
+      background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+      font-family: inherit; font-size: 1rem; font-weight: 500; color: var(--text);
+      cursor: pointer; transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .btn-google:hover { border-color: #c9c9c9; box-shadow: var(--shadow); }
+    .btn-google:disabled { opacity: 0.6; cursor: not-allowed; }
+    .btn-google svg { width: 20px; height: 20px; }
+    .notice { margin-top: 1rem; font-size: 0.8125rem; min-height: 1.2em; color: var(--red); }
+
+    .status-card {
+      max-width: 560px; margin: 10vh auto 0;
+      background: var(--card); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 2rem;
+    }
+    .status-card h2 { font-size: 1.2rem; margin-bottom: 0.5rem; }
+    .status-card p { color: var(--muted); font-size: 0.9rem; }
+
+    .loading { text-align: center; color: var(--muted); font-size: 0.9rem; padding: 8vh 0; }
+
+    /* ── Stat cards ── */
+    .stats-grid {
+      display: grid; gap: 14px;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      margin-bottom: 26px;
+    }
+    .stat {
+      background: var(--card); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 16px 18px;
+    }
+    .stat .label {
+      font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.06em;
+      text-transform: uppercase; color: var(--faint); margin-bottom: 4px;
+    }
+    .stat .value { font-size: 1.65rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .stat .detail { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+
+    /* ── Sections ── */
+    section.block {
+      background: var(--card); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 22px 22px 24px; margin-bottom: 26px;
+    }
+    section.block > h2 { font-size: 1.15rem; margin-bottom: 2px; }
+    section.block > .lede { font-size: 0.8125rem; color: var(--muted); margin-bottom: 18px; }
+    .section-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+    .section-head .lede { flex: 1 1 auto; }
+
+    /* ── Funnel ── */
+    .funnel-row { display: grid; grid-template-columns: 168px 1fr 92px; gap: 12px; align-items: center; margin-bottom: 7px; }
+    .funnel-row .fl { font-size: 0.8125rem; color: var(--muted); text-align: right; }
+    .funnel-row .fl b { color: var(--text); font-weight: 600; }
+    .funnel-track { background: var(--bg); border-radius: 6px; height: 22px; overflow: hidden; }
+    .funnel-fill {
+      height: 100%; border-radius: 6px;
+      background: linear-gradient(90deg, var(--blush), var(--rose));
+      transition: width 0.4s ease;
+    }
+    .funnel-row.major .funnel-fill { background: linear-gradient(90deg, var(--rose), var(--burgundy)); }
+    .funnel-row .fv { font-size: 0.8125rem; font-variant-numeric: tabular-nums; }
+    .funnel-row .fv em { font-style: normal; color: var(--faint); font-size: 0.6875rem; display: block; }
+    .funnel-row .fv .drop { color: var(--red); }
+    .funnel-row.zero .funnel-fill { min-width: 2px; background: var(--blush-light); }
+
+    /* ── Daily chart ── */
+    .chart { display: flex; align-items: flex-end; gap: 3px; height: 130px; padding-top: 14px; }
+    .chart .col { flex: 1 1 0; min-width: 3px; display: flex; flex-direction: column; justify-content: flex-end; height: 100%; }
+    .chart .hits { background: var(--blush); border-radius: 3px 3px 0 0; }
+    .chart .starts { background: var(--burgundy); border-radius: 3px 3px 0 0; margin-bottom: -100%; }
+    .chart .col:hover .hits { background: var(--rose); }
+    .chart-x { display: flex; margin-top: 6px; }
+    .chart-x span { flex: 1 1 0; min-width: 3px; font-size: 0.625rem; color: var(--faint); text-align: center; }
+    .legend { display: flex; gap: 16px; font-size: 0.75rem; color: var(--muted); margin-top: 12px; }
+    .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: baseline; }
+
+    /* ── Results distribution ── */
+    .dist-row { display: grid; grid-template-columns: 220px 1fr 110px; gap: 12px; align-items: center; margin-bottom: 8px; }
+    .dist-row .dl { font-size: 0.8125rem; font-weight: 500; text-align: right; }
+    .dist-track { background: var(--bg); border-radius: 6px; height: 18px; overflow: hidden; }
+    .dist-fill { height: 100%; background: linear-gradient(90deg, var(--blush), var(--deep-rose)); border-radius: 6px; }
+    .dist-row .dv { font-size: 0.78rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+    /* ── Feedback ── */
+    .fb-item {
+      background: var(--bg); border-radius: 10px; padding: 14px 16px; margin-bottom: 10px;
+      border-left: 3px solid var(--blush);
+    }
+    .fb-item .head { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; margin-bottom: 6px; }
+    .fb-item .qnum {
+      font-size: 0.6875rem; font-weight: 700; background: var(--blush-light); color: var(--burgundy);
+      padding: 2px 8px; border-radius: 10px; white-space: nowrap;
+    }
+    .fb-item .qtitle { font-weight: 600; font-size: 0.875rem; }
+    .fb-item .when { font-size: 0.6875rem; color: var(--faint); margin-left: auto; white-space: nowrap; }
+    .fb-item .said { font-size: 0.9rem; line-height: 1.6; white-space: pre-wrap; }
+    .fb-item .picked { font-size: 0.75rem; color: var(--muted); margin-top: 8px; }
+    .fb-item .picked b { font-weight: 600; color: var(--muted); }
+    .fb-empty { color: var(--muted); font-size: 0.875rem; }
+
+    .version-badge {
+      position: fixed; bottom: 8px; right: 12px; z-index: 5;
+      font-size: 0.6875rem; letter-spacing: 0.04em; opacity: 0.35;
+      font-variant-numeric: tabular-nums; pointer-events: none;
+    }
+
+    @media (max-width: 640px) {
+      .funnel-row { grid-template-columns: 112px 1fr 64px; gap: 8px; }
+      .funnel-row .fl, .dist-row .dl { font-size: 0.75rem; }
+      .dist-row { grid-template-columns: 130px 1fr 64px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Stamped with the site-wide canonical version by scripts/bump-version.sh
+       (CI) on every push to main. Keep the data-site-version attribute exactly as it is. --><div class="version-badge" data-site-version>v0</div>
+
+  <div class="topbar" hidden id="topbar">
+    <div class="topbar-inner">
+      <h1 class="title">Quiz Analytics<span>ENM style quiz &middot; swoon.coach</span></h1>
+      <div class="controls">
+        <select id="rangeSel" aria-label="Date range">
+          <option value="7">Last 7 days</option>
+          <option value="30" selected>Last 30 days</option>
+          <option value="90">Last 90 days</option>
+          <option value="0">All time</option>
+        </select>
+        <button type="button" class="btn-soft" id="refreshBtn">Refresh</button>
+        <button type="button" class="btn-plain" id="signOutBtn">Sign out</button>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <!-- Signed out -->
+    <div class="gate-card" id="signedOutView" hidden>
+      <h1>Quiz Analytics</h1>
+      <p class="sub">Sign in to see how the quiz is doing.</p>
+      <button type="button" class="btn-google" id="googleBtn">
+        <svg viewBox="0 0 24 24">
+          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+        </svg>
+        Continue with Google
+      </button>
+      <p class="notice" id="notice" role="alert"></p>
+    </div>
+
+    <div class="status-card" id="deniedView" hidden>
+      <h2>Not on the allowlist</h2>
+      <p id="deniedMsg"></p>
+    </div>
+
+    <div class="loading" id="loadingView" hidden>Checking who you are&hellip;</div>
+    <div class="loading" id="dataLoading" hidden>Loading analytics&hellip;</div>
+    <div class="status-card" id="errorView" hidden>
+      <h2>Could not load analytics</h2>
+      <p id="errorMsg"></p>
+    </div>
+
+    <div id="dash" hidden>
+      <div class="stats-grid" id="statsGrid"></div>
+
+      <section class="block">
+        <div class="section-head">
+          <h2>How far people got</h2>
+        </div>
+        <p class="lede" id="funnelLede"></p>
+        <div id="funnel"></div>
+        <div class="legend">
+          <span><i style="background:var(--blush)"></i> reached step</span>
+          <span><i style="background:var(--burgundy)"></i> major step</span>
+          <span id="furthestNote"></span>
+        </div>
+      </section>
+
+      <section class="block">
+        <h2>Hits over time</h2>
+        <p class="lede">Quiz page loads per day<span id="rangeLabel"></span>.</p>
+        <div class="chart" id="chart"></div>
+        <div class="chart-x" id="chartX"></div>
+        <div class="legend"><span><i style="background:var(--blush)"></i> page loads</span> <span><i style="background:var(--burgundy)"></i> quiz starts</span></div>
+      </section>
+
+      <section class="block">
+        <h2>Results given</h2>
+        <p class="lede">Completed runs by primary result.</p>
+        <div id="dist"></div>
+      </section>
+
+      <section class="block">
+        <div class="section-head">
+          <h2>Feedback from quiz takers</h2>
+          <select id="fbFilter"><option value="0">All questions</option></select>
+        </div>
+        <p class="lede" id="fbLede"></p>
+        <div id="fbList"></div>
+      </section>
+    </div>
+  </main>
+
+  <script src="../vendor/supabase-js-2.39.3.min.js"></script>
+  <script type="module">
+    import { supabase, waitForAuthReady } from '../supabase-client.js';
+
+    const $ = id => document.getElementById(id);
+    const esc = v => String(v ?? '').replace(/[&<>"]/g, c =>
+      ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    const SELF_URL = location.origin + location.pathname;
+    const DAY_MS = 24 * 60 * 60 * 1000;
+    const TOTAL_QUESTIONS = 20;
+
+    let allEvents = [];
+    let allSessions = [];
+    let allFeedback = [];
+    let rangeDays = 30;
+
+    /* ── Auth ──────────────────────────────────────────────────────────────── */
+    async function init() {
+      $('loadingView').hidden = false;
+      await waitForAuthReady();
+      const { data: { session } } = await supabase.auth.getSession();
+      $('loadingView').hidden = true;
+
+      if (!session) {
+        $('signedOutView').hidden = false;
+        return;
+      }
+
+      let isAdmin = false;
+      try {
+        const { data, error } = await supabase.rpc('enm_is_quiz_admin');
+        if (error) throw error;
+        isAdmin = data === true;
+      } catch (e) {
+        showError(`Admin check failed: ${e.message || e}`);
+        return;
+      }
+
+      if (!isAdmin) {
+        $('deniedMsg').textContent =
+          `You are signed in as ${session.user.email || 'unknown'}, but that address is not on the ` +
+          `quiz admin allowlist (enm_quiz_admins). Ask an existing admin to add it.`;
+        $('deniedView').hidden = false;
+        return;
+      }
+
+      $('topbar').hidden = false;
+      $('dataLoading').hidden = false;
+      await loadAndRender();
+    }
+
+    function showError(msg) {
+      $('loadingView').hidden = true;
+      $('dataLoading').hidden = true;
+      $('errorMsg').textContent = msg;
+      $('errorView').hidden = false;
+    }
+
+    $('googleBtn').addEventListener('click', async () => {
+      const btn = $('googleBtn');
+      btn.disabled = true;
+      $('notice').textContent = '';
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: SELF_URL },
+      });
+      if (error) {
+        $('notice').textContent = error.message || 'Google sign-in is unavailable.';
+        btn.disabled = false;
+      }
+    });
+
+    $('signOutBtn').addEventListener('click', async () => {
+      await supabase.auth.signOut();
+      location.reload();
+    });
+
+    /* ── Data ──────────────────────────────────────────────────────────────── */
+    async function loadAndRender() {
+      $('dataLoading').hidden = false;
+      $('dash').hidden = true;
+      $('errorView').hidden = true;
+
+      try {
+        const [ev, se, fb] = await Promise.all([
+          supabase.from('enm_quiz_events')
+            .select('run_id, event, question_number, meta, created_at')
+            .order('created_at', { ascending: false })
+            .limit(50000),
+          supabase.from('enm_quiz_sessions')
+            .select('result_title, completed_at, duration_seconds')
+            .order('completed_at', { ascending: false })
+            .limit(20000),
+          supabase.from('enm_quiz_question_feedback')
+            .select('question_number, question_title, feedback, selected_texts, created_at')
+            .order('created_at', { ascending: false })
+            .limit(1000),
+        ]);
+        if (ev.error) throw new Error(`events: ${ev.error.message}`);
+        if (se.error) throw new Error(`sessions: ${se.error.message}`);
+        if (fb.error) throw new Error(`feedback: ${fb.error.message}`);
+
+        allEvents = ev.data ?? [];
+        allSessions = se.data ?? [];
+        render();
+      } catch (e) {
+        showError(e.message || String(e));
+        return;
+      }
+      $('dataLoading').hidden = true;
+      $('dash').hidden = false;
+    }
+
+    $('refreshBtn').addEventListener('click', loadAndRender);
+    $('rangeSel').addEventListener('change', e => { rangeDays = Number(e.target.value); render(); });
+
+    const cutoff = () => rangeDays > 0 ? new Date(Date.now() - rangeDays * DAY_MS) : null;
+    const inRange = (iso, cut) => !cut || new Date(iso) >= cut;
+
+    /* ── Render ────────────────────────────────────────────────────────────── */
+    function render() {
+      const cut = cutoff();
+
+      const events = allEvents.filter(e => inRange(e.created_at, cut));
+      const sessions = allSessions.filter(s => inRange(s.completed_at, cut));
+      const feedback = allFeedback.filter(f => inRange(f.created_at, cut));
+
+      renderStats(events, sessions, feedback);
+      renderFunnel(events, sessions);
+      renderChart(events, cut);
+      renderDist(sessions);
+      renderFeedback(feedback);
+    }
+
+    function renderStats(events, sessions, feedback) {
+      const runsOpened = new Set(events.filter(e => e.event === 'page_view').map(e => e.run_id));
+      const runsStarted = new Set(events.filter(e => e.event === 'start').map(e => e.run_id));
+      const durations = sessions.map(s => s.duration_seconds).filter(n => Number.isFinite(n)).sort((a, b) => a - b);
+      const median = durations.length ? durations[Math.floor(durations.length / 2)] : null;
+
+      const cards = [
+        { label: 'Page loads', value: fmt(events.filter(e => e.event === 'page_view').length), note: 'hits on the quiz' },
+        { label: 'Visitors', value: fmt(runsOpened.size), note: 'unique quiz runs' },
+        { label: 'Started', value: fmt(runsStarted.size), note: 'pressed start' },
+        { label: 'Completed', value: fmt(sessions.length), note: 'saved a result' },
+        {
+          label: 'Completion',
+          value: runsStarted.size ? Math.round((sessions.length / runsStarted.size) * 100) + '%' : '—',
+          note: 'completed ÷ started',
+        },
+        { label: 'Median time', value: median == null ? '—' : fmtDuration(median), note: 'start → result' },
+      ];
+
+      $('statsGrid').innerHTML = cards.map(c =>
+        `<div class="stat"><div class="label">${esc(c.label)}</div>` +
+        `<div class="value">${esc(c.value)}</div><div class="note">${esc(c.note)}</div></div>`
+      ).join('');
+    }
+
+    function renderFunnel(events) {
+      const setOf = ev => new Set(ev.map(e => e.run_id));
+      const byQ = new Map();
+      events.filter(e => e.event === 'question_answered').forEach(e => {
+        if (!byQ.has(e.question_number)) byQ.set(e.question_number, new Set());
+        byQ.get(e.question_number).add(e.run_id);
+      });
+
+      const opened = setOf(events.filter(e => e.event === 'page_view'));
+      const started = setOf(events.filter(e => e.event === 'start'));
+      const gate = setOf(events.filter(e => e.event === 'gate'));
+      const result = setOf(events.filter(e => e.event === 'result'));
+
+      /* Questions with at least one answer, in order; pad to the furthest seen. */
+      const furthestSeen = Math.max(0, ...[...byQ.keys()]);
+      const rows = [
+        { label: 'Opened the quiz', set: opened, major: true },
+        { label: 'Pressed start', set: started, major: true },
+      ];
+      for (let q = 1; q <= Math.max(furthestSeen, 1); q++) {
+        rows.push({ label: `Q${q} answered`, set: byQ.get(q) ?? new Set() });
+      }
+      rows.push({ label: 'Reached email gate', set: gate, major: true });
+      rows.push({ label: 'Saved their result', set: result, major: true });
+
+      const base = started.size || opened.size || 1;
+      let prev = null;
+      let html = '';
+      for (const r of rows) {
+        const n = r.set.size;
+        const pctOfBase = Math.round((n / base) * 100);
+        const drop = prev != null && prev > 0 ? Math.round((1 - n / prev) * 100) : null;
+        html +=
+          `<div class="funnel-row${r.major ? ' major' : ''}${n === 0 ? ' zero' : ''}">` +
+          `<div class="fl"><b>${r.label}</b></div>` +
+          `<div class="funnel-track"><div class="funnel-fill" style="width:${pctOfBase}%"></div></div>` +
+          `<div class="fv">${fmt(n)} <span style="color:var(--faint)">· ${pctOfBase}%</span>` +
+          (drop != null && drop > 0 ? `<em><span class="drop">-${drop}%</span> from prev</em>` : '') +
+          `</div></div>`;
+        prev = n;
+      }
+      $('funnel').innerHTML = html;
+
+      /* Furthest-question summary across runs that started. */
+      const perRun = new Map();
+      events.filter(e => e.event === 'question_answered').forEach(e => {
+        perRun.set(e.run_id, Math.max(perRun.get(e.run_id) ?? 0, e.question_number));
+      });
+      const startedIds = started;
+      const reached = [...startedIds].map(id => perRun.get(id) ?? 0);
+      if (reached.length) {
+        const avg = reached.reduce((a, b) => a + b, 0) / reached.length;
+        const sorted = [...reached].sort((a, b) => a - b);
+        const med = sorted[Math.floor(sorted.length / 2)];
+        $('funnelLede').textContent =
+          `Across ${fmt(startedIds.size)} started runs: average furthest question ` +
+          `${avg.toFixed(1)}, median ${med}, of 20.`;
+      } else {
+        $('funnelLede').textContent =
+          'Step-by-step progress is recorded from when event tracking went live; ' +
+          'older completions only appear under Results given.';
+      }
+      $('furthestNote').textContent = '';
+    }
+
+    function renderChart(events, cut) {
+      const days = rangeDays > 0 ? rangeDays : 60; // all-time: chart the last 60 days
+      const start = cut ? new Date(cut) : new Date(Date.now() - (days - 1) * DAY_MS);
+      start.setHours(0, 0, 0, 0);
+      const today = new Date(); today.setHours(0, 0, 0, 0);
+      const n = Math.round((today - start) / DAY_MS) + 1;
+
+      const loads = new Array(n).fill(0);
+      const starts = new Array(n).fill(0);
+      events.forEach(e => {
+        const d = new Date(e.created_at); d.setHours(0, 0, 0, 0);
+        const i = Math.round((d - start) / DAY_MS);
+        if (i < 0 || i >= n) return;
+        if (e.event === 'page_view') loads[i]++;
+        else if (e.event === 'start') starts[i]++;
+      });
+
+      const max = Math.max(1, ...loads);
+      let bars = '';
+      for (let i = 0; i < n; i++) {
+        const h = Math.round((loads[i] / max) * 100);
+        const s = Math.round((starts[i] / max) * 100);
+        const d = new Date(start.getTime() + i * DAY_MS);
+        const label = d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+        bars += `<div class="col" title="${label}: ${loads[i]} load${loads[i] === 1 ? '' : 's'}, ` +
+          `${starts[i]} start${starts[i] === 1 ? '' : 's'}">` +
+          `<div class="hits" style="height:${Math.max(loads[i] ? 4 : 0, h)}%"></div>` +
+          `<div class="starts" style="height:${s}%; width:60%; margin-left:20%"></div></div>`;
+      }
+      $('chart').innerHTML = bars;
+
+      let x = '';
+      const step = Math.max(1, Math.floor(n / 8));
+      for (let i = 0; i < n; i++) {
+        const d = new Date(start.getTime() + i * DAY_MS);
+        const show = i % step === 0;
+        x += `<span>${show ? d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : ''}</span>`;
+      }
+      $('chartX').innerHTML = x;
+      $('rangeLabel').textContent = rangeDays > 0 ? ` in the last ${rangeDays} days` : ' (chart shows last 60 days)';
+    }
+
+    function renderDist(sessions) {
+      if (!sessions.length) {
+        $('dist').innerHTML = '<p class="lede" style="margin:0">No completed runs in this range yet.</p>';
+        return;
+      }
+      const counts = new Map();
+      sessions.forEach(s => counts.set(s.result_title || '(unknown)', (counts.get(s.result_title || '(unknown)') ?? 0) + 1));
+      const sorted = [...counts.entries()].sort((a, b) => b[1] - a[1]);
+      const max = sorted[0][1];
+      $('dist').innerHTML = sorted.map(([title, n]) => {
+        const pct = Math.round((n / sessions.length) * 100);
+        return `<div class="dist-row">` +
+          `<div class="dl" title="${esc(title)}">${esc(title)}</div>` +
+          `<div class="dist-track"><div class="dist-fill" style="width:${Math.round((n / max) * 100)}%"></div></div>` +
+          `<div class="dv">${n} &middot; ${pct}%</div></div>`;
+      }).join('');
+    }
+
+    function renderFeedback(feedback) {
+      const counts = new Map();
+      feedback.forEach(f => {
+        counts.set(f.question_number, (counts.get(f.question_number) ?? 0) + 1);
+      });
+      const qs = [...counts.keys()].sort((a, b) => a - b);
+      const current = Number($('fbFilter').value) || 0;
+      $('fbFilter').innerHTML =
+        '<option value="0">All questions</option>' +
+        qs.map(q => `<option value="${q}"${q === current ? ' selected' : ''}>Q${q}</option>`).join('');
+
+      const shown = current ? feedback.filter(f => f.question_number === current) : feedback;
+      $('fbLede').textContent = shown.length
+        ? `${shown.length} comment${shown.length === 1 ? '' : 's'} in this range${current ? ` on Q${current}` : ''}.`
+        : 'Nothing yet in this range. Quiz takers can leave feedback from the link on any question.';
+
+      $('fbList').innerHTML = shown.map(f =>
+        `<div class="fb-item">` +
+        `<div class="head"><span class="qnum">Q${f.question_number}</span>` +
+        `<span class="qtitle">${esc(f.question_title)}</span>` +
+        `<span class="when">${when(f.created_at)}</span></div>` +
+        `<div class="said">${esc(f.feedback)}</div>` +
+        (f.selected_texts?.length ? `<div class="picked"><b>They answered:</b> ${esc(f.selected_texts.join(' · '))}</div>` : '') +
+        `</div>`
+      ).join('');
+    }
+
+    /* ── Helpers ───────────────────────────────────────────────────────────── */
+    const fmt = n => Number(n).toLocaleString();
+    function fmtDuration(sec) {
+      const m = Math.floor(sec / 60), s = Math.round(sec % 60);
+      return m ? `${m}m ${s}s` : `${s}s`;
+    }
+    function when(iso) {
+      const d = new Date(iso);
+      const diff = Date.now() - d.getTime();
+      if (diff < 60 * 1000) return 'just now';
+      if (diff < 60 * 60 * 1000) return `${Math.floor(diff / 60000)}m ago`;
+      if (diff < 24 * 60 * 60 * 1000) return `${Math.floor(diff / 3600000)}h ago`;
+      return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) +
+        ' ' + d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+    }
+
+    init();
+  </script>
+</body>
+</html>
