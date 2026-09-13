@@ -1,12 +1,12 @@
 {
-  "version": "v260913.10 2:51a",
-  "release": 10,
-  "sha": "6365fde",
-  "fullSha": "6365fdebf798dc9edade59681883a062a6e7ebfd",
+  "version": "v260913.11 3:00a",
+  "release": 11,
+  "sha": "1c48fc3",
+  "fullSha": "1c48fc356bf3d9eb76d0b6b40a4efd51254db6cd",
   "actor": "chloeprent",
   "source": "cloudflare-pages-deploy",
   "model": "ci",
   "machine": "runnervmlun5p",
-  "pushedAt": "2026-09-12T21:51:01-05:00",
-  "commits": [{"sha":"6365fde","message":"enm-quiz: redesign cover as split hero with checklist, floating chips, gradient blobs","author":"Chloe Prentoulis"}]
+  "pushedAt": "2026-09-12T21:59:53-05:00",
+  "commits": [{"sha":"1c48fc3","message":"quiz analytics: event funnel tracking + admin dashboard at in.swoon.coach/quiz","author":"Chloe Prentoulis"}]
 }
