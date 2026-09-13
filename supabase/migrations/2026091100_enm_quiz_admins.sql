@@ -40,6 +40,8 @@ DROP POLICY IF EXISTS "enm_quiz_admins_self_select" ON enm_quiz_admins;
 CREATE POLICY "enm_quiz_admins_self_select" ON enm_quiz_admins
   FOR SELECT USING (enm_is_quiz_admin());
 
-INSERT INTO enm_quiz_admins (email, note)
-VALUES ('chloeprent@gmail.com', 'Quiz design review.')
+INSERT INTO enm_quiz_admins (email, note) VALUES
+  ('chloeprent@gmail.com', 'Quiz design review.'),
+  ('chloe@swoon.coach', 'Quiz design review.'),
+  ('rahulioson@gmail.com', 'Quiz design review.')
 ON CONFLICT (lower(email)) DO NOTHING;
