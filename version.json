@@ -1,12 +1,12 @@
 {
-  "version": "v260913.03 1:14a",
-  "release": 3,
-  "sha": "ff08016",
-  "fullSha": "ff08016cccd15788639a4c0a42a0cb90c8f9ebf9",
+  "version": "v260913.04 1:48a",
+  "release": 4,
+  "sha": "7e67834",
+  "fullSha": "7e6783470dae719f83412faafce282cfdf6df822",
   "actor": "chloeprent",
   "source": "cloudflare-pages-deploy",
   "model": "ci",
   "machine": "runnervmlun5p",
-  "pushedAt": "2026-09-12T20:14:22-05:00",
-  "commits": [{"sha":"ff08016","message":"Add placeholder page for in.swoon.coach","author":"Chloe Prentoulis"}]
+  "pushedAt": "2026-09-12T20:47:52-05:00",
+  "commits": [{"sha":"7e67834","message":"Add Google/Supabase login to in.swoon.coach placeholder","author":"Chloe Prentoulis"}]
 }
