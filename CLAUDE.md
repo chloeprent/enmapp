@@ -25,7 +25,7 @@ This is **alpacapps-infra**. If the user mentions **finleg**, **portsie**, or **
 
 ## Mandatory Behaviors
 
-1. After code changes: end response with `vYYMMDD.NN H:MMa [model]` + affected URLs (read `version.json`)
+1. After code changes: push, wait ~90s for CI, then `git pull --rebase origin main` and read the freshly-bumped `version.json`. End your response with THAT version string verbatim + affected URLs. NEVER invent a version string or sequence number — the canonical string is always what CI just wrote to `version.json` (format `vYYMMDD.NN H:MMa`)
 2. Push immediately — Cloudflare Pages deploys on push to main. See `docs/DEPLOY.md`
 3. CI bumps version — never bump locally
 4. Run SQL migrations directly — never ask the user to run SQL manually

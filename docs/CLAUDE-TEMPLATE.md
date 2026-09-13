@@ -26,7 +26,7 @@ Use for projects with 3 or fewer features beyond core.
 
 ## Mandatory Behaviors
 
-1. After code changes: end response with `vYYMMDD.NN H:MMa [model]` + affected URLs (read `version.json`)
+1. After code changes: push, wait ~90s for CI, then `git pull --rebase origin main` and end your response with the freshly-bumped `version.json` version string verbatim + affected URLs. NEVER invent a version string or sequence number
 2. Push immediately — Cloudflare Pages deploys on push to main. See `docs/DEPLOY.md`
 3. CI bumps version — never bump locally
 
@@ -63,7 +63,7 @@ Use for projects with 4+ features. Include all relevant doc references and code 
 
 ## Mandatory Behaviors
 
-1. After code changes: end response with `vYYMMDD.NN H:MMa [model]` + affected URLs (read `version.json`)
+1. After code changes: push, wait ~90s for CI, then `git pull --rebase origin main` and end your response with the freshly-bumped `version.json` version string verbatim + affected URLs. NEVER invent a version string or sequence number
 2. On significant decisions: update `PRODUCTDESIGN.md` with **Decision** and **Why**
 3. Push immediately — Cloudflare Pages deploys on push to main. See `docs/DEPLOY.md`
 4. CI bumps version — never bump locally
