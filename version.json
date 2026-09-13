@@ -1,12 +1,12 @@
 {
-  "version": "v260913.08 2:42a",
-  "release": 8,
-  "sha": "1e9b98d",
-  "fullSha": "1e9b98d94a97d91ad96728bd3ccb82a588baea77",
+  "version": "v260913.09 2:43a",
+  "release": 9,
+  "sha": "5010df7",
+  "fullSha": "5010df79a88872e5a38e6d68dec3fad11c9f082f",
   "actor": "chloeprent",
   "source": "cloudflare-pages-deploy",
   "model": "ci",
   "machine": "runnervmlun5p",
-  "pushedAt": "2026-09-12T21:42:34-05:00",
-  "commits": [{"sha":"1e9b98d","message":"Add chloe@swoon.coach and rahulioson@gmail.com as quiz admins","author":"Chloe Prentoulis"}]
+  "pushedAt": "2026-09-12T21:43:19-05:00",
+  "commits": [{"sha":"5010df7","message":"Canonical version stamp: single rule shared via AGENTS.md symlink to CLAUDE.md","author":"Chloe Prentoulis"}]
 }
