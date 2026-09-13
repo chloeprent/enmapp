@@ -1,12 +1,12 @@
 {
-  "version": "v260913.09 2:43a",
-  "release": 9,
-  "sha": "5010df7",
-  "fullSha": "5010df79a88872e5a38e6d68dec3fad11c9f082f",
+  "version": "v260913.10 2:51a",
+  "release": 10,
+  "sha": "6365fde",
+  "fullSha": "6365fdebf798dc9edade59681883a062a6e7ebfd",
   "actor": "chloeprent",
   "source": "cloudflare-pages-deploy",
   "model": "ci",
   "machine": "runnervmlun5p",
-  "pushedAt": "2026-09-12T21:43:19-05:00",
-  "commits": [{"sha":"5010df7","message":"Canonical version stamp: single rule shared via AGENTS.md symlink to CLAUDE.md","author":"Chloe Prentoulis"}]
+  "pushedAt": "2026-09-12T21:51:01-05:00",
+  "commits": [{"sha":"6365fde","message":"enm-quiz: redesign cover as split hero with checklist, floating chips, gradient blobs","author":"Chloe Prentoulis"}]
 }
