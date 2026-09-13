@@ -10,12 +10,12 @@
 // you stand up your own project from /migrations + /supabase/functions.
 // The anon key is a public, RLS-gated key — it is safe in client code.
 // ---------------------------------------------------------------------------
-const SUPABASE_URL = 'https://aphrrfprbixmhissnjfn.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFwaHJyZnByYml4bWhpc3NuamZuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk5MzA0MjUsImV4cCI6MjA4NTUwNjQyNX0.yYkdQIq97GQgxK7yT2OQEPi5Tt-a7gM45aF8xjSD6wk';
+const SUPABASE_URL = 'https://ohcdjvbveokyyilceenf.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9oY2RqdmJ2ZW9reXlpbGNlZW5mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0MTQ5OTEsImV4cCI6MjA5MDk5MDk5MX0.UlboaX6cVgJwmjxo0e30CgmCtbz9ByHmawclKKShlQ0';
 
 // Namespaces the stored session. Change it if this deploy shares an origin with
 // another Supabase app, so the two don't clobber each other's tokens.
-const AUTH_STORAGE_KEY = 'genalpaca-auth';
+const AUTH_STORAGE_KEY = 'swoon-quiz-auth';
 
 const AUTH_OPTIONS = {
   autoRefreshToken: true,

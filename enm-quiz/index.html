@@ -9,8 +9,8 @@
   <meta property="og:title" content="Discover your ENM Style">
   <meta property="og:description" content="Curious about ethical non-monogamy, but not sure where to begin? Take the quiz to discover the relationship style that may fit you best.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://alpacaplayhouse.com/rahulio/pages/enmtest/">
-  <meta property="og:image" content="https://alpacaplayhouse.com/rahulio/pages/enmtest/img/cover-e13e86.jpg">
+  <meta property="og:url" content="https://swoon-quiz.pages.dev/">
+  <meta property="og:image" content="https://swoon-quiz.pages.dev/img/cover-e13e86.jpg">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="./favicon-r.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -528,7 +528,7 @@
       <div class="tool danger">
         <h3>Update site</h3>
         <p>Applies every <b>accepted</b> item to this page, commits to main and deploys.
-           Scoped to <code>rahulio/pages/enmtest/</code> &mdash; nothing else can be touched.
+           Scoped to <code>enm-quiz/</code> &mdash; nothing else can be touched.
            You will get an email when it is live.</p>
         <input type="email" id="adminEmail" placeholder="your@email.com — where the confirmation goes">
         <div class="btn-row" style="text-align:left">
@@ -567,7 +567,7 @@
             : 'Its scripts failed to load. Check that <code>/vendor/</code> and <code>/shared/</code> are reachable from this host.') +
           '</p>' +
           '<p style="font-size:.8125rem;opacity:.75">Serve the repository root and open ' +
-          '<code>/rahulio/pages/enmtest/</code> from there.</p></div>';
+          '<code>/enm-quiz/</code> from there.</p></div>';
       }, 1500);
     });
   </script>
@@ -1288,7 +1288,7 @@
 
         if (!confirm(
           `Apply ${accepted.length} accepted note(s) to this page, commit to main and deploy?\n\n` +
-          `Only rahulio/pages/enmtest/ can be changed. You will get an email at ${email} when it is live.`
+          `Only enm-quiz/ can be changed. You will get an email at ${email} when it is live.`
         )) return;
 
         const data = await callAi(
