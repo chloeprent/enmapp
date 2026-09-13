@@ -1,12 +1,12 @@
 {
-  "version": "v260913.06 2:08a",
-  "release": 6,
-  "sha": "a61edf4",
-  "fullSha": "a61edf49345a1674477372085be1e51456484308",
+  "version": "v260913.07 2:10a",
+  "release": 7,
+  "sha": "e38b6e5",
+  "fullSha": "e38b6e5b8c1f91b4269e28144e05accb017b7a14",
   "actor": "chloeprent",
   "source": "cloudflare-pages-deploy",
   "model": "ci",
   "machine": "runnervmlun5p",
-  "pushedAt": "2026-09-12T21:07:53-05:00",
-  "commits": [{"sha":"a61edf4","message":"Change quiz text color to blue","author":"Chloe Prentoulis"}]
+  "pushedAt": "2026-09-12T21:10:23-05:00",
+  "commits": [{"sha":"e38b6e5","message":"Use canonical site version for quiz badge; drop orphaned enm-quiz/version.json","author":"Chloe Prentoulis"}]
 }
