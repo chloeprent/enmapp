@@ -173,7 +173,7 @@ Phase 4: Render &amp; Publish
   -H &quot;Authorization: Bearer <span class="dv-fn">$MGMT_TOKEN</span>&quot; \
   -H &quot;Content-Type: application/json&quot; \
   -d <span class="dv-str">'{&quot;query&quot;:&quot;SELECT id, name, ST_AsGeoJSON(boundary_geom) as geojson FROM parcels WHERE id = 1&quot;}'</span> \
-  &quot;https://api.supabase.com/v1/projects/aphrrfprbixmhissnjfn/database/query&quot; \
+  &quot;https://api.supabase.com/v1/projects/legacy-project-ref/database/query&quot; \
   | python3 -c &quot;import sys,json; d=json.load(sys.stdin); print(json.dumps(json.loads(d[0][<span class="dv-str">'geojson'</span>])))&quot; \
   &gt; ~/gis-data/parcel_boundary.geojson
 
@@ -182,7 +182,7 @@ Phase 4: Render &amp; Publish
   -H &quot;Authorization: Bearer <span class="dv-fn">$MGMT_TOKEN</span>&quot; \
   -H &quot;Content-Type: application/json&quot; \
   -d <span class="dv-str">'{&quot;query&quot;:&quot;SELECT id, name, structure_type, width_ft, length_ft, height_ft, material, roof_type, ST_AsGeoJSON(footprint_geom) as geojson FROM structures WHERE parcel_id = 1&quot;}'</span> \
-  &quot;https://api.supabase.com/v1/projects/aphrrfprbixmhissnjfn/database/query&quot; \
+  &quot;https://api.supabase.com/v1/projects/legacy-project-ref/database/query&quot; \
   &gt; ~/gis-data/structure_footprints.json</code></pre>
     </div><h4>Step 2D: QGIS Assembly (Verification)</h4>
 <ol>
@@ -339,7 +339,7 @@ Color Management: Filmic (medium-high contrast)</code></pre>
       </div>
       <pre><code id="cb-jq3nh2"><span <span class=<span class="dv-str">"dv-kw"</span>>class</span>=<span class="dv-str">"dv-cmt"</span>>// In phyprop.js — add to RENDERINGS array</span>
 {
-  url: <span class="dv-str">'https:<span <span class=<span class="dv-str">"dv-kw"</span>>class</span>=<span class="dv-str">"dv-cmt"</span>>//aphrrfprbixmhissnjfn.supabase.co/storage/v1/object/public/housephotos/renders/birds_eye_v1.jpg'</span>,</span>
+  url: <span class="dv-str">'https:<span <span class=<span class="dv-str">"dv-kw"</span>>class</span>=<span class="dv-str">"dv-cmt"</span>>//legacy-project-ref.supabase.co/storage/v1/object/public/housephotos/renders/birds_eye_v1.jpg'</span>,</span>
   label: <span class="dv-str">'Bird\'s Eye View'</span>,
   date: <span class="dv-str">'<span class="dv-num">2026</span>-<span class="dv-num">03</span>-<span class="dv-num">21</span>'</span>
 }</code></pre>

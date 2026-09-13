@@ -4,7 +4,7 @@
 
 | Field | Value |
 |-------|-------|
-| Email | `testuser@alpacaplayhouse.com` |
+| Email | `testuser@legacy-property-domain.example` |
 | Password | `test1234` |
 | Role | `admin` |
 | Auth User ID | `4b530cac-261e-4087-bb73-4258a8f6f91e` |
@@ -26,7 +26,7 @@ The Supabase auth session must be established through the site's own login page 
 **Workflow for headless preview testing:**
 ```
 1. Navigate to /login/?redirect=/spaces/admin/devcontrol.html
-2. Fill email input with testuser@alpacaplayhouse.com
+2. Fill email input with testuser@legacy-property-domain.example
 3. Fill password input with test1234
 4. Click the "Sign in" button
 5. Wait for redirect to complete (~3s)
@@ -54,7 +54,7 @@ The Supabase auth session must be established through the site's own login page 
 
 ```bash
 # 1. Create auth user via GoTrue Admin API (needs service_role key)
-curl -X POST "https://aphrrfprbixmhissnjfn.supabase.co/auth/v1/admin/users" \
+curl -X POST "https://legacy-project-ref.supabase.co/auth/v1/admin/users" \
   -H "apikey: $SERVICE_ROLE_KEY" \
   -H "Authorization: Bearer $SERVICE_ROLE_KEY" \
   -H "Content-Type: application/json" \

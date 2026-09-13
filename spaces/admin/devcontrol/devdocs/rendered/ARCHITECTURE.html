@@ -53,12 +53,12 @@
         │  │  incl. Centralized API  │    │
         │  └─────────────────────────┘    │
         │                                 │
-        │  Project: aphrrfprbixmhissnjfn  │
+        │  Project: legacy-project-ref  │
         └─────────────────────────────────┘</code></pre>
     </div></div></details><details><summary><span id="hosting-locations"></span>Hosting Locations</summary><div class="dv-section-body">
-<div class="dv-table-wrap"><table><thead><tr><th>Component</th><th>Host</th><th>URL/Location</th></tr></thead><tbody><tr><td>Admin UI</td><td>GitHub Pages</td><td>https://alpacaplayhouse.com/</td></tr>
+<div class="dv-table-wrap"><table><thead><tr><th>Component</th><th>Host</th><th>URL/Location</th></tr></thead><tbody><tr><td>Admin UI</td><td>GitHub Pages</td><td>https://legacy-property-domain.example/</td></tr>
 <tr><td>Source Code</td><td>GitHub</td><td>https://github.com/rsonnad/alpacapps</td></tr>
-<tr><td>Database</td><td>Supabase</td><td>https://aphrrfprbixmhissnjfn.supabase.co</td></tr>
+<tr><td>Database</td><td>Supabase</td><td>https://legacy-project-ref.supabase.co</td></tr>
 <tr><td>Photo Storage</td><td>Supabase Storage</td><td>bucket: `housephotos`</td></tr>
 <tr><td>Lease Documents</td><td>Supabase Storage</td><td>bucket: `lease-documents`</td></tr>
 <tr><td>Bug Screenshots</td><td>Supabase Storage</td><td>bucket: `bug-screenshots`</td></tr>
@@ -67,7 +67,7 @@
 <tr><td>Bug Fixer Worker</td><td>DigitalOcean</td><td>Same droplet as legacy OpenClaw</td></tr>
 <tr><td>E-Signatures</td><td>SignWell</td><td>API: signwell.com/api</td></tr>
 <tr><td>Payments</td><td>Square</td><td>API: connect.squareup.com</td></tr>
-<tr><td>Email (Outbound)</td><td>Resend</td><td>Domain: alpacaplayhouse.com, API key in Supabase secrets</td></tr>
+<tr><td>Email (Outbound)</td><td>Resend</td><td>Domain: legacy-property-domain.example, API key in Supabase secrets</td></tr>
 <tr><td>Email (Inbound)</td><td>Resend</td><td>Webhook → `resend-inbound-webhook` Edge Function</td></tr>
 <tr><td>SMS Notifications</td><td>Telnyx</td><td>Phone: +17377474737, config in `telnyx_config` table</td></tr>
 <tr><td>Error Monitoring</td><td>Custom</td><td>Daily digest emails via Resend</td></tr>
@@ -78,7 +78,7 @@
 <tr><td>Sonos Control API</td><td>Alpuca</td><td>node-sonos-http-api on port 5005</td></tr>
 <tr><td>Camera Talkback Relay</td><td>Alpuca</td><td>FFmpeg WebSocket relay on port 8902</td></tr>
 <tr><td>Network Management</td><td>UDM Pro</td><td>UniFi Network API on https://192.168.1.1</td></tr>
-<tr><td>Camera Streaming</td><td>go2rtc on Alpuca</td><td>RTSP→HLS via Caddy proxy at cam.alpacaplayhouse.com</td></tr>
+<tr><td>Camera Streaming</td><td>go2rtc on Alpuca</td><td>RTSP→HLS via Caddy proxy at cam.legacy-property-domain.example</td></tr>
 <tr><td>Nest Thermostats</td><td>Google SDM API</td><td>OAuth tokens in `nest_config` table</td></tr>
 <tr><td>Weather Forecast</td><td>OpenWeatherMap</td><td>API key in `weather_config` table</td></tr>
 <tr><td>Govee Lighting</td><td>Govee Cloud API</td><td>API key as Supabase secret `GOVEE_API_KEY`</td></tr>
@@ -89,7 +89,7 @@
 <tr><td>PayPal Payouts</td><td>PayPal Payouts API</td><td>Config in `paypal_config` table</td></tr>
 <tr><td>Identity Verification</td><td>Claude Vision API</td><td>`verify-identity` Edge Function</td></tr>
 <tr><td>Airbnb Calendar Sync</td><td>Airbnb iCal</td><td>`airbnb-sync` Edge Function</td></tr>
-<tr><td>Mobile App (iOS)</td><td>App Store (pending)</td><td>Capacitor 8, app ID: `com.alpacaplayhouse.app`</td></tr>
+<tr><td>Mobile App (iOS)</td><td>App Store (pending)</td><td>Capacitor 8, app ID: `com.LegacyProperty.app`</td></tr>
 <tr><td>Mobile App (Android)</td><td>Play Store (pending)</td><td>Capacitor 8, same codebase as iOS</td></tr>
 <tr><td>Brave Web Search</td><td>Brave Search API</td><td>API key as Supabase secret `BRAVE_API_KEY`</td></tr>
 <tr><td>OTA Updates</td><td>Capgo</td><td>`@capgo/capacitor-updater` for live web asset pushes</td></tr>
@@ -1110,7 +1110,7 @@ The <code>square-webhook</code> edge function receives <code>payment.created</co
 <li>Updates <code>square_payments</code> and <code>ledger</code> tables on COMPLETED/FAILED</li>
 <li>Sends admin notification emails on ACH status changes</li>
 <li>Deploy: <code>supabase functions deploy square-webhook --no-verify-jwt</code></li>
-<li>Webhook URL: <code>https://aphrrfprbixmhissnjfn.supabase.co/functions/v1/square-webhook</code></li>
+<li>Webhook URL: <code>https://legacy-project-ref.supabase.co/functions/v1/square-webhook</code></li>
 <li>Setup: Square Developer Console → Webhooks → subscribe to payment.* and refund.* events</li>
 </ul>
 <h3><span id="stripe-inbound-payments-associate-payouts"></span>Stripe (Inbound Payments + Associate Payouts)</h3>
@@ -1232,7 +1232,7 @@ Rich receipt with payment history, outstanding balance calculation, and &quot;Pa
 <h3><span id="resend-email-sending-receiving"></span>Resend (Email Sending &amp; Receiving)</h3>
 <ul>
 <li><strong>Account</strong>: <a href="mailto:wingsiebird@gmail.com">wingsiebird@gmail.com</a></li>
-<li><strong>Domain</strong>: <code>alpacaplayhouse.com</code> (verified for both sending and receiving)</li>
+<li><strong>Domain</strong>: <code>legacy-property-domain.example</code> (verified for both sending and receiving)</li>
 <li><strong>Region</strong>: North Virginia (us-east-1)</li>
 <li><strong>API</strong>: <code>https://api.resend.com</code></li>
 <li><strong>API Key</strong>: Stored as Supabase secret <code>RESEND_API_KEY</code></li>
@@ -1246,29 +1246,29 @@ Rich receipt with payment history, outstanding balance calculation, and &quot;Pa
 <ul>
 <li>Edge Function: <code>send-email</code> (43 email templates)</li>
 <li>Client service: <code>shared/email-service.js</code></li>
-<li>From addresses: <code>noreply@alpacaplayhouse.com</code> (system), <code>notifications@alpacaplayhouse.com</code> (forwards)</li>
-<li>Reply-to: <code>hello@alpacaplayhouse.com</code> or original sender for forwards</li>
+<li>From addresses: <code>noreply@legacy-property-domain.example</code> (system), <code>notifications@legacy-property-domain.example</code> (forwards)</li>
+<li>Reply-to: <code>hello@legacy-property-domain.example</code> or original sender for forwards</li>
 <li>Used for: Rental notifications, payment reminders, invitations, bug reports, contact forms, error digests</li>
 </ul>
 <p><strong>Inbound Email:</strong></p>
 <ul>
 <li>Edge Function: <code>resend-inbound-webhook</code> (deployed with <code>--no-verify-jwt</code>)</li>
-<li>Webhook URL: <code>https://aphrrfprbixmhissnjfn.supabase.co/functions/v1/resend-inbound-webhook</code></li>
+<li>Webhook URL: <code>https://legacy-project-ref.supabase.co/functions/v1/resend-inbound-webhook</code></li>
 <li>Webhook event: <code>email.received</code></li>
 <li>Signature verification: SVIX HMAC-SHA256 (headers: <code>svix-id</code>, <code>svix-timestamp</code>, <code>svix-signature</code>)</li>
 <li>Email body NOT included in webhook payload — fetched via <code>GET /emails/{id}</code> API call</li>
 </ul>
-<p><strong>Inbound Email Routing Rules</strong> (<code>*@alpacaplayhouse.com</code>):
+<p><strong>Inbound Email Routing Rules</strong> (<code>*@legacy-property-domain.example</code>):
 All inbound emails are logged to the <code>inbound_emails</code> table, then routed by prefix:</p>
 <div class="dv-table-wrap"><table><thead><tr><th>Prefix</th><th>Action</th><th>Destination</th></tr></thead><tbody><tr><td>`haydn@`</td><td>Forward</td><td>`hrsonnad@gmail.com`</td></tr>
 <tr><td>`rahulio@`</td><td>Forward</td><td>`rahulioson@gmail.com`</td></tr>
 <tr><td>`sonia@`</td><td>Forward</td><td>`sonia245g@gmail.com`</td></tr>
-<tr><td>`team@`</td><td>Forward</td><td>`alpacaplayhouse@gmail.com`</td></tr>
+<tr><td>`team@`</td><td>Forward</td><td>`legacy-property@example.com`</td></tr>
 <tr><td>`herd@`</td><td>Special logic</td><td>Stub for future AI processing</td></tr>
 <tr><td>`auto@`</td><td>Special logic</td><td>Bug report replies create follow-up `bug_reports` row; other replies forwarded to admin</td></tr>
-<tr><td>(default)</td><td>Forward</td><td>`alpacaplayhouse@gmail.com`</td></tr></tbody></table></div><p><strong>Inbound Email Flow:</strong></p>
+<tr><td>(default)</td><td>Forward</td><td>`legacy-property@example.com`</td></tr></tbody></table></div><p><strong>Inbound Email Flow:</strong></p>
 <ol>
-<li>External sender emails <code>someone@alpacaplayhouse.com</code></li>
+<li>External sender emails <code>someone@legacy-property-domain.example</code></li>
 <li>MX record routes to Resend (via <code>inbound-smtp.us-east-1.amazonaws.com</code>)</li>
 <li>Resend fires <code>email.received</code> webhook to Edge Function</li>
 <li>Edge Function verifies SVIX signature</li>
@@ -1283,7 +1283,7 @@ All inbound emails are logged to the <code>inbound_emails</code> table, then rou
 <li><code>created_at</code> (timestamptz)</li>
 <li><code>resend_email_id</code> (text) - Resend&#39;s email ID</li>
 <li><code>from_address</code> (text) - Original sender</li>
-<li><code>to_address</code> (text) - Recipient address at alpacaplayhouse.com</li>
+<li><code>to_address</code> (text) - Recipient address at legacy-property-domain.example</li>
 <li><code>cc</code> (text[]) - CC addresses</li>
 <li><code>subject</code> (text)</li>
 <li><code>body_html</code> (text) - Full HTML body</li>
@@ -1305,7 +1305,7 @@ All inbound emails are logged to the <code>inbound_emails</code> table, then rou
 <li><strong>Messaging Profile ID</strong>: <code>40019c2b-034b-4d3f-9eae-e00a13122927</code></li>
 <li><strong>API Key</strong>: Stored in <code>telnyx_config.api_key</code> (generated in Telnyx Portal &gt; API Keys)</li>
 <li><strong>Public Key</strong>: Stored in <code>telnyx_config.public_key</code> (from Telnyx Portal &gt; API Keys &gt; Public Key)</li>
-<li><strong>Webhook URL</strong>: <code>https://aphrrfprbixmhissnjfn.supabase.co/functions/v1/telnyx-webhook</code></li>
+<li><strong>Webhook URL</strong>: <code>https://legacy-project-ref.supabase.co/functions/v1/telnyx-webhook</code></li>
 </ul>
 <p><strong>10DLC Requirement (IMPORTANT):</strong>
 US long code numbers require 10DLC registration to send/receive SMS. Without it, messages won&#39;t deliver and webhooks won&#39;t fire. Register in Telnyx Portal &gt; Messaging &gt; Compliance:</p>
@@ -1426,7 +1426,7 @@ Response: { &quot;data&quot;: { &quot;id&quot;: &quot;msg-uuid&quot;, &quot;to&q
 <ul>
 <li>Phone Number: +17377474737</li>
 <li>Messaging Profile: &quot;AlpacApps&quot; (ID: <code>40019c2b-034b-4d3f-9eae-e00a13122927</code>)</li>
-<li>Profile &gt; Inbound tab &gt; Webhook URL: <code>https://aphrrfprbixmhissnjfn.supabase.co/functions/v1/telnyx-webhook</code></li>
+<li>Profile &gt; Inbound tab &gt; Webhook URL: <code>https://legacy-project-ref.supabase.co/functions/v1/telnyx-webhook</code></li>
 <li>Numbers &gt; My Numbers &gt; +17377474737 must be assigned to &quot;AlpacApps&quot; messaging profile</li>
 <li>10DLC: Must be registered in Messaging &gt; Compliance before SMS works</li>
 </ul>
@@ -1462,7 +1462,7 @@ Response: { &quot;data&quot;: { &quot;id&quot;: &quot;msg-uuid&quot;, &quot;to&q
     </div></div></details><details><summary><span id="contacts-accounts"></span>Contacts &amp; Accounts</summary><div class="dv-section-body">
 <div class="dv-table-wrap"><table><thead><tr><th>Service</th><th>Account</th></tr></thead><tbody><tr><td>GitHub</td><td>rsonnad</td></tr>
 <tr><td>Supabase</td><td>(Rahul's account)</td></tr>
-<tr><td>Hostinger</td><td>alpacaplayhouse@gmail.com</td></tr>
+<tr><td>Hostinger</td><td>legacy-property@example.com</td></tr>
 <tr><td>DigitalOcean</td><td>(Rahul's account) — DEPRECATED</td></tr>
 <tr><td>Oracle Cloud</td><td>wingsiebird@gmail.com (alpacapps-ops)</td></tr></tbody></table></div></div></details><details><summary><span id="recent-features"></span>Recent Features</summary><div class="dv-section-body">
 <h3><span id="space-archiving"></span>Space Archiving</h3>
@@ -1699,13 +1699,13 @@ Automated daily cron job (2 PM UTC / 9 AM CT) checks for events 10 days out:</p>
 npx supabase login
 
 <span class=<span class="dv-str">"dv-cmt"</span>># Deploy functions</span>
-npx supabase functions deploy record-payment --project-ref aphrrfprbixmhissnjfn
-npx supabase functions deploy resolve-payment --project-ref aphrrfprbixmhissnjfn
-npx supabase functions deploy signwell-webhook --project-ref aphrrfprbixmhissnjfn
-npx supabase functions deploy event-payment-reminder --project-ref aphrrfprbixmhissnjfn
+npx supabase functions deploy record-payment --project-ref legacy-project-ref
+npx supabase functions deploy resolve-payment --project-ref legacy-project-ref
+npx supabase functions deploy signwell-webhook --project-ref legacy-project-ref
+npx supabase functions deploy event-payment-reminder --project-ref legacy-project-ref
 
 <span class=<span class="dv-str">"dv-cmt"</span>># Set secrets (one-time)</span>
-npx supabase secrets set GEMINI_API_KEY=your_key_here --project-ref aphrrfprbixmhissnjfn</code></pre>
+npx supabase secrets set GEMINI_API_KEY=your_key_here --project-ref legacy-project-ref</code></pre>
     </div></div></details><details><summary><span id="bug-reporter-extension-auto-fix-system"></span>Bug Reporter Extension &amp; Auto-Fix System</summary><div class="dv-section-body">
 <p>An automated bug reporting and fixing pipeline. Testers use a Chrome extension to capture annotated screenshots and submit bug reports. A worker on the DigitalOcean droplet picks up reports, runs Claude Code to fix the bug, pushes to GitHub, and emails the reporter.</p>
 <div class="dv-code-wrap">
@@ -1914,7 +1914,7 @@ EOF
       </div>
       <pre><code id="cb-9y19yn"><span class="dv-kw">cd</span> /opt/bug-fixer/repo
 <span class="dv-kw">git</span> config user.name &quot;Bug Fixer Bot&quot;
-<span class="dv-kw">git</span> config user.email &quot;bugfixer@alpacaplayhouse.com&quot;</code></pre>
+<span class="dv-kw">git</span> config user.email &quot;bugfixer@legacy-property-domain.example&quot;</code></pre>
     </div></li>
 <li><p><strong>Claude Code needs writable home dir:</strong> Claude Code stores config/cache in <code>~/.claude</code>. The <code>bugfixer</code> home dir must exist and be writable.</p>
 </li>
@@ -1955,7 +1955,7 @@ su - bugfixer -c &quot;<span class="dv-kw">git</span> clone <span class="dv-kw">
 
 <span class=<span class="dv-str">"dv-cmt"</span>># Create .env file (must be populated manually)</span>
 <span class="dv-kw">cat</span> &gt; /opt/bug-fixer/.env &lt;&lt; <span class="dv-str">'EOF'</span>
-SUPABASE_URL=https://aphrrfprbixmhissnjfn.supabase.co
+SUPABASE_URL=https://legacy-project-ref.supabase.co
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 ANTHROPIC_API_KEY=your-anthropic-key
 REPO_DIR=/opt/bug-fixer/repo
@@ -2067,7 +2067,7 @@ su - bugfixer -c &quot;<span class="dv-kw">cd</span> /opt/bug-fixer/repo &amp;&a
 <tr><td>go2rtc</td><td>Almaca :1984</td><td>RTSP→HLS restreaming from UniFi Protect</td></tr>
 <tr><td>talkback-relay</td><td>Almaca :8902</td><td>WebSocket→FFmpeg→UDP two-way camera audio</td></tr>
 <tr><td>Tailscale</td><td>DO Droplet + Almaca</td><td>Encrypted mesh VPN for remote access</td></tr>
-<tr><td>Caddy</td><td>DO Droplet</td><td>Reverse proxy: cam.alpacaplayhouse.com → go2rtc</td></tr>
+<tr><td>Caddy</td><td>DO Droplet</td><td>Reverse proxy: cam.legacy-property-domain.example → go2rtc</td></tr>
 <tr><td>UniFi Network API</td><td>UDM Pro :443</td><td>Firewall, DHCP, WiFi management</td></tr>
 <tr><td>UniFi Protect</td><td>UDM Pro :7441</td><td>Camera RTSP streams + snapshot API</td></tr>
 <tr><td>Uptime Kuma</td><td>Almaca :3001</td><td>Service health monitoring</td></tr></tbody></table></div><h3><span id="unified-lighting-control-plane-in-progress"></span>Unified Lighting Control Plane (in progress)</h3>
@@ -2264,7 +2264,7 @@ su - bugfixer -c &quot;<span class="dv-kw">cd</span> /opt/bug-fixer/repo &amp;&a
 <tr><td>Splash screen</td><td>@capacitor/splash-screen</td><td>2s auto-hide</td></tr></tbody></table></div><h3><span id="configuration"></span>Configuration</h3>
 <p><strong><code>mobile/capacitor.config.ts</code>:</strong></p>
 <ul>
-<li>App ID: <code>com.alpacaplayhouse.app</code></li>
+<li>App ID: <code>com.LegacyProperty.app</code></li>
 <li>App name: &quot;Alpaca Playhouse&quot;</li>
 <li>Web directory: <code>www/</code> (built by <code>copy-web.js</code>)</li>
 <li>iOS scheme: &quot;Alpaca Playhouse&quot;</li>
@@ -2388,7 +2388,7 @@ Once published, code-only updates can be pushed without App Store review:</p>
 <li><code>SKILL.md</code> - OpenClaw integration</li>
 <li><code>HOMEAUTOMATION.md</code> - Home automation system (Sonos, UniFi, cameras)</li>
 <li><code>bug-reporter-extension/install.html</code> - Tester installation guide</li>
-<li>Supabase Dashboard - <a href="https://supabase.com/dashboard/project/aphrrfprbixmhissnjfn">https://supabase.com/dashboard/project/aphrrfprbixmhissnjfn</a></li>
+<li>Supabase Dashboard - <a href="https://supabase.com/dashboard/project/legacy-project-ref">https://supabase.com/dashboard/project/legacy-project-ref</a></li>
 </ul>
 </div></details>
 </div>

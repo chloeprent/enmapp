@@ -188,7 +188,7 @@ curl -s -X POST \
   -H "Authorization: Bearer $MGMT_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"query":"SELECT id, name, ST_AsGeoJSON(boundary_geom) as geojson FROM parcels WHERE id = 1"}' \
-  "https://api.supabase.com/v1/projects/aphrrfprbixmhissnjfn/database/query" \
+  "https://api.supabase.com/v1/projects/legacy-project-ref/database/query" \
   | python3 -c "import sys,json; d=json.load(sys.stdin); print(json.dumps(json.loads(d[0]['geojson'])))" \
   > ~/gis-data/parcel_boundary.geojson
 
@@ -197,7 +197,7 @@ curl -s -X POST \
   -H "Authorization: Bearer $MGMT_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"query":"SELECT id, name, structure_type, width_ft, length_ft, height_ft, material, roof_type, ST_AsGeoJSON(footprint_geom) as geojson FROM structures WHERE parcel_id = 1"}' \
-  "https://api.supabase.com/v1/projects/aphrrfprbixmhissnjfn/database/query" \
+  "https://api.supabase.com/v1/projects/legacy-project-ref/database/query" \
   > ~/gis-data/structure_footprints.json
 ```
 
@@ -360,7 +360,7 @@ In Blender Compositor:
 ```javascript
 // In phyprop.js — add to RENDERINGS array
 {
-  url: 'https://aphrrfprbixmhissnjfn.supabase.co/storage/v1/object/public/housephotos/renders/birds_eye_v1.jpg',
+  url: 'https://legacy-project-ref.supabase.co/storage/v1/object/public/housephotos/renders/birds_eye_v1.jpg',
   label: 'Bird\'s Eye View',
   date: '2026-03-21'
 }

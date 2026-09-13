@@ -46,7 +46,7 @@
 - `printer-data.js` - FlashForge 3D printer state + control via `printer-control` edge function
 
 ## Mobile App (`/mobile/`)
-- `capacitor.config.ts` - App config (ID: `com.alpacaplayhouse.app`, plugins, platform settings)
+- `capacitor.config.ts` - App config (ID: `com.LegacyProperty.app`, plugins, platform settings)
 - `scripts/copy-web.js` - Build script: copies web assets → www/, injects capacitor.js, patches redirects
 - `app/index.html` - App shell (loading overlay, login overlay, tab sections, bottom nav bar)
 - `app/mobile.css` - Dark theme stylesheet (all mobile CSS in one file)

@@ -589,7 +589,7 @@ async function loadContext() {
     { name: 'LIGHTINGAUTOMATION.md', path: 'devdocs/LIGHTINGAUTOMATION.md', category: 'docs', gh: 'spaces/admin/devcontrol/devdocs/LIGHTINGAUTOMATION.md',
       desc: 'Smart lighting control reference for all rooms at Alpaca Playhouse. Documents WiZ, Govee, and Tuya light entities in HAOS, room-by-room entity IDs, brightness/color commands via the alpuca ha wrapper, scene definitions, and light group configurations. Loaded when controlling lights, changing colors/brightness, or debugging light entities. For non-lighting HAOS devices see HOMEAUTOMATION.md.' },
     { name: 'TESTING-GUIDE.md', path: 'devdocs/TESTING-GUIDE.md', category: 'docs', gh: 'spaces/admin/devcontrol/devdocs/TESTING-GUIDE.md',
-      desc: 'Testing guide with test account credentials (testuser@alpacaplayhouse.com), auth architecture overview, and testing workflows for admin pages. Documents how to authenticate as a test user, role-based access patterns, and QA checklists for verifying UI changes. Loaded when testing admin pages, debugging auth issues, or running manual QA.' },
+      desc: 'Testing guide with test account credentials, auth architecture overview, and testing workflows for admin pages. Documents how to authenticate as a test user, role-based access patterns, and QA checklists for verifying UI changes. Loaded when testing admin pages, debugging auth issues, or running manual QA.' },
     { name: 'SECRETS-GUIDE.md', path: 'devdocs/SECRETS-GUIDE.md', category: 'docs', gh: 'spaces/admin/devcontrol/devdocs/SECRETS-GUIDE.md',
       desc: 'Cross-project secrets management guide using Bitwarden as the source of truth. Documents the bw-read helper script, Bitwarden CLI patterns (bw unlock, bw list items), secret naming conventions, how to store and retrieve API keys/tokens/passwords, and the DevOps-alpacapps vault organization. Replicable across all projects (alpacapps, finleg, portsie, etc.). Loaded when managing secrets, setting up new API keys, or debugging credential access.' },
     { name: 'ARCHITECTURE.md', path: 'ARCHITECTURE.md', category: 'docs', gh: 'ARCHITECTURE.md',
@@ -1438,7 +1438,7 @@ async function loadBackups() {
       ${serviceBlock('active', 'Supabase DB',
         'Full database dump of the AlpacApps Supabase project — all tables, data, schemas, and RLS policies',
         `/Volumes/RVAULT20/backups/alpacapps/db/ &nbsp;·&nbsp; 12 rolling dumps &nbsp;·&nbsp; Cron on Alpuca
-         &nbsp;·&nbsp; ${link('https://supabase.com/dashboard/project/aphrrfprbixmhissnjfn','Supabase dashboard ↗')}`,
+         &nbsp;·&nbsp; ${link('https://supabase.com/dashboard/','Supabase dashboard ↗')}`,
         'Every Monday at 1:00 AM CT', nextRvault,
         instanceTable(rvaultCols('supabase-db'), rvaultRowsFor('supabase','db','supabase-db'), 'supabase'),
         'supabase-db'

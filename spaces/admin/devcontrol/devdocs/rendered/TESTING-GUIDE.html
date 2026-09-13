@@ -11,7 +11,7 @@
   <details open style="margin-bottom:1rem;"><summary style="font-size:0.75rem;font-weight:600;color:var(--text-muted,#888);">Contents</summary><nav style="padding:0.25rem 0.75rem;"><a href="#test-account" style="display:block;padding:0.2rem 0;color:var(--text-muted,#666);text-decoration:none;font-size:0.75rem;" onclick="event.preventDefault();document.getElementById('test-account')?.scrollIntoView({behavior:'smooth'})">Test Account</a><a href="#how-to-sign-in" style="display:block;padding:0.2rem 0;color:var(--text-muted,#666);text-decoration:none;font-size:0.75rem;margin-left:1rem;" onclick="event.preventDefault();document.getElementById('how-to-sign-in')?.scrollIntoView({behavior:'smooth'})">How to sign in</a><a href="#programmatic-sign-in-preview-tools" style="display:block;padding:0.2rem 0;color:var(--text-muted,#666);text-decoration:none;font-size:0.75rem;margin-left:1rem;" onclick="event.preventDefault();document.getElementById('programmatic-sign-in-preview-tools')?.scrollIntoView({behavior:'smooth'})">Programmatic sign-in (preview tools)</a><a href="#auth-architecture" style="display:block;padding:0.2rem 0;color:var(--text-muted,#666);text-decoration:none;font-size:0.75rem;" onclick="event.preventDefault();document.getElementById('auth-architecture')?.scrollIntoView({behavior:'smooth'})">Auth Architecture</a><a href="#role-hierarchy" style="display:block;padding:0.2rem 0;color:var(--text-muted,#666);text-decoration:none;font-size:0.75rem;margin-left:1rem;" onclick="event.preventDefault();document.getElementById('role-hierarchy')?.scrollIntoView({behavior:'smooth'})">Role hierarchy</a><a href="#creating-a-new-test-user" style="display:block;padding:0.2rem 0;color:var(--text-muted,#666);text-decoration:none;font-size:0.75rem;margin-left:1rem;" onclick="event.preventDefault();document.getElementById('creating-a-new-test-user')?.scrollIntoView({behavior:'smooth'})">Creating a new test user</a><a href="#testing-admin-pages" style="display:block;padding:0.2rem 0;color:var(--text-muted,#666);text-decoration:none;font-size:0.75rem;" onclick="event.preventDefault();document.getElementById('testing-admin-pages')?.scrollIntoView({behavior:'smooth'})">Testing Admin Pages</a><a href="#key-admin-pages" style="display:block;padding:0.2rem 0;color:var(--text-muted,#666);text-decoration:none;font-size:0.75rem;margin-left:1rem;" onclick="event.preventDefault();document.getElementById('key-admin-pages')?.scrollIntoView({behavior:'smooth'})">Key admin pages</a></nav></details>
   <h1>Testing Guide</h1>
 <details open><summary><span id="test-account"></span>Test Account</summary><div class="dv-section-body">
-<div class="dv-table-wrap"><table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Email</td><td>`testuser@alpacaplayhouse.com`</td></tr>
+<div class="dv-table-wrap"><table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Email</td><td>`testuser@legacy-property-domain.example`</td></tr>
 <tr><td>Password</td><td>`test1234`</td></tr>
 <tr><td>Role</td><td>`admin`</td></tr>
 <tr><td>Auth User ID</td><td>`4b530cac-261e-4087-bb73-4258a8f6f91e`</td></tr>
@@ -32,7 +32,7 @@
         <button class="dv-copy-btn" onclick="navigator.clipboard.writeText(document.getElementById('cb-0khgxu').textContent).then(()=>{this.textContent='Copied!';this.classList.add('copied');setTimeout(()=>{this.textContent='Copy';this.classList.remove('copied')},1500)})">Copy</button>
       </div>
       <pre><code id="cb-0khgxu">1. Navigate to /login/?redirect=/spaces/admin/devcontrol.html
-2. Fill email input with testuser@alpacaplayhouse.com
+2. Fill email input with testuser@legacy-property-domain.example
 3. Fill password input with test1234
 4. Click the &quot;Sign in&quot; button
 5. Wait for redirect to complete (~3s)</code></pre>
@@ -56,7 +56,7 @@
         <button class="dv-copy-btn" onclick="navigator.clipboard.writeText(document.getElementById('cb-ag5ira').textContent).then(()=>{this.textContent='Copied!';this.classList.add('copied');setTimeout(()=>{this.textContent='Copy';this.classList.remove('copied')},1500)})">Copy</button>
       </div>
       <pre><code id="cb-ag5ira"><span class=<span class="dv-str">"dv-cmt"</span>># 1. Create auth user via GoTrue Admin API (needs service_role key)</span>
-<span class="dv-kw">curl</span> -X POST &quot;https://aphrrfprbixmhissnjfn.supabase.co/auth/v1/admin/users&quot; \
+<span class="dv-kw">curl</span> -X POST &quot;https://legacy-project-ref.supabase.co/auth/v1/admin/users&quot; \
   -H &quot;apikey: <span class="dv-fn">$SERVICE_ROLE_KEY</span>&quot; \
   -H &quot;Authorization: Bearer <span class="dv-fn">$SERVICE_ROLE_KEY</span>&quot; \
   -H &quot;Content-Type: application/json&quot; \

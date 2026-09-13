@@ -54,7 +54,7 @@ Set these in Supabase project secrets:
 3. Create intents from `integrations/alexa/master-pasture-interaction-model.json`.
 4. Endpoint type: HTTPS
    - URL:
-     `https://aphrrfprbixmhissnjfn.supabase.co/functions/v1/alexa-room-control`
+     `https://legacy-project-ref.supabase.co/functions/v1/alexa-room-control`
 5. Build model and test in Alexa simulator.
 
 ## Testing utterances

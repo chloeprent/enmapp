@@ -8,7 +8,7 @@ Paste this into a Claude Code session on the M4 MacBook Air:
 
 ---
 
-The hallway kiosk tablet is a Samsung Galaxy Tab A9 (SM-X210) wall-mounted in the hallway. It runs Fully Kiosk Browser displaying `alpacaplayhouse.com/kioskhall/`.
+The hallway kiosk tablet is a Samsung Galaxy Tab A9 (SM-X210) wall-mounted in the hallway. It runs Fully Kiosk Browser displaying `legacy-property-domain.example/kioskhall/`.
 
 ### Device Info
 
@@ -53,7 +53,7 @@ On the tablet screen, log in to the UniFi console:
 **Step 4 — Return to kiosk:**
 
 ```bash
-curl "http://100.103.110.7:2323/?cmd=loadUrl&url=https%3A%2F%2Falpacaplayhouse.com%2Fkioskhall%2F&password=alpaca2323"
+curl "http://100.103.110.7:2323/?cmd=loadUrl&url=https%3A%2F%2Flegacy-property-domain.example%2Fkioskhall%2F&password=alpaca2323"
 ```
 
 **Step 5 — Verify rotation is working:**
@@ -78,7 +78,7 @@ adb shell pm disable-user --user 0 com.sec.android.app.samsungapps
 ### Troubleshooting
 
 - **Can't reach tablet:** Check Tailscale is running on both machines. Try `ping 100.103.110.7`. Also try the LAN IP (check UniFi for current DHCP lease).
-- **Popup blocked:** In the tablet's browser settings, allow popups for `alpacaplayhouse.com`.
+- **Popup blocked:** In the tablet's browser settings, allow popups for `legacy-property-domain.example`.
 - **ADB not connecting:** Wireless debugging may need re-enabling. Triple-tap bottom-right of kiosk (password: `1234`), go to Settings → Developer Options → Wireless Debugging → ON. Then pair: `adb pair <ip>:<pair-port>`.
 - **UniFi session expired:** Repeat steps 2-4 to log in again. Sessions last ~24 hours.
-- **Full setup instructions page:** `alpacaplayhouse.com/kioskhall/setup.html`
+- **Full setup instructions page:** `legacy-property-domain.example/kioskhall/setup.html`

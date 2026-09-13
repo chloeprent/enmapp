@@ -70,7 +70,7 @@
 <li><strong>Resend Inbound Email</strong> - Inbound email receiving and routing via Resend</li>
 </ol>
 <ul>
-<li>Domain <code>alpacaplayhouse.com</code> configured for both sending and receiving</li>
+<li>Domain <code>legacy-property-domain.example</code> configured for both sending and receiving</li>
 <li>MX record points to <code>inbound-smtp.us-east-1.amazonaws.com</code></li>
 <li>Edge function: <code>resend-inbound-webhook</code> (SVIX signature verification)</li>
 <li>Prefix-based routing: personal forwards, team@, auto@ (bug reply logic), herd@ (stub)</li>
@@ -167,7 +167,7 @@
 <li>3 UniFi G5 PTZ cameras restreamed via go2rtc on Alpaca Mac</li>
 <li>go2rtc handles UniFi Protect&#39;s quirky RTSP (MediaMTX crashed on SPS parsing)</li>
 <li><code>rtspx://</code> protocol (RTSP over TLS control, no SRTP on media)</li>
-<li>Caddy reverse proxy on DO droplet: <code>cam.alpacaplayhouse.com</code> → go2rtc:1984 via Tailscale</li>
+<li>Caddy reverse proxy on DO droplet: <code>cam.legacy-property-domain.example</code> → go2rtc:1984 via Tailscale</li>
 <li>HLS fMP4 mode (<code>&amp;mp4</code> parameter) required — without it, segments contain only audio</li>
 <li><code>camera_streams</code> DB table stores stream config, frontend constructs HLS URL dynamically</li>
 <li>PTZ controls via UniFi Protect API (continuous move + preset goto)</li>
@@ -266,7 +266,7 @@
 <li><code>resend-inbound-webhook</code> detects Zelle payment confirmation emails</li>
 <li>Parses sender name, amount, date from email body</li>
 <li>Auto-creates ledger entry for the payment</li>
-<li>Fixes Zelle email address: <code>alpacaplayhouse@gmail.com</code> (not payments@)</li>
+<li>Fixes Zelle email address: <code>legacy-property@example.com</code> (not payments@)</li>
 </ul>
 <ol start="30">
 <li><strong>Airbnb iCal Sync</strong> - Two-way calendar sync with Airbnb</li>
@@ -315,7 +315,7 @@
 <li><strong>Mobile App (iOS &amp; Android)</strong> - Native mobile apps via Capacitor 8</li>
 </ol>
 <ul>
-<li>App ID: <code>com.alpacaplayhouse.app</code>, Capacitor 8 wrapping mobile-first SPA</li>
+<li>App ID: <code>com.LegacyProperty.app</code>, Capacitor 8 wrapping mobile-first SPA</li>
 <li>5 tabs: Cameras, Music, Lights, Climate, Cars (bottom tab bar)</li>
 <li>Dark theme, inline login (email/password + Google OAuth), no page redirects</li>
 <li><code>mobile/app/</code> — SPA source (index.html, mobile.css, mobile-app.js, tabs/)</li>
@@ -340,7 +340,7 @@
 <li>10 GB free, zero egress fees, $0.015/GB-mo beyond free tier</li>
 </ul>
 <ol start="38">
-<li><strong>PAI Email Inbox</strong> - <code>pai@alpacaplayhouse.com</code> processes inbound emails</li>
+<li><strong>PAI Email Inbox</strong> - <code>pai@legacy-property-domain.example</code> processes inbound emails</li>
 </ol>
 <ul>
 <li>Added <code>pai</code> to SPECIAL_PREFIXES and loop guard in <code>resend-inbound-webhook</code></li>
@@ -349,7 +349,7 @@
 <li>Documents: attachments downloaded from Resend, uploaded to R2 (<code>documents/email-uploads/</code>), indexed in <code>document_index</code> (inactive pending admin review), admin notified</li>
 <li>Other: forwarded to admin</li>
 <li>New templates: <code>pai_email_reply</code>, <code>pai_document_received</code> in send-email</li>
-<li>New sender: <code>pai</code> in SENDER_MAP (<code>PAI &lt;pai@alpacaplayhouse.com&gt;</code>)</li>
+<li>New sender: <code>pai</code> in SENDER_MAP (<code>PAI &lt;pai@legacy-property-domain.example&gt;</code>)</li>
 <li>Loop guard prevents feedback loops (self-sent emails to pai@)</li>
 </ul>
 <ol start="39">
@@ -441,12 +441,12 @@
 <li><strong>Key use case</strong>: ACH bank transfer payments go PENDING → COMPLETED/FAILED over 1-3 business days</li>
 <li><strong>DB</strong>: <code>square_config.webhook_signature_key</code> stores the HMAC key from Square Developer Console</li>
 <li><strong>DB</strong>: <code>square_payments</code> columns: <code>square_source_type</code>, <code>square_event_id</code> (dedup), <code>completed_at</code>, <code>failed_at</code>, <code>failure_reason</code></li>
-<li><strong>Notifications</strong>: Sends admin email to <code>payments@alpacaplayhouse.com</code> on ACH status changes</li>
+<li><strong>Notifications</strong>: Sends admin email to <code>payments@legacy-property-domain.example</code> on ACH status changes</li>
 <li><strong>Ledger sync</strong>: Automatically updates linked <code>ledger</code> entries on payment completion/failure</li>
 <li><strong>Dedup</strong>: Tracks <code>square_event_id</code> to prevent duplicate processing on webhook retries (up to 11 retries over 24h)</li>
 <li><strong>Deployment</strong>: <code>supabase functions deploy square-webhook --no-verify-jwt</code></li>
 <li><strong>Setup</strong>: Register webhook at Square Developer Console → Webhooks → Add subscription → copy Signature Key → store in <code>square_config.webhook_signature_key</code></li>
-<li><strong>Webhook URL</strong>: <code>https://aphrrfprbixmhissnjfn.supabase.co/functions/v1/square-webhook</code></li>
+<li><strong>Webhook URL</strong>: <code>https://legacy-project-ref.supabase.co/functions/v1/square-webhook</code></li>
 </ul>
 <ol start="45">
 <li><strong>Stripe Payment Integration</strong> - Full inbound/outbound payment system via Stripe</li>
@@ -462,7 +462,7 @@
 <li><strong>Client service</strong>: <code>shared/stripe-service.js</code> (config loader, PaymentIntent creation, Stripe.js loader)</li>
 <li><strong>Admin settings</strong>: Stripe section in Settings page (keys, test mode toggle, test connection button)</li>
 <li><strong>Deployment</strong>: <code>stripe-webhook</code> with <code>--no-verify-jwt</code>; others with default JWT</li>
-<li><strong>Webhook URL</strong>: <code>https://aphrrfprbixmhissnjfn.supabase.co/functions/v1/stripe-webhook</code></li>
+<li><strong>Webhook URL</strong>: <code>https://legacy-project-ref.supabase.co/functions/v1/stripe-webhook</code></li>
 <li><strong>Events</strong>: <code>payment_intent.succeeded</code>, <code>payment_intent.payment_failed</code>, <code>transfer.paid/failed/reversed</code>, <code>account.updated</code></li>
 </ul>
 <ol start="46">

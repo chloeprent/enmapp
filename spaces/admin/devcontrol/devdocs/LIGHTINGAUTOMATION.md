@@ -32,23 +32,23 @@ ssh paca@192.168.1.200 "~/lights.sh kitchen,living red"
 
 Public URL via Cloudflare Tunnel. Works from anywhere — cloud services, mobile apps, PAI agent.
 
-- **URL:** `https://lights.alpacaplayhouse.com`
+- **URL:** `https://lights.legacy-property-domain.example`
 - **Auth:** Bearer token (stored in Bitwarden: "Light API — Alpuca")
 - **LAN URL:** `http://192.168.1.200:8100` (no tunnel, faster)
 
 ```bash
 # Control lights
-curl -X POST https://lights.alpacaplayhouse.com/lights \
+curl -X POST https://lights.legacy-property-domain.example/lights \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
   -d '{"rooms":"kitchen,living","color":"red","brightness":"50%"}'
 
 # Health check (no auth)
-curl https://lights.alpacaplayhouse.com/health
+curl https://lights.legacy-property-domain.example/health
 
 # List rooms/colors (auth required)
-curl -H "Authorization: Bearer <token>" https://lights.alpacaplayhouse.com/lights/rooms
-curl -H "Authorization: Bearer <token>" https://lights.alpacaplayhouse.com/lights/colors
+curl -H "Authorization: Bearer <token>" https://lights.legacy-property-domain.example/lights/rooms
+curl -H "Authorization: Bearer <token>" https://lights.legacy-property-domain.example/lights/colors
 ```
 
 **Response:** `{"status":"ok","rooms":"kitchen,living","color":"red","brightness":"50%"}`
@@ -75,7 +75,7 @@ Uses a long-lived HAOS API token (expires 2036). Token in `devdocs/HOMEAUTOMATIO
 |--------|-----|---------|
 | Claude Code (LAN) | `ssh paca@... "~/lights.sh ..."` | ~0.7s |
 | Claude Desktop (Alpuca) | `~/lights.sh ...` | ~0.5s |
-| PAI agent / edge functions | `POST https://lights.alpacaplayhouse.com/lights` | ~0.7s |
+| PAI agent / edge functions | `POST https://lights.legacy-property-domain.example/lights` | ~0.7s |
 | Mobile apps | Same HTTP API | ~0.7s |
 | Hostinger workers | Same HTTP API | ~0.7s |
 | Alexa | Native HA Alexa integration (separate) | varies |
@@ -451,7 +451,7 @@ Individual: `light.smart_rgbtw_bulb_6` (Top), `light.smart_rgbtw_bulb_7` (Bottom
 ~/lights.sh garage-dj-strip off
 
 # Via Light API
-curl -X POST https://lights.alpacaplayhouse.com/lights \
+curl -X POST https://lights.legacy-property-domain.example/lights \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
   -d '{"rooms":"garage-dj-strip","color":"purple","brightness":"60%"}'
@@ -828,7 +828,7 @@ curl -s -X POST \
   -H "Authorization: Bearer $MGMT_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"query":"INSERT INTO lighting_devices ..."}' \
-  "https://api.supabase.com/v1/projects/aphrrfprbixmhissnjfn/database/query"
+  "https://api.supabase.com/v1/projects/legacy-project-ref/database/query"
 ```
 
 ### Step 7: Add to `lighting_groups` / `lighting_group_targets` (if new group)

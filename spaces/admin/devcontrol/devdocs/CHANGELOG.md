@@ -40,7 +40,7 @@
    - Worker writes back `diagnosis` (root cause) and `notes` (observations/caveats) after Claude Code analyzes the bug
    - Claude Code prompt instructs it to output structured JSON with `diagnosis`, `fix_summary`, and `notes`
 14. **Resend Inbound Email** - Inbound email receiving and routing via Resend
-   - Domain `alpacaplayhouse.com` configured for both sending and receiving
+   - Domain `legacy-property-domain.example` configured for both sending and receiving
    - MX record points to `inbound-smtp.us-east-1.amazonaws.com`
    - Edge function: `resend-inbound-webhook` (SVIX signature verification)
    - Prefix-based routing: personal forwards, team@, auto@ (bug reply logic), herd@ (stub)
@@ -109,7 +109,7 @@
    - 3 UniFi G5 PTZ cameras restreamed via go2rtc on Alpaca Mac
    - go2rtc handles UniFi Protect's quirky RTSP (MediaMTX crashed on SPS parsing)
    - `rtspx://` protocol (RTSP over TLS control, no SRTP on media)
-   - Caddy reverse proxy on DO droplet: `cam.alpacaplayhouse.com` → go2rtc:1984 via Tailscale
+   - Caddy reverse proxy on DO droplet: `cam.legacy-property-domain.example` → go2rtc:1984 via Tailscale
    - HLS fMP4 mode (`&mp4` parameter) required — without it, segments contain only audio
    - `camera_streams` DB table stores stream config, frontend constructs HLS URL dynamically
    - PTZ controls via UniFi Protect API (continuous move + preset goto)
@@ -176,7 +176,7 @@
    - `resend-inbound-webhook` detects Zelle payment confirmation emails
    - Parses sender name, amount, date from email body
    - Auto-creates ledger entry for the payment
-   - Fixes Zelle email address: `alpacaplayhouse@gmail.com` (not payments@)
+   - Fixes Zelle email address: `legacy-property@example.com` (not payments@)
 30. **Airbnb iCal Sync** - Two-way calendar sync with Airbnb
    - `airbnb-sync` edge function: fetch Airbnb iCal → create blocking assignments
    - `ical` edge function: export assignments as iCal per space
@@ -201,7 +201,7 @@
 35. **UP-SENSE Smart Sensors** - UniFi Protect sensor installation guide
    - `residents/sensorinstallation.html` — step-by-step installation instructions
 36. **Mobile App (iOS & Android)** - Native mobile apps via Capacitor 8
-   - App ID: `com.alpacaplayhouse.app`, Capacitor 8 wrapping mobile-first SPA
+   - App ID: `com.LegacyProperty.app`, Capacitor 8 wrapping mobile-first SPA
    - 5 tabs: Cameras, Music, Lights, Climate, Cars (bottom tab bar)
    - Dark theme, inline login (email/password + Google OAuth), no page redirects
    - `mobile/app/` — SPA source (index.html, mobile.css, mobile-app.js, tabs/)
@@ -220,14 +220,14 @@
    - Supabase secrets: R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_BUCKET_NAME, R2_PUBLIC_URL
    - Migrated 2 PDFs from Supabase Storage `instructions-and-manuals` bucket to R2
    - 10 GB free, zero egress fees, $0.015/GB-mo beyond free tier
-38. **PAI Email Inbox** - `pai@alpacaplayhouse.com` processes inbound emails
+38. **PAI Email Inbox** - `pai@legacy-property-domain.example` processes inbound emails
    - Added `pai` to SPECIAL_PREFIXES and loop guard in `resend-inbound-webhook`
    - Gemini classifies emails: question, document, command, or other
    - Questions/commands: forwarded to `alpaca-pai` edge function, PAI reply sent via email
    - Documents: attachments downloaded from Resend, uploaded to R2 (`documents/email-uploads/`), indexed in `document_index` (inactive pending admin review), admin notified
    - Other: forwarded to admin
    - New templates: `pai_email_reply`, `pai_document_received` in send-email
-   - New sender: `pai` in SENDER_MAP (`PAI <pai@alpacaplayhouse.com>`)
+   - New sender: `pai` in SENDER_MAP (`PAI <pai@legacy-property-domain.example>`)
    - Loop guard prevents feedback loops (self-sent emails to pai@)
 
 39. **Centralized Internal REST API** - Single permissioned edge function for all entity CRUD
@@ -299,12 +299,12 @@
    - **Key use case**: ACH bank transfer payments go PENDING → COMPLETED/FAILED over 1-3 business days
    - **DB**: `square_config.webhook_signature_key` stores the HMAC key from Square Developer Console
    - **DB**: `square_payments` columns: `square_source_type`, `square_event_id` (dedup), `completed_at`, `failed_at`, `failure_reason`
-   - **Notifications**: Sends admin email to `payments@alpacaplayhouse.com` on ACH status changes
+   - **Notifications**: Sends admin email to `payments@legacy-property-domain.example` on ACH status changes
    - **Ledger sync**: Automatically updates linked `ledger` entries on payment completion/failure
    - **Dedup**: Tracks `square_event_id` to prevent duplicate processing on webhook retries (up to 11 retries over 24h)
    - **Deployment**: `supabase functions deploy square-webhook --no-verify-jwt`
    - **Setup**: Register webhook at Square Developer Console → Webhooks → Add subscription → copy Signature Key → store in `square_config.webhook_signature_key`
-   - **Webhook URL**: `https://aphrrfprbixmhissnjfn.supabase.co/functions/v1/square-webhook`
+   - **Webhook URL**: `https://legacy-project-ref.supabase.co/functions/v1/square-webhook`
 
 45. **Stripe Payment Integration** - Full inbound/outbound payment system via Stripe
    - **Inbound payments**: Tenant pay page at `/pay/` with Stripe PaymentElement (ACH bank transfer + card)
@@ -317,7 +317,7 @@
    - **Client service**: `shared/stripe-service.js` (config loader, PaymentIntent creation, Stripe.js loader)
    - **Admin settings**: Stripe section in Settings page (keys, test mode toggle, test connection button)
    - **Deployment**: `stripe-webhook` with `--no-verify-jwt`; others with default JWT
-   - **Webhook URL**: `https://aphrrfprbixmhissnjfn.supabase.co/functions/v1/stripe-webhook`
+   - **Webhook URL**: `https://legacy-project-ref.supabase.co/functions/v1/stripe-webhook`
    - **Events**: `payment_intent.succeeded`, `payment_intent.payment_failed`, `transfer.paid/failed/reversed`, `account.updated`
 
 46. **Brave Search API for PAI** - Real-time web search capability for PAI assistant

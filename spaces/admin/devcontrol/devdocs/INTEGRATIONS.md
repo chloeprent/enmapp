@@ -175,36 +175,36 @@ The accounting admin page (`spaces/admin/accounting.html`) should show:
 5. `agreement_status` updated to "signed"
 
 ### Resend (Email)
-- **Domain**: `alpacaplayhouse.com` (verified, sending + receiving)
+- **Domain**: `legacy-property-domain.example` (verified, sending + receiving)
 - **Account**: wingsiebird@gmail.com
 - **API Key**: Stored as Supabase secret `RESEND_API_KEY`
 - **Webhook Secret**: Stored as Supabase secret `RESEND_WEBHOOK_SECRET` (SVIX-based)
 - **Outbound**: `send-email` Edge Function sends via Resend API (43 templates)
-  - From: `notifications@alpacaplayhouse.com` (forwarded emails) or `noreply@alpacaplayhouse.com` (system emails)
+  - From: `notifications@legacy-property-domain.example` (forwarded emails) or `noreply@legacy-property-domain.example` (system emails)
   - Client service: `shared/email-service.js`
 - **Inbound**: `resend-inbound-webhook` Edge Function (deployed with `--no-verify-jwt`)
-  - Webhook URL: `https://aphrrfprbixmhissnjfn.supabase.co/functions/v1/resend-inbound-webhook`
+  - Webhook URL: `https://legacy-project-ref.supabase.co/functions/v1/resend-inbound-webhook`
   - Event: `email.received`
   - All inbound emails logged to `inbound_emails` table
   - Webhook payload doesn't include body — fetched separately via Resend API
 
-**DNS Records** (GoDaddy, domain: `alpacaplayhouse.com`):
+**DNS Records** (GoDaddy, domain: `legacy-property-domain.example`):
 - MX `@` → `inbound-smtp.us-east-1.amazonaws.com` (priority 10) — inbound receiving
 - MX `send` → `feedback-smtp.us-east-1.amazonses.com` (priority 10) — SPF for outbound
 - TXT `send` → SPF record for outbound
 - TXT `resend._domainkey` → DKIM record
 
-**Inbound Email Routing** (`*@alpacaplayhouse.com`):
+**Inbound Email Routing** (`*@legacy-property-domain.example`):
 | Prefix | Action | Destination |
 |--------|--------|-------------|
 | `haydn@` | Forward | `hrsonnad@gmail.com` |
 | `rahulio@` | Forward | `rahulioson@gmail.com` |
 | `sonia@` | Forward | `sonia245g@gmail.com` |
-| `team@` | Forward | `alpacaplayhouse@gmail.com` |
+| `team@` | Forward | `legacy-property@example.com` |
 | `herd@` | Special logic | (stub — future AI processing) |
 | `auto@` | Special logic | Bug report replies → new bug report; others → admin |
 | `pai@` | Special logic | Gemini classifies → questions/commands get PAI reply; documents uploaded to R2; other forwarded to admin |
-| Everything else | Forward | `alpacaplayhouse@gmail.com` |
+| Everything else | Forward | `legacy-property@example.com` |
 
 ### Telnyx (SMS)
 - Config stored in `telnyx_config` table (api_key, messaging_profile_id, phone_number, test_mode)
@@ -247,7 +247,7 @@ The accounting admin page (`spaces/admin/accounting.html`) should show:
 - **App**: AlpacApps (Development mode)
 - **Dashboard**: https://developer.spotify.com/dashboard
 - **Config**: `spotify_config` table (client_id, client_secret, tokens)
-- **Redirect URIs**: `http://127.0.0.1:8080` (local dev), `https://alpacaplayhouse.com/auth/spotify/callback` (production)
+- **Redirect URIs**: `http://127.0.0.1:8080` (local dev), `https://legacy-property-domain.example/auth/spotify/callback` (production)
 - **Scopes**: TBD (will need `user-read-playback-state`, `user-modify-playback-state`, etc.)
 - **DB**: `spotify_config` (single row, id=1)
 
@@ -271,7 +271,7 @@ The accounting admin page (`spaces/admin/accounting.html`) should show:
 - **Traits used**: Temperature, Humidity, ThermostatMode, ThermostatHvac, ThermostatEco, ThermostatTemperatureSetpoint, Connectivity
 - **Temperature**: SDM API uses Celsius, UI shows Fahrenheit, edge function converts
 - **Rate limit**: 5 QPS per SDM project (polling at 0.1 QPS is well within limit)
-- **OAuth setup**: One-time admin flow via Climate tab Settings → "Authorize Google Account". If you get Error 400 redirect_uri_mismatch, add `https://alpacaplayhouse.com/residents/climate.html` to the OAuth client's Authorized redirect URIs in Google Cloud Console (APIs & Services → Credentials).
+- **OAuth setup**: One-time admin flow via Climate tab Settings → "Authorize Google Account". If you get Error 400 redirect_uri_mismatch, add `https://legacy-property-domain.example/residents/climate.html` to the OAuth client's Authorized redirect URIs in Google Cloud Console (APIs & Services → Credentials).
 
 ### OpenWeatherMap (Weather)
 - **API**: One Call API 3.0 (with 2.5 free tier fallback)
@@ -343,12 +343,12 @@ The accounting admin page (`spaces/admin/accounting.html`) should show:
 - **Config:** `~/go2rtc/go2rtc.yaml` (also in repo at `scripts/go2rtc/go2rtc.yaml`)
 - **Protocol:** `rtspx://` (RTSP over TLS, no SRTP) to UniFi Protect on UDM Pro
 - **Cameras:** 3 UniFi G5 PTZ cameras × 3 quality levels = 9 streams
-- **Proxy:** Caddy on DO droplet at `cam.alpacaplayhouse.com/api/*` → go2rtc:1984 via Tailscale
-- **HLS URL format:** `https://cam.alpacaplayhouse.com/api/stream.m3u8?src={stream_name}&mp4`
+- **Proxy:** Caddy on DO droplet at `cam.legacy-property-domain.example/api/*` → go2rtc:1984 via Tailscale
+- **HLS URL format:** `https://cam.legacy-property-domain.example/api/stream.m3u8?src={stream_name}&mp4`
 - **DB:** `camera_streams` table stores stream config (stream_name, proxy_base_url, quality, location)
 - **Client:** `residents/cameras.js` loads streams from DB, plays via HLS.js with fMP4 mode (`&mp4` parameter)
 - **PTZ:** UniFi Protect API — continuous move at `POST /proxy/protect/api/cameras/{id}/move`, presets at `POST .../ptz/goto/{slot}`
-- **CORS:** Caddy strips go2rtc's CORS headers, adds origin-specific ones for `rsonnad.github.io` and `alpacaplayhouse.com`
+- **CORS:** Caddy strips go2rtc's CORS headers, adds origin-specific ones for `rsonnad.github.io` and `legacy-property-domain.example`
 - **Launchd:** `com.go2rtc` service (KeepAlive + RunAtLoad)
 - **Full docs:** `HOMEAUTOMATION.md`
 

@@ -158,39 +158,39 @@ await supabaseAdmin.from('api_usage_log').insert({
 </ol>
 <h3><span id="resend-email"></span>Resend (Email)</h3>
 <ul>
-<li><strong>Domain</strong>: <code>alpacaplayhouse.com</code> (verified, sending + receiving)</li>
+<li><strong>Domain</strong>: <code>legacy-property-domain.example</code> (verified, sending + receiving)</li>
 <li><strong>Account</strong>: <a href="mailto:wingsiebird@gmail.com">wingsiebird@gmail.com</a></li>
 <li><strong>API Key</strong>: Stored as Supabase secret <code>RESEND_API_KEY</code></li>
 <li><strong>Webhook Secret</strong>: Stored as Supabase secret <code>RESEND_WEBHOOK_SECRET</code> (SVIX-based)</li>
 <li><strong>Outbound</strong>: <code>send-email</code> Edge Function sends via Resend API (43 templates)<ul>
-<li>From: <code>notifications@alpacaplayhouse.com</code> (forwarded emails) or <code>noreply@alpacaplayhouse.com</code> (system emails)</li>
+<li>From: <code>notifications@legacy-property-domain.example</code> (forwarded emails) or <code>noreply@legacy-property-domain.example</code> (system emails)</li>
 <li>Client service: <code>shared/email-service.js</code></li>
 </ul>
 </li>
 <li><strong>Inbound</strong>: <code>resend-inbound-webhook</code> Edge Function (deployed with <code>--no-verify-jwt</code>)<ul>
-<li>Webhook URL: <code>https://aphrrfprbixmhissnjfn.supabase.co/functions/v1/resend-inbound-webhook</code></li>
+<li>Webhook URL: <code>https://legacy-project-ref.supabase.co/functions/v1/resend-inbound-webhook</code></li>
 <li>Event: <code>email.received</code></li>
 <li>All inbound emails logged to <code>inbound_emails</code> table</li>
 <li>Webhook payload doesn&#39;t include body — fetched separately via Resend API</li>
 </ul>
 </li>
 </ul>
-<p><strong>DNS Records</strong> (GoDaddy, domain: <code>alpacaplayhouse.com</code>):</p>
+<p><strong>DNS Records</strong> (GoDaddy, domain: <code>legacy-property-domain.example</code>):</p>
 <ul>
 <li>MX <code>@</code> → <code>inbound-smtp.us-east-1.amazonaws.com</code> (priority 10) — inbound receiving</li>
 <li>MX <code>send</code> → <code>feedback-smtp.us-east-1.amazonses.com</code> (priority 10) — SPF for outbound</li>
 <li>TXT <code>send</code> → SPF record for outbound</li>
 <li>TXT <code>resend._domainkey</code> → DKIM record</li>
 </ul>
-<p><strong>Inbound Email Routing</strong> (<code>*@alpacaplayhouse.com</code>):</p>
+<p><strong>Inbound Email Routing</strong> (<code>*@legacy-property-domain.example</code>):</p>
 <div class="dv-table-wrap"><table><thead><tr><th>Prefix</th><th>Action</th><th>Destination</th></tr></thead><tbody><tr><td>`haydn@`</td><td>Forward</td><td>`hrsonnad@gmail.com`</td></tr>
 <tr><td>`rahulio@`</td><td>Forward</td><td>`rahulioson@gmail.com`</td></tr>
 <tr><td>`sonia@`</td><td>Forward</td><td>`sonia245g@gmail.com`</td></tr>
-<tr><td>`team@`</td><td>Forward</td><td>`alpacaplayhouse@gmail.com`</td></tr>
+<tr><td>`team@`</td><td>Forward</td><td>`legacy-property@example.com`</td></tr>
 <tr><td>`herd@`</td><td>Special logic</td><td>(stub — future AI processing)</td></tr>
 <tr><td>`auto@`</td><td>Special logic</td><td>Bug report replies → new bug report; others → admin</td></tr>
 <tr><td>`pai@`</td><td>Special logic</td><td>Gemini classifies → questions/commands get PAI reply; documents uploaded to R2; other forwarded to admin</td></tr>
-<tr><td>Everything else</td><td>Forward</td><td>`alpacaplayhouse@gmail.com`</td></tr></tbody></table></div><h3><span id="telnyx-sms"></span>Telnyx (SMS)</h3>
+<tr><td>Everything else</td><td>Forward</td><td>`legacy-property@example.com`</td></tr></tbody></table></div><h3><span id="telnyx-sms"></span>Telnyx (SMS)</h3>
 <ul>
 <li>Config stored in <code>telnyx_config</code> table (api_key, messaging_profile_id, phone_number, test_mode)</li>
 <li>Outbound: <code>send-sms</code> Edge Function calls Telnyx Messages API</li>
@@ -235,7 +235,7 @@ await supabaseAdmin.from('api_usage_log').insert({
 <li><strong>App</strong>: AlpacApps (Development mode)</li>
 <li><strong>Dashboard</strong>: <a href="https://developer.spotify.com/dashboard">https://developer.spotify.com/dashboard</a></li>
 <li><strong>Config</strong>: <code>spotify_config</code> table (client_id, client_secret, tokens)</li>
-<li><strong>Redirect URIs</strong>: <code>http://127.0.0.1:8080</code> (local dev), <code>https://alpacaplayhouse.com/auth/spotify/callback</code> (production)</li>
+<li><strong>Redirect URIs</strong>: <code>http://127.0.0.1:8080</code> (local dev), <code>https://legacy-property-domain.example/auth/spotify/callback</code> (production)</li>
 <li><strong>Scopes</strong>: TBD (will need <code>user-read-playback-state</code>, <code>user-modify-playback-state</code>, etc.)</li>
 <li><strong>DB</strong>: <code>spotify_config</code> (single row, id=1)</li>
 </ul>
@@ -261,7 +261,7 @@ await supabaseAdmin.from('api_usage_log').insert({
 <li><strong>Traits used</strong>: Temperature, Humidity, ThermostatMode, ThermostatHvac, ThermostatEco, ThermostatTemperatureSetpoint, Connectivity</li>
 <li><strong>Temperature</strong>: SDM API uses Celsius, UI shows Fahrenheit, edge function converts</li>
 <li><strong>Rate limit</strong>: 5 QPS per SDM project (polling at 0.1 QPS is well within limit)</li>
-<li><strong>OAuth setup</strong>: One-time admin flow via Climate tab Settings → &quot;Authorize Google Account&quot;. If you get Error 400 redirect_uri_mismatch, add <code>https://alpacaplayhouse.com/residents/climate.html</code> to the OAuth client&#39;s Authorized redirect URIs in Google Cloud Console (APIs &amp; Services → Credentials).</li>
+<li><strong>OAuth setup</strong>: One-time admin flow via Climate tab Settings → &quot;Authorize Google Account&quot;. If you get Error 400 redirect_uri_mismatch, add <code>https://legacy-property-domain.example/residents/climate.html</code> to the OAuth client&#39;s Authorized redirect URIs in Google Cloud Console (APIs &amp; Services → Credentials).</li>
 </ul>
 <h3><span id="openweathermap-weather"></span>OpenWeatherMap (Weather)</h3>
 <ul>
@@ -343,12 +343,12 @@ await supabaseAdmin.from('api_usage_log').insert({
 <li><strong>Config:</strong> <code>~/go2rtc/go2rtc.yaml</code> (also in repo at <code>scripts/go2rtc/go2rtc.yaml</code>)</li>
 <li><strong>Protocol:</strong> <code>rtspx://</code> (RTSP over TLS, no SRTP) to UniFi Protect on UDM Pro</li>
 <li><strong>Cameras:</strong> 3 UniFi G5 PTZ cameras × 3 quality levels = 9 streams</li>
-<li><strong>Proxy:</strong> Caddy on DO droplet at <code>cam.alpacaplayhouse.com/api/*</code> → go2rtc:1984 via Tailscale</li>
-<li><strong>HLS URL format:</strong> <code>https://cam.alpacaplayhouse.com/api/stream.m3u8?src={stream_name}&amp;mp4</code></li>
+<li><strong>Proxy:</strong> Caddy on DO droplet at <code>cam.legacy-property-domain.example/api/*</code> → go2rtc:1984 via Tailscale</li>
+<li><strong>HLS URL format:</strong> <code>https://cam.legacy-property-domain.example/api/stream.m3u8?src={stream_name}&amp;mp4</code></li>
 <li><strong>DB:</strong> <code>camera_streams</code> table stores stream config (stream_name, proxy_base_url, quality, location)</li>
 <li><strong>Client:</strong> <code>residents/cameras.js</code> loads streams from DB, plays via HLS.js with fMP4 mode (<code>&amp;mp4</code> parameter)</li>
 <li><strong>PTZ:</strong> UniFi Protect API — continuous move at <code>POST /proxy/protect/api/cameras/{id}/move</code>, presets at <code>POST .../ptz/goto/{slot}</code></li>
-<li><strong>CORS:</strong> Caddy strips go2rtc&#39;s CORS headers, adds origin-specific ones for <code>rsonnad.github.io</code> and <code>alpacaplayhouse.com</code></li>
+<li><strong>CORS:</strong> Caddy strips go2rtc&#39;s CORS headers, adds origin-specific ones for <code>rsonnad.github.io</code> and <code>legacy-property-domain.example</code></li>
 <li><strong>Launchd:</strong> <code>com.go2rtc</code> service (KeepAlive + RunAtLoad)</li>
 <li><strong>Full docs:</strong> <code>HOMEAUTOMATION.md</code></li>
 </ul>

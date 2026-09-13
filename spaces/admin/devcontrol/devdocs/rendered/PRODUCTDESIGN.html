@@ -103,7 +103,7 @@
 <ul>
 <li><strong>Cost.</strong> Zelle and Venmo transfers cost the property $0. Stripe ACH costs 0.8% capped at $5. Card payments cost 2.9% + $0.30. For a $2,000/month rent payment, that&#39;s $0 vs $5 vs $58.30.</li>
 <li><strong>Tenant preference.</strong> Most tenants already use Zelle for rent at other properties. Offering it as the primary method matches existing behavior.</li>
-<li><strong>Auto-recording.</strong> Zelle payments send confirmation emails to <code>alpacaplayhouse@gmail.com</code>. The inbound email webhook automatically detects these and creates ledger entries. This gives the convenience of automatic recording without payment processing fees.</li>
+<li><strong>Auto-recording.</strong> Zelle payments send confirmation emails to <code>legacy-property@example.com</code>. The inbound email webhook automatically detects these and creates ledger entries. This gives the convenience of automatic recording without payment processing fees.</li>
 </ul>
 <p><strong>Stripe is there for:</strong> Tenants who prefer automated online payments, or for situations where manual payment isn&#39;t practical (deposits from out-of-state applicants, event payments from non-residents).</p>
 <h3><span id="4-2-transparent-fee-display"></span>4.2 Transparent Fee Display</h3>
@@ -112,7 +112,7 @@
 <hr>
 </div></details><details><summary><span id="5-pai-property-ai-design"></span>5. PAI (Property AI) Design</summary><div class="dv-section-body">
 <h3><span id="5-1-one-ai-multiple-channels"></span>5.1 One AI, Multiple Channels</h3>
-<p><strong>Decision:</strong> PAI is a single AI assistant accessible via web chat widget, voice phone calls (Vapi), email (<code>pai@alpacaplayhouse.com</code>), and Discord. All channels route to the same <code>alpaca-pai</code> edge function.</p>
+<p><strong>Decision:</strong> PAI is a single AI assistant accessible via web chat widget, voice phone calls (Vapi), email (<code>pai@legacy-property-domain.example</code>), and Discord. All channels route to the same <code>alpaca-pai</code> edge function.</p>
 <p><strong>Why:</strong></p>
 <ul>
 <li><strong>Consistency.</strong> PAI gives the same answers and has the same capabilities regardless of channel. A question asked via Discord gets the same smart home access as one asked via voice.</li>
@@ -219,12 +219,12 @@
 <p><strong>Decision:</strong> All system emails are wrapped in a consistent branded shell (header with logo, body, footer with address and tagline) rather than plain text.</p>
 <p><strong>Why:</strong></p>
 <ul>
-<li><strong>Professionalism.</strong> Emails from <code>noreply@alpacaplayhouse.com</code> that look branded and consistent build trust. Plain text emails look like spam.</li>
+<li><strong>Professionalism.</strong> Emails from <code>noreply@legacy-property-domain.example</code> that look branded and consistent build trust. Plain text emails look like spam.</li>
 <li><strong>One change, all emails.</strong> The wrapper is defined in <code>email-brand-wrapper.ts</code>. Updating the logo, colors, or footer text updates every email template automatically.</li>
 <li><strong>Brand config from DB.</strong> The wrapper reads colors, logos, and text from <code>brand_config</code>, so a non-developer can update the email look from the Brand admin page.</li>
 </ul>
 <h3><span id="11-2-inbound-email-routing"></span>11.2 Inbound Email Routing</h3>
-<p><strong>Decision:</strong> All <code>*@alpacaplayhouse.com</code> addresses are received via Resend webhook and routed by prefix (personal forwards, <code>team@</code>, <code>auto@</code>, <code>pai@</code>).</p>
+<p><strong>Decision:</strong> All <code>*@legacy-property-domain.example</code> addresses are received via Resend webhook and routed by prefix (personal forwards, <code>team@</code>, <code>auto@</code>, <code>pai@</code>).</p>
 <p><strong>Why:</strong></p>
 <ul>
 <li><strong>One domain, many uses.</strong> Personal email addresses (haydn@, rahulio@, sonia@) forward to Gmail. Team email goes to a shared inbox. PAI email goes to the AI. Auto email handles bug report replies. All from one domain with one webhook.</li>
