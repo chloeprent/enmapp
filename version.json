@@ -1,12 +1,12 @@
 {
-  "version": "v260913.04 1:48a",
-  "release": 4,
-  "sha": "7e67834",
-  "fullSha": "7e6783470dae719f83412faafce282cfdf6df822",
+  "version": "v260913.05 1:57a",
+  "release": 5,
+  "sha": "29c9405",
+  "fullSha": "29c9405363c660bbb44114e89585861a08480d49",
   "actor": "chloeprent",
   "source": "cloudflare-pages-deploy",
   "model": "ci",
   "machine": "runnervmlun5p",
-  "pushedAt": "2026-09-12T20:47:52-05:00",
-  "commits": [{"sha":"7e67834","message":"Add Google/Supabase login to in.swoon.coach placeholder","author":"Chloe Prentoulis"}]
+  "pushedAt": "2026-09-12T20:57:43-05:00",
+  "commits": [{"sha":"29c9405","message":"Wire ENM quiz to our own Supabase project and free AI model","author":"Chloe Prentoulis"}]
 }
