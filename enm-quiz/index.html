@@ -963,7 +963,10 @@
         selected.forEach(oi => {
           const target = QUIZ.questions[qi].options[oi].result;
           const list = Array.isArray(target) ? target : [target];
-          list.forEach(t => { if (t > 0 && totals.has(t)) totals.set(t, totals.get(t) + 1); });
+          list.forEach(t => {
+            const [idx, pts] = Array.isArray(t) ? t : [t, 1];
+            if (idx > 0 && totals.has(idx)) totals.set(idx, totals.get(idx) + pts);
+          });
         });
       });
 

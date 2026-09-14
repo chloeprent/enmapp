@@ -171,7 +171,7 @@ export const QUIZ = {
         {
           "uid": "a_O8PRmIvgUzW",
           "text": "One or both of us dating separately, on the side.",
-          "result": 0
+          "result": 2
         },
         {
           "uid": "a_G7ogxQ0eKJy",
@@ -313,7 +313,7 @@ export const QUIZ = {
         {
           "uid": "a_TIeJp-ILGP",
           "text": "Okay — a wobble at first, but I'd manage and talk it through.",
-          "result": 0
+          "result": 2
         },
         {
           "uid": "a_gPkIGo9Q56",
@@ -493,22 +493,22 @@ export const QUIZ = {
         {
           "uid": "a_bET3KtXHAw",
           "text": " Losing my partner.",
-          "result": 0
+          "result": [[1, 1], [7, 1]]
         },
         {
           "uid": "a_F4nz4DNQte",
           "text": "That I can't handle it emotionally.",
-          "result": 0
+          "result": [[1, 1], [7, 1]]
         },
         {
           "uid": "a_NFLow7iY2U",
           "text": "What other people will think of us.",
-          "result": 0
+          "result": 7
         },
         {
           "uid": "a_aCQiWBLzp4",
           "text": "Changing us permanently.",
-          "result": 0
+          "result": [[1, 1], [7, 1]]
         },
         {
           "uid": "a_Sklr_WtoBf",
@@ -528,7 +528,7 @@ export const QUIZ = {
         {
           "uid": "a_r-AJV_og4K",
           "text": "A clear, agreed set of boundaries with my partner as we explore romantic connections externally.",
-          "result": 0
+          "result": [[3, 1], [2, 1]]
         },
         {
           "uid": "a_r7AtOHvr6c",
@@ -706,7 +706,7 @@ export const QUIZ = {
         {
           "uid": "a_ouHVAQhCyn",
           "text": "A real, regular part of life — not an occasional thing.",
-          "result": 0
+          "result": [[3, 2], [2, 1]]
         },
         {
           "uid": "a_VKh3Pg9LaU",
@@ -716,7 +716,7 @@ export const QUIZ = {
         {
           "uid": "a_9mufBbl5zK",
           "text": "I want a regular lover/partner besides my home partner.",
-          "result": 0
+          "result": [[8, 2], [2, 1]]
         }
       ]
     },
