@@ -1,12 +1,12 @@
 {
-  "version": "v260914.03 4:06p",
-  "release": 3,
-  "sha": "1549500",
-  "fullSha": "1549500011b8187ef6f173fa1d376f6b3564a648",
+  "version": "v260914.04 4:21p",
+  "release": 4,
+  "sha": "a9204ff",
+  "fullSha": "a9204ff58d1d3c45b983151c3185dd47375540e7",
   "actor": "chloeprent",
   "source": "cloudflare-pages-deploy",
   "model": "ci",
   "machine": "runnervmlun5p",
-  "pushedAt": "2026-09-14T11:05:58-05:00",
-  "commits": [{"sha":"9413d85","message":"enm-quiz: weighted multi-style scoring for inert answers","author":"Chloe Prentoulis"},{"sha":"f24b231","message":"enm-quiz: core/tag split — 12 typing questions + 6 optional aftercare questions","author":"Chloe Prentoulis"},{"sha":"1549500","message":"ENM quiz: weighted scoring + core/tag split","author":"chloeprent"}]
+  "pushedAt": "2026-09-14T11:21:38-05:00",
+  "commits": [{"sha":"a9204ff","message":"enm-quiz: bust quiz-data.js module cache with ?v=2","author":"Chloe Prentoulis"}]
 }
