@@ -107,7 +107,13 @@
 
   <div id="signedInView" class="signed-in hidden">
     <p class="who" id="whoami"></p>
+    <a class="btn-secondary" id="quizLink" href="./quiz/" style="display:inline-block;text-decoration:none;margin-bottom:0.5rem">Quiz Analytics</a>
     <button type="button" class="btn-secondary" id="signOutBtn">Sign out</button>
+  </div>
+
+  <div id="deniedView" class="signed-in hidden">
+    <p class="who" id="deniedWhoami"></p>
+    <button type="button" class="btn-secondary" id="deniedSignOutBtn">Sign out</button>
   </div>
 
   <p class="msg" id="msg" role="alert"></p>
@@ -126,10 +132,22 @@
 
   const { data: { session } } = await supabase.auth.getSession();
   if (session) {
-    $('signedOutView').classList.add('hidden');
-    $('signedInView').classList.remove('hidden');
-    $('whoami').textContent = `Signed in as ${session.user.email || ''}`;
+    const { data: isAdmin } = await supabase.rpc('enm_is_quiz_admin');
+    if (isAdmin) {
+      $('signedOutView').classList.add('hidden');
+      $('signedInView').classList.remove('hidden');
+      $('whoami').textContent = `Signed in as ${session.user.email || ''}`;
+    } else {
+      $('signedOutView').classList.add('hidden');
+      $('deniedView').classList.remove('hidden');
+      $('deniedWhoami').textContent = `${session.user.email || 'This account'} isn't on the admin list.`;
+    }
   }
+
+  $('deniedSignOutBtn').addEventListener('click', async () => {
+    await supabase.auth.signOut();
+    location.reload();
+  });
 
   $('googleBtn').addEventListener('click', async () => {
     const btn = $('googleBtn');
