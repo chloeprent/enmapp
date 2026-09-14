@@ -1,12 +1,12 @@
 {
-  "version": "v260914.01 1:48p",
-  "release": 1,
-  "sha": "28521d9",
-  "fullSha": "28521d94912f04f1a86a7540b6440413858916c3",
+  "version": "v260914.02 2:13p",
+  "release": 2,
+  "sha": "e8685e1",
+  "fullSha": "e8685e15f6e7787ebce0924c9942fe3abbba5f04",
   "actor": "chloeprent",
   "source": "cloudflare-pages-deploy",
   "model": "ci",
   "machine": "runnervmlun5p",
-  "pushedAt": "2026-09-14T08:48:04-05:00",
-  "commits": [{"sha":"28521d9","message":"Gate in.swoon.coach's sign-in shell on the existing quiz-admin allowlist","author":"Chloe Prentoulis"}]
+  "pushedAt": "2026-09-14T09:12:56-05:00",
+  "commits": [{"sha":"e8685e1","message":"enm-quiz: black text, hide version stamp","author":"Chloe Prentoulis"}]
 }
