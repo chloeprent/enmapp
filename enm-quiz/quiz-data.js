@@ -40,7 +40,7 @@ export const QUIZ = {
   "topResultsTitle": "Your Top Results",
   "graphBarColor": "#fc6a77",
   "questions": [
-    {
+        {
       "uid": "q_Q6w-rn1aV",
       "title": "Are you exploring this as a couple, or as an individual?",
       "answerType": "text",
@@ -70,42 +70,7 @@ export const QUIZ = {
         }
       ]
     },
-    {
-      "uid": "q_VGlPr-9oC0",
-      "title": "Where would you honestly place yourself right now?",
-      "answerType": "text",
-      "multi": false,
-      "min": 1,
-      "max": 1,
-      "options": [
         {
-          "uid": "a_5xz5XfIi_b",
-          "text": "Purely curious, completely clueless.",
-          "result": 0
-        },
-        {
-          "uid": "a_dH5TKeeI7E",
-          "text": "We agreed to explore, not sure where to start.",
-          "result": 0
-        },
-        {
-          "uid": "a_KX3-NqZgDJ",
-          "text": "One of us wants this, the other's happy staying monogamous and fully supports us doing it",
-          "result": 11
-        },
-        {
-          "uid": "a_z_WpjPEGNF",
-          "text": "We tried something once, it went badly.",
-          "result": 1
-        },
-        {
-          "uid": "a_-SwFtuCszF",
-          "text": "Something else",
-          "result": 0
-        }
-      ]
-    },
-    {
       "uid": "q_AyVbXLY-9K",
       "title": "When you imagine \"opening up\", what's the first image that comes to mind?",
       "answerType": "text",
@@ -150,7 +115,7 @@ export const QUIZ = {
         }
       ]
     },
-    {
+        {
       "uid": "q_x-qS5Nx0ux1",
       "title": "What feels more appealing right now?",
       "answerType": "image",
@@ -184,7 +149,7 @@ export const QUIZ = {
         }
       ]
     },
-    {
+        {
       "uid": "q_0ebDYbt5GT",
       "title": "On the emotional side, what sounds good?",
       "answerType": "text",
@@ -214,7 +179,7 @@ export const QUIZ = {
         }
       ]
     },
-    {
+        {
       "uid": "q_qQxmbqtPEk",
       "title": "Picture your partner really hitting it off with someone else — a great date, real chemistry, obvious happiness. Your honest gut reaction?",
       "answerType": "text",
@@ -247,7 +212,7 @@ export const QUIZ = {
         }
       ]
     },
-    {
+        {
       "uid": "q_xslyBTMmAn",
       "title": "If another person is involved, what role would they play?",
       "answerType": "text",
@@ -290,7 +255,7 @@ export const QUIZ = {
         }
       ]
     },
-    {
+        {
       "uid": "q_2SoZCLKDoU",
       "title": "If the idea of your partner being with someone else appeals to you — when you picture it, what's the turn on?",
       "answerType": "text",
@@ -320,7 +285,7 @@ export const QUIZ = {
         }
       ]
     },
-    {
+        {
       "uid": "q_mdmXGt_0ya",
       "title": "How does the idea of a life partner and the  standard relationship progression feel?",
       "answerType": "text",
@@ -364,7 +329,7 @@ export const QUIZ = {
         }
       }
     },
-    {
+        {
       "uid": "q_4ho6eLjlBJ",
       "title": "If you want more than one meaningful relationship, which version fits you best?",
       "answerType": "text",
@@ -399,7 +364,7 @@ export const QUIZ = {
         }
       ]
     },
-    {
+        {
       "uid": "q_iVBwBebqvd",
       "title": "How do you and your partner's desires line up?",
       "answerType": "text",
@@ -434,7 +399,7 @@ export const QUIZ = {
         }
       ]
     },
-    {
+        {
       "uid": "q_uwGiBZrBMA",
       "title": "When it comes to rules and agreements across your relationships, what feels right?",
       "answerType": "text",
@@ -464,7 +429,37 @@ export const QUIZ = {
         }
       ]
     },
-    {
+        {
+      "uid": "q_cFzI7jPfpK",
+      "title": "If this goes well, one year from now how do you want your non-monogamous life to feel?",
+      "answerType": "text",
+      "multi": false,
+      "min": 1,
+      "max": 1,
+      "options": [
+        {
+          "uid": "a_KSMAQLjejv",
+          "text": "Connected a chosen network of partners and close friends, valued equally and intentionally.",
+          "result": 9
+        },
+        {
+          "uid": "a_pjr6eLeSuH",
+          "text": "Grounded with my partner, occasionally lit up by something extra — not a second life, just the rare spark",
+          "result": 7
+        },
+        {
+          "uid": "a_dNOLhJ44Mx",
+          "text": "Genuinely present in more than one loving relationship, each one getting real time and depth.",
+          "result": 3
+        },
+        {
+          "uid": "a_JGGlfBAKQp",
+          "text": "Light and unattached to a plan — free to say yes when connections present, enjoying the ride with my partner. ",
+          "result": 2
+        }
+      ]
+    },
+        {
       "uid": "q_3--dWVspW8",
       "title": "What brought you to this? (Select all that apply)",
       "answerType": "text",
@@ -514,7 +509,7 @@ export const QUIZ = {
         }
       ]
     },
-    {
+        {
       "uid": "q_pvc3AyFooQ",
       "title": "Is there a gender or attraction dimension to what you're imagining?",
       "answerType": "text",
@@ -547,7 +542,7 @@ export const QUIZ = {
         }
       ]
     },
-    {
+        {
       "uid": "q_sEeiPqW-i1",
       "title": "What are you most afraid of? (Pick the ONE that lands hardest)",
       "answerType": "text",
@@ -609,7 +604,7 @@ export const QUIZ = {
         }
       ]
     },
-    {
+        {
       "uid": "q_0M06OLiMVj",
       "title": "What would make you feel safe enough to take the first step? (select all that apply)",
       "answerType": "text",
@@ -667,7 +662,7 @@ export const QUIZ = {
         }
       }
     },
-    {
+        {
       "uid": "q_blYnw2DTEd",
       "title": "Ideally, how often does \"outside\" realistically come into play?",
       "answerType": "text",
@@ -715,37 +710,42 @@ export const QUIZ = {
         }
       ]
     },
-    {
-      "uid": "q_cFzI7jPfpK",
-      "title": "If this goes well, one year from now how do you want your non-monogamous life to feel?",
+        {
+      "uid": "q_VGlPr-9oC0",
+      "title": "Where would you honestly place yourself right now?",
       "answerType": "text",
       "multi": false,
       "min": 1,
       "max": 1,
       "options": [
         {
-          "uid": "a_KSMAQLjejv",
-          "text": "Connected a chosen network of partners and close friends, valued equally and intentionally.",
-          "result": 9
+          "uid": "a_5xz5XfIi_b",
+          "text": "Purely curious, completely clueless.",
+          "result": 0
         },
         {
-          "uid": "a_pjr6eLeSuH",
-          "text": "Grounded with my partner, occasionally lit up by something extra — not a second life, just the rare spark",
-          "result": 7
+          "uid": "a_dH5TKeeI7E",
+          "text": "We agreed to explore, not sure where to start.",
+          "result": 0
         },
         {
-          "uid": "a_dNOLhJ44Mx",
-          "text": "Genuinely present in more than one loving relationship, each one getting real time and depth.",
-          "result": 3
+          "uid": "a_KX3-NqZgDJ",
+          "text": "One of us wants this, the other's happy staying monogamous and fully supports us doing it",
+          "result": 11
         },
         {
-          "uid": "a_JGGlfBAKQp",
-          "text": "Light and unattached to a plan — free to say yes when connections present, enjoying the ride with my partner. ",
-          "result": 2
+          "uid": "a_z_WpjPEGNF",
+          "text": "We tried something once, it went badly.",
+          "result": 1
+        },
+        {
+          "uid": "a_-SwFtuCszF",
+          "text": "Something else",
+          "result": 0
         }
       ]
     }
-  ],
+    ],
   "results": [
     {
       "uid": "r_z1_KbCVyDt",
