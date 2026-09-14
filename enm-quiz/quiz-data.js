@@ -106,56 +106,6 @@ export const QUIZ = {
       ]
     },
     {
-      "uid": "q_3--dWVspW8",
-      "title": "What brought you to this? (Select all that apply)",
-      "answerType": "text",
-      "multi": true,
-      "min": 1,
-      "max": 8,
-      "options": [
-        {
-          "uid": "a_XGd85lehYO",
-          "text": "A fantasy one of us has had for a long time.",
-          "result": 0
-        },
-        {
-          "uid": "a_A31D2_G1vM",
-          "text": "A conversation about desires we hadn't shared before.",
-          "result": 0
-        },
-        {
-          "uid": "a_hTt2uiu6Zs",
-          "text": "Feeling something is missing, even though we love each other.",
-          "result": 0
-        },
-        {
-          "uid": "a_ktScuXJV27",
-          "text": "Curiosity after seeing someone else doing this.",
-          "result": 0
-        },
-        {
-          "uid": "a_e37IBqRMy0",
-          "text": " We know other couples exploring this and it looks enjoyable.",
-          "result": 0
-        },
-        {
-          "uid": "a_G5TXqWDYB4",
-          "text": "Our sex life has gone quiet, this feels like a reawakening.",
-          "result": 0
-        },
-        {
-          "uid": "a_rl8wD9qXId",
-          "text": "We've had a few experiences and we want more!",
-          "result": 0
-        },
-        {
-          "uid": "a_w8PziL-g8e",
-          "text": "I don't know, I just know I'm interested.",
-          "result": 0
-        }
-      ]
-    },
-    {
       "uid": "q_AyVbXLY-9K",
       "title": "When you imagine \"opening up\", what's the first image that comes to mind?",
       "answerType": "text",
@@ -261,39 +211,6 @@ export const QUIZ = {
           "uid": "a_KM28GqjL43",
           "text": "Hmm... honestly not sure yet.",
           "result": 1
-        }
-      ]
-    },
-    {
-      "uid": "q_pvc3AyFooQ",
-      "title": "Is there a gender or attraction dimension to what you're imagining?",
-      "answerType": "text",
-      "multi": false,
-      "min": 1,
-      "max": 1,
-      "options": [
-        {
-          "uid": "a_a_1G491aCI",
-          "text": "We're both straight.",
-          "result": 0
-        },
-        {
-          "uid": "a_HMetgx9VSA",
-          "text": "One or both of us is bi/queer and that's part of it.",
-          "result": 0
-        },
-        {
-          "uid": "a_Tt-CGxJdj8",
-          "text": "One of us wants our partner with a particular gender while we watch or know about it. ",
-          "result": [
-            5,
-            6
-          ]
-        },
-        {
-          "uid": "a_LwPaMr7be6",
-          "text": "Gender isn't really a factor for us.",
-          "result": 0
         }
       ]
     },
@@ -483,90 +400,6 @@ export const QUIZ = {
       ]
     },
     {
-      "uid": "q_sEeiPqW-i1",
-      "title": "What are you most afraid of? (Pick the ONE that lands hardest)",
-      "answerType": "text",
-      "multi": true,
-      "min": 1,
-      "max": 5,
-      "options": [
-        {
-          "uid": "a_bET3KtXHAw",
-          "text": " Losing my partner.",
-          "result": [[1, 1], [7, 1]]
-        },
-        {
-          "uid": "a_F4nz4DNQte",
-          "text": "That I can't handle it emotionally.",
-          "result": [[1, 1], [7, 1]]
-        },
-        {
-          "uid": "a_NFLow7iY2U",
-          "text": "What other people will think of us.",
-          "result": 7
-        },
-        {
-          "uid": "a_aCQiWBLzp4",
-          "text": "Changing us permanently.",
-          "result": [[1, 1], [7, 1]]
-        },
-        {
-          "uid": "a_Sklr_WtoBf",
-          "text": "Losing my autonomy, I value my independence.",
-          "result": 10
-        }
-      ]
-    },
-    {
-      "uid": "q_0M06OLiMVj",
-      "title": "What would make you feel safe enough to take the first step? (select all that apply)",
-      "answerType": "text",
-      "multi": true,
-      "min": 1,
-      "max": 6,
-      "options": [
-        {
-          "uid": "a_r-AJV_og4K",
-          "text": "A clear, agreed set of boundaries with my partner as we explore romantic connections externally.",
-          "result": [[3, 1], [2, 1]]
-        },
-        {
-          "uid": "a_r7AtOHvr6c",
-          "text": "Knowing we can stop anytime.",
-          "result": 0
-        },
-        {
-          "uid": "a_8W42EBT770",
-          "text": "Starting so small it barely counts. Light flirtation, an occasional smooch...",
-          "result": 7
-        },
-        {
-          "uid": "a_2LQryhJ5HA",
-          "text": "Talking to someone who's doing this well.",
-          "result": 0
-        },
-        {
-          "uid": "a_LaxiHOColf",
-          "text": "Understanding the culture, dipping into communities and doing the research before taking the plunge.",
-          "result": 0
-        },
-        {
-          "uid": "a_vKLtSHwCU_",
-          "text": "Not over-planning it — we'd rather stay open to different kinds of connection and let our agreement evolve as we go, together.",
-          "result": 2
-        }
-      ],
-      "img": {
-        "src": "img/q14-7ce9f1.jpg",
-        "crop": {
-          "x": 0,
-          "y": 14.938862307283355,
-          "width": 100,
-          "height": 85.06113769271664
-        }
-      }
-    },
-    {
       "uid": "q_iVBwBebqvd",
       "title": "How do you and your partner's desires line up?",
       "answerType": "text",
@@ -632,63 +465,207 @@ export const QUIZ = {
       ]
     },
     {
-      "uid": "q_XM8ig2qfud",
-      "title": "Do you have children at home?",
+      "uid": "q_3--dWVspW8",
+      "title": "What brought you to this? (Select all that apply)",
       "answerType": "text",
-      "multi": false,
+      "multi": true,
       "min": 1,
-      "max": 1,
+      "max": 8,
       "options": [
         {
-          "uid": "a_F2NCng2NoK",
-          "text": "Yes, young children, logistics and discretion are essential.",
+          "uid": "a_XGd85lehYO",
+          "text": "A fantasy one of us has had for a long time.",
           "result": 0
         },
         {
-          "uid": "a_TxRRS824Sp",
-          "text": "Yes, older kids/teens,  we need to be thoughtful but have some flexibility around our privacy and free time. ",
+          "uid": "a_A31D2_G1vM",
+          "text": "A conversation about desires we hadn't shared before.",
           "result": 0
         },
         {
-          "uid": "a_3gSOKJwNAg",
-          "text": "No children at home.",
-          "result": 0
-        }
-      ],
-      "img": {
-        "src": "img/q17-b11950.jpg",
-        "crop": {
-          "x": -5.246178401880751e-14,
-          "y": 28.110783418650215,
-          "width": 100.00000000000004,
-          "height": 29.629629629629623
-        }
-      }
-    },
-    {
-      "uid": "q_W8nxtNVwoz",
-      "title": "What does your budget look like for this? ",
-      "answerType": "text",
-      "multi": false,
-      "min": 1,
-      "max": 1,
-      "options": [
-        {
-          "uid": "a_Xdb_OO8T_W",
-          "text": "Very limited, free options only, at least to start.",
+          "uid": "a_hTt2uiu6Zs",
+          "text": "Feeling something is missing, even though we love each other.",
           "result": 0
         },
         {
-          "uid": "a_54rdjUOcxB",
-          "text": "Could stretch a little - subscriptions to apps, some parties.",
+          "uid": "a_ktScuXJV27",
+          "text": "Curiosity after seeing someone else doing this.",
           "result": 0
         },
         {
-          "uid": "a_0PyVwCLVbg",
-          "text": "Comfortable spending on experiences, memberships, retreats, coaching, equipment, clothing, you name it! ",
+          "uid": "a_e37IBqRMy0",
+          "text": " We know other couples exploring this and it looks enjoyable.",
+          "result": 0
+        },
+        {
+          "uid": "a_G5TXqWDYB4",
+          "text": "Our sex life has gone quiet, this feels like a reawakening.",
+          "result": 0
+        },
+        {
+          "uid": "a_rl8wD9qXId",
+          "text": "We've had a few experiences and we want more!",
+          "result": 0
+        },
+        {
+          "uid": "a_w8PziL-g8e",
+          "text": "I don't know, I just know I'm interested.",
           "result": 0
         }
       ]
+    },
+    {
+      "uid": "q_pvc3AyFooQ",
+      "title": "Is there a gender or attraction dimension to what you're imagining?",
+      "answerType": "text",
+      "multi": false,
+      "min": 1,
+      "max": 1,
+      "options": [
+        {
+          "uid": "a_a_1G491aCI",
+          "text": "We're both straight.",
+          "result": 0
+        },
+        {
+          "uid": "a_HMetgx9VSA",
+          "text": "One or both of us is bi/queer and that's part of it.",
+          "result": 0
+        },
+        {
+          "uid": "a_Tt-CGxJdj8",
+          "text": "One of us wants our partner with a particular gender while we watch or know about it. ",
+          "result": [
+            5,
+            6
+          ]
+        },
+        {
+          "uid": "a_LwPaMr7be6",
+          "text": "Gender isn't really a factor for us.",
+          "result": 0
+        }
+      ]
+    },
+    {
+      "uid": "q_sEeiPqW-i1",
+      "title": "What are you most afraid of? (Pick the ONE that lands hardest)",
+      "answerType": "text",
+      "multi": true,
+      "min": 1,
+      "max": 5,
+      "options": [
+        {
+          "uid": "a_bET3KtXHAw",
+          "text": " Losing my partner.",
+          "result": [
+            [
+              1,
+              1
+            ],
+            [
+              7,
+              1
+            ]
+          ]
+        },
+        {
+          "uid": "a_F4nz4DNQte",
+          "text": "That I can't handle it emotionally.",
+          "result": [
+            [
+              1,
+              1
+            ],
+            [
+              7,
+              1
+            ]
+          ]
+        },
+        {
+          "uid": "a_NFLow7iY2U",
+          "text": "What other people will think of us.",
+          "result": 7
+        },
+        {
+          "uid": "a_aCQiWBLzp4",
+          "text": "Changing us permanently.",
+          "result": [
+            [
+              1,
+              1
+            ],
+            [
+              7,
+              1
+            ]
+          ]
+        },
+        {
+          "uid": "a_Sklr_WtoBf",
+          "text": "Losing my autonomy, I value my independence.",
+          "result": 10
+        }
+      ]
+    },
+    {
+      "uid": "q_0M06OLiMVj",
+      "title": "What would make you feel safe enough to take the first step? (select all that apply)",
+      "answerType": "text",
+      "multi": true,
+      "min": 1,
+      "max": 6,
+      "options": [
+        {
+          "uid": "a_r-AJV_og4K",
+          "text": "A clear, agreed set of boundaries with my partner as we explore romantic connections externally.",
+          "result": [
+            [
+              3,
+              1
+            ],
+            [
+              2,
+              1
+            ]
+          ]
+        },
+        {
+          "uid": "a_r7AtOHvr6c",
+          "text": "Knowing we can stop anytime.",
+          "result": 0
+        },
+        {
+          "uid": "a_8W42EBT770",
+          "text": "Starting so small it barely counts. Light flirtation, an occasional smooch...",
+          "result": 7
+        },
+        {
+          "uid": "a_2LQryhJ5HA",
+          "text": "Talking to someone who's doing this well.",
+          "result": 0
+        },
+        {
+          "uid": "a_LaxiHOColf",
+          "text": "Understanding the culture, dipping into communities and doing the research before taking the plunge.",
+          "result": 0
+        },
+        {
+          "uid": "a_vKLtSHwCU_",
+          "text": "Not over-planning it — we'd rather stay open to different kinds of connection and let our agreement evolve as we go, together.",
+          "result": 2
+        }
+      ],
+      "img": {
+        "src": "img/q14-7ce9f1.jpg",
+        "crop": {
+          "x": 0,
+          "y": 14.938862307283355,
+          "width": 100,
+          "height": 85.06113769271664
+        }
+      }
     },
     {
       "uid": "q_blYnw2DTEd",
@@ -706,7 +683,16 @@ export const QUIZ = {
         {
           "uid": "a_ouHVAQhCyn",
           "text": "A real, regular part of life — not an occasional thing.",
-          "result": [[3, 2], [2, 1]]
+          "result": [
+            [
+              3,
+              2
+            ],
+            [
+              2,
+              1
+            ]
+          ]
         },
         {
           "uid": "a_VKh3Pg9LaU",
@@ -716,7 +702,16 @@ export const QUIZ = {
         {
           "uid": "a_9mufBbl5zK",
           "text": "I want a regular lover/partner besides my home partner.",
-          "result": [[8, 2], [2, 1]]
+          "result": [
+            [
+              8,
+              2
+            ],
+            [
+              2,
+              1
+            ]
+          ]
         }
       ]
     },
@@ -972,5 +967,6 @@ export const QUIZ = {
         "blank": true
       }
     }
-  ]
+  ],
+  "coreQuestionsCount": 12
 };

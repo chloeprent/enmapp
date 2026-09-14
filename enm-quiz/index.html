@@ -411,6 +411,29 @@
     .summary-loading { font-size: .875rem; opacity: .6; padding: 10px 0; }
 
     /* ── Partner invite ── */
+    .tag-prompt {
+      margin-top: 2rem;
+      padding: 1.5rem 1.25rem;
+      background: rgba(252,106,119,.06);
+      border: 1px solid rgba(252,106,119,.2);
+      border-radius: 12px;
+      text-align: center;
+    }
+    .tag-prompt h3 { margin: 0 0 .5rem; font-size: 1.0625rem; font-weight: 600; }
+    .tag-prompt p { margin: 0 0 1.25rem; font-size: .875rem; opacity: .75; line-height: 1.55; }
+    .tag-prompt-btns { display: flex; flex-direction: column; gap: .625rem; align-items: center; }
+    .btn-ghost {
+      background: transparent;
+      border: none;
+      font-family: inherit;
+      font-size: .875rem;
+      opacity: .6;
+      cursor: pointer;
+      padding: .4rem .75rem;
+      text-decoration: underline;
+    }
+    .btn-ghost:hover { opacity: 1; }
+
     .partner-box {
       background: #fff; border-radius: var(--radius); padding: 16px; margin-top: 26px;
     }
@@ -616,6 +639,16 @@
       </div>
 
       <p class="save-note" id="saveNote"></p>
+
+      <div class="tag-prompt" id="tagPromptBanner" hidden>
+        <h3>Want more personalized guidance?</h3>
+        <p>Answer 6 quick questions and we'll tailor your aftercare emails to your specific situation — your fears, your pace, your vision.</p>
+        <div class="tag-prompt-btns">
+          <button class="btn" type="button" id="tagYesBtn">Yes, personalize my emails</button>
+          <button class="btn-ghost" type="button" id="tagNoBtn">No thanks, I'm done</button>
+        </div>
+      </div>
+      <p class="save-note" id="tagThanksNote" hidden>Thanks — we'll use your answers to personalize the guidance we send you.</p>
     </section>
 
     <!-- Shown only to admin/staff. Sits directly under the per-question notes
@@ -765,6 +798,7 @@
       finalTop: null,
       finalTotals: null,
       finalTotal: 0,
+      tagPhase: false,
     };
 
     /* Admin review notes. Populated after auth resolves, which can land after
@@ -803,8 +837,9 @@
     applyImage($('coverImg'), QUIZ.cover.src ? { src: QUIZ.cover.src } : null);
     $('coverImg').setAttribute('role', 'img');
     $('coverImg').setAttribute('aria-label', QUIZ.cover.alt || '');
-    $('coverMetaQ').textContent = QUIZ.questions.length;
-    $('coverChipTime').textContent = `~${Math.max(3, Math.ceil(QUIZ.questions.length / 5))} min`;
+    const coverQCount = QUIZ.coreQuestionsCount ?? QUIZ.questions.length;
+    $('coverMetaQ').textContent = coverQCount;
+    $('coverChipTime').textContent = `~${Math.max(3, Math.ceil(coverQCount / 5))} min`;
     $('startBtn').querySelector('.label').textContent = QUIZ.startButton.label.trim();
     $('startBtn').addEventListener('click', () => {
       state.startedAt = new Date();
@@ -865,9 +900,18 @@
 
       admin.refreshQuestion();
 
-      $('counter').textContent = `${state.current + 1} / ${QUIZ.questions.length}`;
-      $('backBtn').classList.toggle('show', state.current > 0);
-      $('progressFill').style.width = `${(state.current / QUIZ.questions.length) * 100}%`;
+      const coreCount = QUIZ.coreQuestionsCount ?? QUIZ.questions.length;
+      if (state.tagPhase) {
+        const tagIdx = state.current - coreCount + 1;
+        const tagTotal = QUIZ.questions.length - coreCount;
+        $('counter').textContent = `Bonus ${tagIdx} / ${tagTotal}`;
+        $('progressFill').style.width = '100%';
+        $('backBtn').classList.add('show');
+      } else {
+        $('counter').textContent = `${state.current + 1} / ${coreCount}`;
+        $('backBtn').classList.toggle('show', state.current > 0);
+        $('progressFill').style.width = `${(state.current / coreCount) * 100}%`;
+      }
     }
 
     function choose(idx) {
@@ -892,11 +936,14 @@
       /* Question state.current was just completed; re-answers dedupe downstream
          by counting distinct run_ids per question. */
       track('question_answered', {}, state.current + 1);
-      if (state.current < QUIZ.questions.length - 1) {
+      const coreCount = QUIZ.coreQuestionsCount ?? QUIZ.questions.length;
+      if (!state.tagPhase && state.current === coreCount - 1) {
+        finishCoreQuestions();
+      } else if (state.current < QUIZ.questions.length - 1) {
         state.current += 1;
         renderQuestion();
       } else {
-        finishQuestions();
+        finishTagQuestions();
       }
     }
 
@@ -906,6 +953,11 @@
     });
 
     $('backBtn').addEventListener('click', () => {
+      const coreCount = QUIZ.coreQuestionsCount ?? QUIZ.questions.length;
+      if (state.tagPhase && state.current === coreCount) {
+        show('screenResult');
+        return;
+      }
       if (state.current === 0) return;
       state.current -= 1;
       renderQuestion();
@@ -978,22 +1030,70 @@
       return { ranked, total, totals };
     }
 
-    /* The email gate now sits here, after the last question, so the result is
-       computed first and held until the address is in. */
-    function finishQuestions() {
+    /* After the last core (typing) question: compute the result, then show
+       the email gate. Tag questions come after the result if the user opts in. */
+    function finishCoreQuestions() {
       $('progressFill').style.width = '100%';
       $('quizFooter').hidden = true;
 
       const { ranked, total, totals } = score();
       const top = ranked.filter(r => r.points > 0).slice(0, QUIZ.multipleResultsMax);
-      /* Nothing scored (every answer was a neutral option) — "Still Exploring"
-         is the designed fallback for someone who hasn't landed anywhere yet. */
+      /* Nothing scored — "Still Exploring" is the designed fallback. */
       state.finalTop = top.length ? top : [{ result: QUIZ.results[0], points: 0 }];
       state.finalTotals = totals;
       state.finalTotal = total;
 
+      const coreCount = QUIZ.coreQuestionsCount ?? QUIZ.questions.length;
+      $('gateProgress').textContent =
+        `That's all ${coreCount} questions — one step away from your result.`;
+      $('gateSubmit').textContent = 'See my result';
+
       show('screenGate');
       track('gate');
+    }
+
+    /* After the last tag question: persist the tag answers, show a thanks note. */
+    function finishTagQuestions() {
+      $('quizFooter').hidden = true;
+      persistTagAnswers();
+      $('tagPromptBanner').hidden = true;
+      $('tagThanksNote').hidden = false;
+      show('screenResult');
+    }
+
+    /* Fire-and-forget: insert DB rows for the tag questions only. */
+    async function persistTagAnswers() {
+      if (!state.sessionId || !state.leadId) return;
+      const coreCount = QUIZ.coreQuestionsCount ?? QUIZ.questions.length;
+      const rows = [];
+      state.answers.forEach((selected, qi) => {
+        if (qi < coreCount || !selected.length) return;
+        const q = QUIZ.questions[qi];
+        const chosen = selected.map(i => q.options[i]);
+        const scored = chosen
+          .flatMap(o => {
+            const r = o.result;
+            if (Array.isArray(r)) return r.flatMap(t => Array.isArray(t) ? [t[0]] : [t]);
+            return [r];
+          })
+          .filter(n => typeof n === 'number' && n > 0)
+          .map(n => QUIZ.results.find(r => r.index === n)?.uid)
+          .filter(Boolean);
+        rows.push({
+          session_id: state.sessionId,
+          lead_id: state.leadId,
+          question_number: qi + 1,
+          question_uid: q.uid,
+          question_title: q.title,
+          option_uids: chosen.map(o => o.uid),
+          option_texts: chosen.map(o => o.text),
+          scored_results: scored,
+        });
+      });
+      if (!rows.length) return;
+      supabase.from('enm_quiz_answers').insert(rows)
+        .then(({ error }) => { if (error) console.error('[enm-quiz] tag answer save failed', error); })
+        .catch(e => console.error('[enm-quiz] tag answer save failed', e));
     }
 
     /* ── Email gate ────────────────────────────────────────────────────────── */
@@ -1076,8 +1176,12 @@
           const q = QUIZ.questions[qi];
           const chosen = selected.map(i => q.options[i]);
           const scored = chosen
-            .flatMap(o => (Array.isArray(o.result) ? o.result : [o.result]))
-            .filter(n => n > 0)
+            .flatMap(o => {
+              const r = o.result;
+              if (Array.isArray(r)) return r.flatMap(t => Array.isArray(t) ? [t[0]] : [t]);
+              return [r];
+            })
+            .filter(n => typeof n === 'number' && n > 0)
             .map(n => QUIZ.results.find(r => r.index === n)?.uid)
             .filter(Boolean);
           rows.push({
@@ -1148,9 +1252,29 @@
       /* Only offer the partner invite to someone who did not arrive from one. */
       $('partnerBox').hidden = !state.leadId || !!state.inviteToken;
 
+      /* Show the tag-questions prompt only when tag questions exist and the
+         user has not already completed or dismissed them. */
+      const coreCount = QUIZ.coreQuestionsCount ?? QUIZ.questions.length;
+      const hasTagQs = QUIZ.questions.length > coreCount;
+      $('tagPromptBanner').hidden = !hasTagQs || state.tagPhase;
+      $('tagThanksNote').hidden = true;
+
       show('screenResult');
       loadSummary();
     }
+
+    $('tagYesBtn').addEventListener('click', () => {
+      const coreCount = QUIZ.coreQuestionsCount ?? QUIZ.questions.length;
+      state.tagPhase = true;
+      state.current = coreCount;
+      $('quizFooter').hidden = false;
+      renderQuestion();
+      show('screenQuestion');
+    });
+
+    $('tagNoBtn').addEventListener('click', () => {
+      $('tagPromptBanner').hidden = true;
+    });
 
     function renderResult(result) {
       applyImage($('resultImg'), result.img);
