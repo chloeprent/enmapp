@@ -1,12 +1,12 @@
 {
-  "version": "v260913.11 3:00a",
-  "release": 11,
-  "sha": "1c48fc3",
-  "fullSha": "1c48fc356bf3d9eb76d0b6b40a4efd51254db6cd",
+  "version": "v260914.01 1:48p",
+  "release": 1,
+  "sha": "28521d9",
+  "fullSha": "28521d94912f04f1a86a7540b6440413858916c3",
   "actor": "chloeprent",
   "source": "cloudflare-pages-deploy",
   "model": "ci",
   "machine": "runnervmlun5p",
-  "pushedAt": "2026-09-12T21:59:53-05:00",
-  "commits": [{"sha":"1c48fc3","message":"quiz analytics: event funnel tracking + admin dashboard at in.swoon.coach/quiz","author":"Chloe Prentoulis"}]
+  "pushedAt": "2026-09-14T08:48:04-05:00",
+  "commits": [{"sha":"28521d9","message":"Gate in.swoon.coach's sign-in shell on the existing quiz-admin allowlist","author":"Chloe Prentoulis"}]
 }
