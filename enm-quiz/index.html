@@ -19,14 +19,14 @@
   <style>
     :root {
       --bg: #f4eee9;
-      --text: #2563eb;
+      --text: #000000;
       --btn: #fc6a77;
       --btn-hover: #e0606b;
       --btn-font: #ffffff;
       --progress: #e8505e;
       --option: rgb(244, 225, 226);
       --option-selected: #fc6a77;
-      --option-font: #2563eb;
+      --option-font: #000000;
       --radius: 8px;
     }
 
@@ -355,6 +355,7 @@
     .admin-bar .chev { margin-left: 4px; }
 
     .version-badge {
+      display: none;
       position: fixed; top: 8px; right: 12px; z-index: 30;
       font-size: .6875rem; letter-spacing: .04em; opacity: .45;
       font-variant-numeric: tabular-nums; pointer-events: none;
@@ -484,7 +485,8 @@
 <body>
   <!-- Stamped with the site-wide canonical version by scripts/bump-version.sh
        (CI, .github/workflows/bump-version-on-push.yml) on every push to main.
-       Keep the data-site-version attribute exactly as it is. -->v260914.01 1:48p
+       Keep the data-site-version attribute exactly as it is. Hidden per request
+       (2026-09-14) — element stays for the bump script, just not shown. -->
   <div class="version-badge" data-site-version>v260914.01 1:48p</div>
 
   <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
