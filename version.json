@@ -1,12 +1,12 @@
 {
-  "version": "v260914.04 4:21p",
-  "release": 4,
-  "sha": "a9204ff",
-  "fullSha": "a9204ff58d1d3c45b983151c3185dd47375540e7",
+  "version": "v260914.05 4:56p",
+  "release": 5,
+  "sha": "3e17e7f",
+  "fullSha": "3e17e7f6a35fd483d5683d7ebbd771875a974913",
   "actor": "chloeprent",
   "source": "cloudflare-pages-deploy",
   "model": "ci",
   "machine": "runnervmlun5p",
-  "pushedAt": "2026-09-14T11:21:38-05:00",
-  "commits": [{"sha":"a9204ff","message":"enm-quiz: bust quiz-data.js module cache with ?v=2","author":"Chloe Prentoulis"}]
+  "pushedAt": "2026-09-14T11:56:32-05:00",
+  "commits": [{"sha":"3e17e7f","message":"enm-quiz: fix core/tag split — Q2 → tag, Q17 → core","author":"Chloe Prentoulis"}]
 }
