@@ -244,6 +244,14 @@
     }
     .options.image-grid .option .label { padding: 12px 14px; }
     .options.image-grid .option .box { display: none; }
+    .freeform-input {
+      width: 100%; margin-top: 4px; padding: 12px 14px;
+      border: 1.5px solid var(--option-selected, #fc6a77);
+      border-radius: 10px; font-family: inherit; font-size: .9375rem;
+      background: #fff8f8; color: #3c3c3c; resize: vertical;
+      outline: none; transition: border-color .15s;
+    }
+    .freeform-input:focus { border-color: #e0606b; }
 
     .question-img {
       width: 100%; aspect-ratio: 16 / 9;
@@ -753,7 +761,7 @@
 
   <script src="./vendor/supabase-js-2.39.3.min.js"></script>
   <script type="module">
-    import { QUIZ } from './quiz-data.js?v=2';
+    import { QUIZ } from './quiz-data.js?v=3';
     import { supabase, waitForAuthReady } from './supabase-client.js';
 
     const $ = id => document.getElementById(id);
@@ -794,6 +802,7 @@
       startedAt: null,
       inviteToken: new URLSearchParams(location.search).get('invite'),
       answers: QUIZ.questions.map(() => []),
+      freeformAnswers: {},
       current: 0,
       finalTop: null,
       finalTotals: null,
@@ -890,8 +899,22 @@
         wrap.appendChild(btn);
       });
 
+      /* Freeform text box — shown when the selected single-select option has freeform:true */
+      const selIdx = selected[0];
+      const hasFreeform = !q.multi && selIdx !== undefined && q.options[selIdx] && q.options[selIdx].freeform;
+      if (hasFreeform) {
+        const ta = document.createElement('textarea');
+        ta.className = 'freeform-input';
+        ta.placeholder = 'Tell us more (optional)…';
+        ta.value = state.freeformAnswers[state.current] || '';
+        ta.rows = 3;
+        ta.addEventListener('input', () => { state.freeformAnswers[state.current] = ta.value; });
+        wrap.appendChild(ta);
+      }
+
       const multi = q.multi;
-      $('multiRow').hidden = !multi;
+      /* Show next button for multi-select OR when a freeform option is selected */
+      $('multiRow').hidden = !multi && !hasFreeform;
       $('multiHint').hidden = !multi;
       if (multi) {
         $('multiHint').textContent = `Select at least ${q.min}${q.max > q.min ? `, up to ${q.max}` : ''}.`;
@@ -921,8 +944,8 @@
       if (!q.multi) {
         state.answers[state.current] = [idx];
         renderQuestion();
-        /* Single-select auto-advances, as in the source quiz. */
-        setTimeout(advance, 260);
+        /* Single-select auto-advances unless the chosen option wants a freeform note. */
+        if (!q.options[idx].freeform) setTimeout(advance, 260);
         return;
       }
 
@@ -935,7 +958,8 @@
     function advance() {
       /* Question state.current was just completed; re-answers dedupe downstream
          by counting distinct run_ids per question. */
-      track('question_answered', {}, state.current + 1);
+      const freeformText = state.freeformAnswers[state.current] || null;
+      track('question_answered', freeformText ? { freeform: freeformText } : {}, state.current + 1);
       const coreCount = QUIZ.coreQuestionsCount ?? QUIZ.questions.length;
       if (!state.tagPhase && state.current === coreCount - 1) {
         finishCoreQuestions();

@@ -1,6 +1,7 @@
 // Auto-generated quiz content for the ENM Style quiz.
 // Ported from the Interact quiz 6a524e8898c01b449e42a71f.
 // `result` on each option is a 1-based index into `results`; 0 means the option scores nothing.
+// Weighted tuples: [[styleIndex, pts], ...] give each style a specific point value.
 
 export const QUIZ = {
   "title": "Discover your ENM Style",
@@ -40,7 +41,7 @@ export const QUIZ = {
   "topResultsTitle": "Your Top Results",
   "graphBarColor": "#fc6a77",
   "questions": [
-        {
+    {
       "uid": "q_Q6w-rn1aV",
       "title": "Are you exploring this as a couple, or as an individual?",
       "answerType": "text",
@@ -51,26 +52,26 @@ export const QUIZ = {
         {
           "uid": "a_J92oPa_RWZ",
           "text": "Couple. We're both curious.",
-          "result": 2
+          "result": 0
         },
         {
           "uid": "a_LuwC7NUAuw",
           "text": "Couple. One of us brought it up, the other is uncertain.",
-          "result": 11
+          "result": [[11, 2], [1, 1]]
         },
         {
           "uid": "a_SbWy9FKD6y",
           "text": "I'm in a relationship but my partner doesn't know or said no.",
-          "result": 1
+          "result": [[1, 3]]
         },
         {
           "uid": "a_twSGUH9YXk",
           "text": "I'm single, and I want to understand ENM before dating.",
-          "result": 0
+          "result": [[1, 1]]
         }
       ]
     },
-        {
+    {
       "uid": "q_AyVbXLY-9K",
       "title": "When you imagine \"opening up\", what's the first image that comes to mind?",
       "answerType": "text",
@@ -81,75 +82,71 @@ export const QUIZ = {
         {
           "uid": "a_K8tOQNmn6qY",
           "text": "Us at a sexy social event or party, meeting other couples.",
-          "result": 4
+          "result": [[4, 3]]
         },
         {
           "uid": "a_O8PRmIvgUzW",
           "text": "One or both of us dating separately, on the side.",
-          "result": 2
+          "result": [[2, 1]]
         },
         {
           "uid": "a_G7ogxQ0eKJy",
           "text": "One of us watching while the other is with someone else.",
-          "result": 5
+          "result": [[5, 3], [6, 1]]
         },
         {
           "uid": "a_DeZhQbSzkO5",
           "text": "Us and a specific third, or couple, we're both drawn to.",
-          "result": 4
+          "result": [[4, 2]]
         },
         {
           "uid": "a_C64_3Bxn7e",
           "text": "Being able to have casual sex separately, mainly for fun and pleasure.",
-          "result": 2
+          "result": [[2, 2]]
         },
         {
           "uid": "a_kfBL1lNJp7",
           "text": "A deeper connection with someone that becomes romantic.",
-          "result": 3
+          "result": [[3, 3]]
         },
         {
           "uid": "a_l4Xm2dqpic",
           "text": "Not sure, I just know something interests me",
-          "result": 1
+          "result": [[1, 1]]
         }
       ]
     },
-        {
-      "uid": "q_x-qS5Nx0ux1",
-      "title": "What feels more appealing right now?",
-      "answerType": "image",
+    {
+      "uid": "q_blYnw2DTEd",
+      "title": "Ideally, how often does \"outside\" realistically come into play?",
+      "answerType": "text",
       "multi": false,
       "min": 1,
       "max": 1,
       "options": [
         {
-          "uid": "a_Q8dTrTxp6aS",
-          "text": "Experiences we have together as a couple, with others.",
-          "result": 4,
-          "img": {
-            "src": "img/q5o1-1b3e66.webp"
-          }
+          "uid": "a_503dROP3FJ",
+          "text": "Once or twice a year, when those rare opportunities spark.",
+          "result": [[7, 3]]
         },
         {
-          "uid": "a_EOy-9hsD4cx",
-          "text": "Experiences we each have separately.",
-          "result": 3,
-          "img": {
-            "src": "img/q5o2-4d3e02.webp"
-          }
+          "uid": "a_ouHVAQhCyn",
+          "text": "A real, regular part of life — not an occasional thing.",
+          "result": [[3, 2], [2, 1]]
         },
         {
-          "uid": "a_HMx37_mP4Y6",
-          "text": "A mix, sometimes together, sometimes apart.",
-          "result": 2,
-          "img": {
-            "src": "img/q5o3-9ac145.webp"
-          }
+          "uid": "a_VKh3Pg9LaU",
+          "text": "As often as we can find a frisky party!",
+          "result": [[4, 3]]
+        },
+        {
+          "uid": "a_9mufBbl5zK",
+          "text": "I want a regular lover/partner besides my home partner.",
+          "result": [[8, 2], [2, 1]]
         }
       ]
     },
-        {
+    {
       "uid": "q_0ebDYbt5GT",
       "title": "On the emotional side, what sounds good?",
       "answerType": "text",
@@ -160,26 +157,26 @@ export const QUIZ = {
         {
           "uid": "a_1kXbEX00PU",
           "text": "Only physical fun, I don't really want emotional connections.",
-          "result": 4
+          "result": [[4, 3]]
         },
         {
           "uid": "a_wBWlBZQWj2",
           "text": "It's okay if feelings form naturally, but that's not the point.",
-          "result": 2
+          "result": [[2, 2]]
         },
         {
           "uid": "a_Uje-uysCtt",
           "text": "I want deeper connections like relationships, not just sex.",
-          "result": 3
+          "result": [[3, 3]]
         },
         {
           "uid": "a_KM28GqjL43",
           "text": "Hmm... honestly not sure yet.",
-          "result": 1
+          "result": [[1, 1]]
         }
       ]
     },
-        {
+    {
       "uid": "q_qQxmbqtPEk",
       "title": "Picture your partner really hitting it off with someone else — a great date, real chemistry, obvious happiness. Your honest gut reaction?",
       "answerType": "text",
@@ -190,29 +187,26 @@ export const QUIZ = {
         {
           "uid": "a_za3EkPYpae",
           "text": "Happy for them — their joy feels good to me, not a threat.",
-          "result": 3
+          "result": [[3, 3]]
         },
         {
           "uid": "a_TIeJp-ILGP",
           "text": "Okay — a wobble at first, but I'd manage and talk it through.",
-          "result": 2
+          "result": [[2, 2]]
         },
         {
           "uid": "a_gPkIGo9Q56",
           "text": "I'd struggle, but I'd want to work through it.",
-          "result": 3
+          "result": [[3, 1]]
         },
         {
           "uid": "a_dYtznbQMMc",
           "text": "That's the part that scares me most.",
-          "result": [
-            1,
-            4
-          ]
+          "result": [[1, 2], [4, 2]]
         }
       ]
     },
-        {
+    {
       "uid": "q_xslyBTMmAn",
       "title": "If another person is involved, what role would they play?",
       "answerType": "text",
@@ -223,39 +217,37 @@ export const QUIZ = {
         {
           "uid": "a_dOxUNj7qY8",
           "text": "Joining us both, we'd date as a couple, together.",
-          "result": 4
+          "result": [[4, 3], [2, 1]]
         },
         {
           "uid": "a_TEVkeqlF_3",
           "text": "With can date separately, with our partner knowing. It's mostly casual.",
-          "result": 2
+          "result": [[2, 2]]
         },
         {
           "uid": "a_7BSViSPFYW",
           "text": "With my partner while I watch, arrange, or know.",
-          "result": [
-            5,
-            6
-          ]
+          "result": [[5, 2], [6, 2]]
         },
         {
           "uid": "a_Z9DaWsRN-v",
           "text": "I'm the only one dating, and my partner supports this.",
-          "result": 11
+          "result": [[11, 3]]
         },
         {
           "uid": "a_heACTY6Tfa",
           "text": "We'd both explore independently and share openly, feelings allowed.",
-          "result": 3
+          "result": [[3, 2], [9, 1]]
         },
         {
           "uid": "a_wO8eJnHq3u",
           "text": "No specific scenario yet, still figuring it out",
-          "result": 1
+          "result": [[1, 1]],
+          "freeform": true
         }
       ]
     },
-        {
+    {
       "uid": "q_2SoZCLKDoU",
       "title": "If the idea of your partner being with someone else appeals to you — when you picture it, what's the turn on?",
       "answerType": "text",
@@ -266,12 +258,12 @@ export const QUIZ = {
         {
           "uid": "a_o22r_N2a7M",
           "text": "Pride — I love seeing how wanted they are.",
-          "result": 5
+          "result": [[5, 3]]
         },
         {
           "uid": "a_aVgAaJQYDq",
           "text": "Submission & the \"I'm not enough for you\" feeling - that's the turn-on.",
-          "result": 6
+          "result": [[6, 3]]
         },
         {
           "uid": "a_-zJJTRw2Vb",
@@ -281,11 +273,11 @@ export const QUIZ = {
         {
           "uid": "a_2PnJnujh4v",
           "text": "Not sure.",
-          "result": 1
+          "result": 0
         }
       ]
     },
-        {
+    {
       "uid": "q_mdmXGt_0ya",
       "title": "How does the idea of a life partner and the  standard relationship progression feel?",
       "answerType": "text",
@@ -296,27 +288,28 @@ export const QUIZ = {
         {
           "uid": "a_jVmilAoPsJ",
           "text": "Confining, honestly, a risk to my independence. But I do want connection. ",
-          "result": 10
+          "result": [[10, 3]]
         },
         {
           "uid": "a_rN1RP6oA_Z",
           "text": "Like a cultural script Ive always secretly questioned. Why just accept the rules? I'd rather make my own with people individually.",
-          "result": 9
+          "result": [[9, 3]]
         },
         {
           "uid": "a_ow6xWLiPWM",
           "text": "A life partner, home base, plans, a future together - that all feels great to me. I hope we can both make room for more love and connection, too. ",
-          "result": 8
+          "result": [[8, 3], [3, 1]]
         },
         {
           "uid": "a_ziDpvaqkNO",
           "text": "A life partner and stable home base feels great, and I hope we can add some uncomplicated sex and novelty into it!",
-          "result": 4
+          "result": [[4, 3]]
         },
         {
           "uid": "a_iPpoAKpzRz",
           "text": "Something else",
-          "result": 0
+          "result": 0,
+          "freeform": true
         }
       ],
       "img": {
@@ -329,7 +322,7 @@ export const QUIZ = {
         }
       }
     },
-        {
+    {
       "uid": "q_4ho6eLjlBJ",
       "title": "If you want more than one meaningful relationship, which version fits you best?",
       "answerType": "text",
@@ -340,22 +333,22 @@ export const QUIZ = {
         {
           "uid": "a_796OIi4A4B",
           "text": "One person is my anchor — a primary partner I build my life with — and the others matter, but they orbit that center.",
-          "result": 8
+          "result": [[8, 3]]
         },
         {
           "uid": "a_4VxbUdzXqy",
           "text": "I keep my independence. No merging into a couple-unit, no \"primary\" outranking the rest — I'm my own home base.",
-          "result": 10
+          "result": [[10, 3]]
         },
         {
           "uid": "a_8q4598qFgy",
           "text": "I refuse to rank them at all — a deep friendship can weigh as much as a romance, and every bond writes its own rules.",
-          "result": 9
+          "result": [[9, 3]]
         },
         {
           "uid": "a_v6swtl7P4F",
           "text": "I'm open to more than one significant relationship, without a \"main\" one automatically dominating.",
-          "result": 3
+          "result": [[3, 2]]
         },
         {
           "uid": "a_rHUpj3LqNJ",
@@ -364,7 +357,7 @@ export const QUIZ = {
         }
       ]
     },
-        {
+    {
       "uid": "q_iVBwBebqvd",
       "title": "How do you and your partner's desires line up?",
       "answerType": "text",
@@ -375,31 +368,31 @@ export const QUIZ = {
         {
           "uid": "a_D_ZgM9vSTV",
           "text": "We both want to explore and are excited but feel a little clueless!",
-          "result": 2
+          "result": 0
         },
         {
           "uid": "a_MrK78snAWY",
           "text": "One of us wants other partners; the other is genuinely happy staying monogamous (but fully supports their partner exploring).",
-          "result": 11
+          "result": [[11, 3]]
         },
         {
           "uid": "a_M36vyMIf-K",
           "text": "One of us wants this and the other is going along with it a little reluctantly, but willing to try.",
-          "result": 1
+          "result": [[1, 3]]
         },
         {
           "uid": "a_SWcHtW_f5r",
           "text": "We're craving more intentional connections, new relationship energy, emotional depth, all of it.",
-          "result": 3
+          "result": [[3, 3]]
         },
         {
           "uid": "a_250X-I9Nq_",
           "text": "We want to basically be monogamous with occasional fun and thrilling experiences",
-          "result": 7
+          "result": [[7, 3]]
         }
       ]
     },
-        {
+    {
       "uid": "q_uwGiBZrBMA",
       "title": "When it comes to rules and agreements across your relationships, what feels right?",
       "answerType": "text",
@@ -410,26 +403,26 @@ export const QUIZ = {
         {
           "uid": "a__U_gy0a68P",
           "text": "Detailed, explicit agreements — we talk things through regularly and keep clear structure so we know where everyone stands.",
-          "result": 8
+          "result": [[8, 3]]
         },
         {
           "uid": "a_r_dBrSKPbC",
           "text": "A separate understanding built fresh with each connection — no one template. Every relationship is unique.",
-          "result": 9
+          "result": [[9, 3]]
         },
         {
           "uid": "a_qQoi7F046C",
           "text": "Loose and evolving — we stay flexible and figure out our own flavor as we go, together.",
-          "result": 2
+          "result": [[2, 2]]
         },
         {
           "uid": "a_h8XQIi_GFs",
           "text": "Simple, clear guardrails and contained fun — not something we need to keep processing. ",
-          "result": 4
+          "result": [[4, 3]]
         }
       ]
     },
-        {
+    {
       "uid": "q_cFzI7jPfpK",
       "title": "If this goes well, one year from now how do you want your non-monogamous life to feel?",
       "answerType": "text",
@@ -440,26 +433,26 @@ export const QUIZ = {
         {
           "uid": "a_KSMAQLjejv",
           "text": "Connected a chosen network of partners and close friends, valued equally and intentionally.",
-          "result": 9
+          "result": [[9, 2], [3, 1]]
         },
         {
           "uid": "a_pjr6eLeSuH",
           "text": "Grounded with my partner, occasionally lit up by something extra — not a second life, just the rare spark",
-          "result": 7
+          "result": [[7, 3]]
         },
         {
           "uid": "a_dNOLhJ44Mx",
           "text": "Genuinely present in more than one loving relationship, each one getting real time and depth.",
-          "result": 3
+          "result": [[3, 3]]
         },
         {
           "uid": "a_JGGlfBAKQp",
           "text": "Light and unattached to a plan — free to say yes when connections present, enjoying the ride with my partner. ",
-          "result": 2
+          "result": [[2, 2]]
         }
       ]
     },
-        {
+    {
       "uid": "q_3--dWVspW8",
       "title": "What brought you to this? (Select all that apply)",
       "answerType": "text",
@@ -489,7 +482,7 @@ export const QUIZ = {
         },
         {
           "uid": "a_e37IBqRMy0",
-          "text": " We know other couples exploring this and it looks enjoyable.",
+          "text": " We know other couples exploring this and it looks enjoyable.",
           "result": 0
         },
         {
@@ -509,7 +502,7 @@ export const QUIZ = {
         }
       ]
     },
-        {
+    {
       "uid": "q_pvc3AyFooQ",
       "title": "Is there a gender or attraction dimension to what you're imagining?",
       "answerType": "text",
@@ -542,7 +535,7 @@ export const QUIZ = {
         }
       ]
     },
-        {
+    {
       "uid": "q_sEeiPqW-i1",
       "title": "What are you most afraid of? (Pick the ONE that lands hardest)",
       "answerType": "text",
@@ -552,7 +545,7 @@ export const QUIZ = {
       "options": [
         {
           "uid": "a_bET3KtXHAw",
-          "text": " Losing my partner.",
+          "text": " Losing my partner.",
           "result": [
             [
               1,
@@ -604,7 +597,7 @@ export const QUIZ = {
         }
       ]
     },
-        {
+    {
       "uid": "q_0M06OLiMVj",
       "title": "What would make you feel safe enough to take the first step? (select all that apply)",
       "answerType": "text",
@@ -662,55 +655,7 @@ export const QUIZ = {
         }
       }
     },
-        {
-      "uid": "q_blYnw2DTEd",
-      "title": "Ideally, how often does \"outside\" realistically come into play?",
-      "answerType": "text",
-      "multi": false,
-      "min": 1,
-      "max": 1,
-      "options": [
-        {
-          "uid": "a_503dROP3FJ",
-          "text": "Once or twice a year, when those rare opportunities spark.",
-          "result": 7
-        },
-        {
-          "uid": "a_ouHVAQhCyn",
-          "text": "A real, regular part of life — not an occasional thing.",
-          "result": [
-            [
-              3,
-              2
-            ],
-            [
-              2,
-              1
-            ]
-          ]
-        },
-        {
-          "uid": "a_VKh3Pg9LaU",
-          "text": "As often as we can find a frisky party!",
-          "result": 4
-        },
-        {
-          "uid": "a_9mufBbl5zK",
-          "text": "I want a regular lover/partner besides my home partner.",
-          "result": [
-            [
-              8,
-              2
-            ],
-            [
-              2,
-              1
-            ]
-          ]
-        }
-      ]
-    },
-        {
+    {
       "uid": "q_VGlPr-9oC0",
       "title": "Where would you honestly place yourself right now?",
       "answerType": "text",
@@ -741,7 +686,8 @@ export const QUIZ = {
         {
           "uid": "a_-SwFtuCszF",
           "text": "Something else",
-          "result": 0
+          "result": 0,
+          "freeform": true
         }
       ]
     }
@@ -750,8 +696,8 @@ export const QUIZ = {
     {
       "uid": "r_z1_KbCVyDt",
       "index": 1,
-      "title": "Still Exploring (and there’s no pressure to know more just yet)",
-      "description": "<h2 style=\"text-align:center\"><em>You're not  quite sure what you want, individually or as a couple. You're being thoughtful.</em></h2><hr /><h2 style=\"text-align:center\"><strong>You're here because:</strong></h2><p data-rep=\"true\" style=\"text-align:justify\">Your answers say you're genuinely still figuring this out maybe you're not fully aligned with your partner yet, maybe it's early, maybe you're just gathering courage. If the pathway isn’t clear, start here. </p><p data-rep=\"true\" style=\"text-align:justify\">There's no rush and no wrong answer. The people who learn <em>before</em> they leap are the ones who do this well. Let's get you grounded first with understanding and no pressure The clarity will come.</p><hr /><h2 style=\"text-align:left\"><strong>Your customized Get Started pathway</strong></h2><p data-rep=\"true\" style=\"text-align:left\">is the gentlest on-ramp:</p><ul style=\"text-align:center\"><li><p data-rep=\"true\" style=\"text-align:left\">discover your preferences - and move there intentionally</p></li><li><p data-rep=\"true\" style=\"text-align:left\">the communities to explore, for friendship and learning</p></li><li><p data-rep=\"true\" style=\"text-align:left\">the one conversation that comes before all the others so you can move forward only when <em>you're</em> ready.</p></li></ul><p data-rep=\"true\" style=\"text-align:left\"><em>Inside the guide.</em></p>",
+      "title": "Still Exploring (and there's no pressure to know more just yet)",
+      "description": "<h2 style=\"text-align:center\"><em>You're not  quite sure what you want, individually or as a couple. You're being thoughtful.</em></h2><hr /><h2 style=\"text-align:center\"><strong>You're here because:</strong></h2><p data-rep=\"true\" style=\"text-align:justify\">Your answers say you're genuinely still figuring this out maybe you're not fully aligned with your partner yet, maybe it's early, maybe you're just gathering courage. If the pathway isn't clear, start here. </p><p data-rep=\"true\" style=\"text-align:justify\">There's no rush and no wrong answer. The people who learn <em>before</em> they leap are the ones who do this well. Let's get you grounded first with understanding and no pressure The clarity will come.</p><hr /><h2 style=\"text-align:left\"><strong>Your customized Get Started pathway</strong></h2><p data-rep=\"true\" style=\"text-align:left\">is the gentlest on-ramp:</p><ul style=\"text-align:center\"><li><p data-rep=\"true\" style=\"text-align:left\">discover your preferences - and move there intentionally</p></li><li><p data-rep=\"true\" style=\"text-align:left\">the communities to explore, for friendship and learning</p></li><li><p data-rep=\"true\" style=\"text-align:left\">the one conversation that comes before all the others so you can move forward only when <em>you're</em> ready.</p></li></ul><p data-rep=\"true\" style=\"text-align:left\"><em>Inside the guide.</em></p>",
       "img": {
         "src": "img/r1-117ec4.jpg",
         "crop": {
@@ -891,7 +837,7 @@ export const QUIZ = {
       "uid": "r_IlnWBruy-C",
       "index": 8,
       "title": "Hierarchical Polyamory",
-      "description": "<h2 style=\"text-align:center\"><strong><em>More than</em></strong><em> one love  with a</em><strong><em> clear</em></strong><em> anchor.</em></h2><hr /><h2 style=\"text-align:center\"><strong>This is you if:</strong> </h2><h3 style=\"text-align:left\">You want multiple loving relationships, <em>but</em> you want one primary/anchor partnership to stay at the center: the home, the big decisions, the long-term plans stay with your main person. </h3><h3 style=\"text-align:left\">But maybe there’s another love in mind, or just the desire for more deep connection, and you know your heart can hold it.</h3><p data-rep=\"true\" style=\"text-align:justify\">You want the richness of poly with the security of a clear structure. Other relationships are genuine and cherished, but the hierarchy is named and agreed. </p><hr /><h2 style=\"text-align:left\"><strong>Your customized Get Started pathway:</strong> </h2><p data-rep=\"true\" style=\"text-align:justify\">Shows you how to protect your anchor while you explore: </p><ul style=\"text-align:center\"><li><p data-rep=\"true\" style=\"text-align:justify\">the right apps for deep connection and community, </p></li><li><p data-rep=\"true\" style=\"text-align:justify\">how to introduce the hierarchy honestly (so no one gets hurt), and </p></li><li><p data-rep=\"true\" style=\"text-align:justify\">the safeguards that help keep your primary bond rock-solid. </p></li></ul><p data-rep=\"true\" style=\"text-align:justify\"><em>Inside the guide.</em></p>",
+      "description": "<h2 style=\"text-align:center\"><strong><em>More than</em></strong><em> one love  with a</em><strong><em> clear</em></strong><em> anchor.</em></h2><hr /><h2 style=\"text-align:center\"><strong>This is you if:</strong> </h2><h3 style=\"text-align:left\">You want multiple loving relationships, <em>but</em> you want one primary/anchor partnership to stay at the center: the home, the big decisions, the long-term plans stay with your main person. </h3><h3 style=\"text-align:left\">But maybe there's another love in mind, or just the desire for more deep connection, and you know your heart can hold it.</h3><p data-rep=\"true\" style=\"text-align:justify\">You want the richness of poly with the security of a clear structure. Other relationships are genuine and cherished, but the hierarchy is named and agreed. </p><hr /><h2 style=\"text-align:left\"><strong>Your customized Get Started pathway:</strong> </h2><p data-rep=\"true\" style=\"text-align:justify\">Shows you how to protect your anchor while you explore: </p><ul style=\"text-align:center\"><li><p data-rep=\"true\" style=\"text-align:justify\">the right apps for deep connection and community, </p></li><li><p data-rep=\"true\" style=\"text-align:justify\">how to introduce the hierarchy honestly (so no one gets hurt), and </p></li><li><p data-rep=\"true\" style=\"text-align:justify\">the safeguards that help keep your primary bond rock-solid. </p></li></ul><p data-rep=\"true\" style=\"text-align:justify\"><em>Inside the guide.</em></p>",
       "img": {
         "src": "img/r8-f018b0.jpg",
         "crop": {
@@ -931,7 +877,7 @@ export const QUIZ = {
       "uid": "r_aPwM1WGTMl",
       "index": 10,
       "title": "Solo Polyamory",
-      "description": "<h2 style=\"text-align:center\"> <em>Multiple loves and </em><strong><em>my own life as the anchor.</em></strong></h2><hr /><h2 style=\"text-align:center\"><strong>This is you if:</strong></h2><p data-rep=\"true\" style=\"text-align:justify\">You want several meaningful relationships but you <em>don't</em> need or necessarily want a <strong>\"primary,\"</strong> don't want to merge households or finances, and treat your own autonomy as the center of your world.</p><p data-rep=\"true\" style=\"text-align:justify\">You love <strong>freely and fully</strong>, but you're the anchor of your own life, there’s <strong>no </strong>automatic progression, <strong>no </strong>merging by default.</p><p data-rep=\"true\" style=\"text-align:justify\"><strong>Independence</strong> isn't a phase for you; <strong>it's the point.</strong> You get all the connection without giving up your autonomy.</p><hr /><h2 style=\"text-align:left\"><strong>Your customized Get Started pathway</strong></h2><p data-rep=\"true\" style=\"text-align:justify\">is built for the independent heart:</p><ul style=\"text-align:center\"><li><p data-rep=\"true\" style=\"text-align:justify\">the apps that fit solo poly,</p></li><li><p data-rep=\"true\" style=\"text-align:justify\">the communities that respect autonomy, and</p></li><li><p data-rep=\"true\" style=\"text-align:justify\">how to date richly while keeping your freedom intact.</p></li></ul><p data-rep=\"true\" style=\"text-align:justify\">Inside the guide.</p>",
+      "description": "<h2 style=\"text-align:center\"> <em>Multiple loves and </em><strong><em>my own life as the anchor.</em></strong></h2><hr /><h2 style=\"text-align:center\"><strong>This is you if:</strong></h2><p data-rep=\"true\" style=\"text-align:justify\">You want several meaningful relationships but you <em>don't</em> need or necessarily want a <strong>\"primary,\"</strong> don't want to merge households or finances, and treat your own autonomy as the center of your world.</p><p data-rep=\"true\" style=\"text-align:justify\">You love <strong>freely and fully</strong>, but you're the anchor of your own life, there's <strong>no </strong>automatic progression, <strong>no </strong>merging by default.</p><p data-rep=\"true\" style=\"text-align:justify\"><strong>Independence</strong> isn't a phase for you; <strong>it's the point.</strong> You get all the connection without giving up your autonomy.</p><hr /><h2 style=\"text-align:left\"><strong>Your customized Get Started pathway</strong></h2><p data-rep=\"true\" style=\"text-align:justify\">is built for the independent heart:</p><ul style=\"text-align:center\"><li><p data-rep=\"true\" style=\"text-align:justify\">the apps that fit solo poly,</p></li><li><p data-rep=\"true\" style=\"text-align:justify\">the communities that respect autonomy, and</p></li><li><p data-rep=\"true\" style=\"text-align:justify\">how to date richly while keeping your freedom intact.</p></li></ul><p data-rep=\"true\" style=\"text-align:justify\">Inside the guide.</p>",
       "img": {
         "src": "img/r10-576d71.jpg",
         "crop": {
@@ -951,7 +897,7 @@ export const QUIZ = {
       "uid": "r_wo9ZhTvshw",
       "index": 11,
       "title": "Mono/Poly",
-      "description": "<h2 style=\"text-align:center\"><em>One of you wants</em><strong><em> more</em></strong><em>. One of you is </em><strong><em>happy to support. </em></strong><em>And that works.</em></h2><hr /><h2 style=\"text-align:center\"><strong>You're a match if:</strong> </h2><p data-rep=\"true\" style=\"text-align:left\">One partner wants other relationships or exploration and the other is <strong>genuinely happy staying monogamous</strong> not resentful, not tolerating it, but truly supportive of their <strong>partner exploring.</strong></p><p data-rep=\"true\" style=\"text-align:left\">This is one of the <strong>most misunderstood</strong>  and most quietly successful, dynamics in ENM. It only works on a foundation of <strong>genuine generosity and rock-solid communication, </strong>where one person's freedom and the other's contentment aren't in conflict. </p><p data-rep=\"true\" style=\"text-align:left\">This is often the solution when libidos are mismatched but companionship and the bond are still tight.  When it's real, it's beautiful.</p><hr /><h2 style=\"text-align:left\"><strong>Your customized Get Started pathway</strong> </h2><p data-rep=\"true\" style=\"text-align:left\">is built for your unique setup: </p><ul style=\"text-align:center\"><li><p data-rep=\"true\" style=\"text-align:left\">how to keep it ethical and loving, </p></li><li><p data-rep=\"true\" style=\"text-align:left\">how the exploring partner finds connections, and </p></li><li><p data-rep=\"true\" style=\"text-align:left\">how the mono partner stays secure, seen, and celebrated. </p></li></ul><p data-rep=\"true\" style=\"text-align:left\"><em>Inside the guide.</em></p>",
+      "description": "<h2 style=\"text-align:center\"><em>One of you wants</em><strong><em> more</em></strong><em>. One of you is </em><strong><em>happy to support. </em></strong><em>And that works.</em></h2><hr /><h2 style=\"text-align:center\"><strong>You're a match if:</strong> </h2><p data-rep=\"true\" style=\"text-align:left\">One partner wants other relationships or exploration and the other is <strong>genuinely happy staying monogamous</strong> not resentful, not tolerating it, but truly supportive of their <strong>partner exploring.</strong></p><p data-rep=\"true\" style=\"text-align:left\">This is one of the <strong>most misunderstood</strong>  and most quietly successful, dynamics in ENM. It only works on a foundation of <strong>genuine generosity and rock-solid communication, </strong>where one person's freedom and the other's contentment aren't in conflict. </p><p data-rep=\"true\" style=\"text-align:left\">This is often the solution when libidos are mismatched but companionship and the bond are still tight.  When it's real, it's beautiful.</p><hr /><h2 style=\"text-align:left\"><strong>Your customized Get Started pathway</strong> </h2><p data-rep=\"true\" style=\"text-align:left\">is built for your unique setup: </p><ul style=\"text-align:center\"><li><p data-rep=\"true\" style=\"text-align:left\">how to keep it ethical and loving, </p></li><li><p data-rep=\"true\" style=\"text-align:left\">how the exploring partner finds connections, and </p></li><li><p data-rep=\"true\" style=\"text-align:left\">how the mono partner stays secure, seen, and celebrated. </p></li></ul><p data-rep=\"true\" style=\"text-align:left\"><em>Inside the guide.</em></p>",
       "img": {
         "src": "img/r11-f2e19a.jpg",
         "crop": {
