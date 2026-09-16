@@ -189,7 +189,54 @@
       .funnel-row { grid-template-columns: 112px 1fr 64px; gap: 8px; }
       .funnel-row .fl, .dist-row .dl { font-size: 0.75rem; }
       .dist-row { grid-template-columns: 130px 1fr 64px; }
+      .ans-row { grid-template-columns: 130px 1fr 70px; gap: 7px; }
+      .ans-label { font-size: 0.75rem; }
     }
+
+    /* ── Answer distribution ── */
+    .dist-q { border-bottom: 1px solid var(--border); padding: 16px 0; }
+    .dist-q:last-child { border-bottom: none; padding-bottom: 0; }
+    .q-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+    .qnum-badge { font-size: 0.6875rem; font-weight: 700; background: var(--blush-light); color: var(--burgundy); padding: 2px 8px; border-radius: 10px; white-space: nowrap; flex-shrink: 0; }
+    .q-title { font-weight: 600; font-size: 0.875rem; flex: 1 1 auto; }
+    .q-count { font-size: 0.75rem; color: var(--faint); white-space: nowrap; }
+    .ans-row { display: grid; grid-template-columns: 200px 1fr 90px; gap: 10px; align-items: center; margin-bottom: 5px; }
+    .ans-label { font-size: 0.8125rem; color: var(--muted); text-align: right; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .ans-track { background: var(--bg); border-radius: 6px; height: 16px; overflow: hidden; }
+    .ans-fill { height: 100%; background: linear-gradient(90deg, var(--blush), var(--rose)); border-radius: 6px; }
+    .ans-val { font-size: 0.78rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+    #answerDistFilter { margin-bottom: 18px; }
+
+    /* ── Review items (AI findings) ── */
+    .review-item { background: var(--bg); border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; border-left: 3px solid var(--blush); }
+    .review-item[data-status="accepted"] { border-left-color: var(--green); }
+    .review-item[data-status="dismissed"] { opacity: 0.45; }
+    .rv-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+    .rv-title { font-weight: 600; font-size: 0.875rem; flex: 1 1 200px; }
+    .rv-cat { font-size: 0.6875rem; font-weight: 700; padding: 2px 7px; border-radius: 10px; letter-spacing: 0.04em; white-space: nowrap; flex-shrink: 0; }
+    .rv-cat-coverage { background: #fef9c3; color: #a16207; }
+    .rv-cat-scoring   { background: #fce7f3; color: #9d174d; }
+    .rv-cat-safety    { background: #fee2e2; color: #b91c1c; }
+    .rv-cat-clarity, .rv-cat-copy { background: var(--blush-light); color: var(--burgundy); }
+    .rv-cat-flow, .rv-cat-self-vs-partner { background: #dbeafe; color: #1d4ed8; }
+    .rv-status { font-size: 0.6875rem; padding: 2px 7px; border-radius: 10px; }
+    .rv-status-pending  { background: var(--bg); color: var(--faint); border: 1px solid var(--border); }
+    .rv-status-accepted { background: #dcfce7; color: #166534; }
+    .rv-status-dismissed { background: #f3f4f6; color: #9ca3af; }
+    .rv-body { font-size: 0.875rem; line-height: 1.6; margin-bottom: 10px; }
+    .rv-finding { color: var(--text); margin-bottom: 6px; }
+    .rv-rec { color: var(--muted); }
+    .rv-rec strong { color: var(--text); }
+    .rv-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .btn-rv { font-family: inherit; font-size: 0.75rem; font-weight: 500; padding: 4px 12px; border-radius: 6px; cursor: pointer; }
+    .btn-rv-accept  { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+    .btn-rv-dismiss { background: var(--bg); color: var(--faint); border: 1px solid var(--border); }
+    .btn-rv:disabled { opacity: 0.5; cursor: not-allowed; }
+    .regen-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 2px; }
+    .regen-status { font-size: 0.8125rem; color: var(--muted); }
+    .btn-regen { font-family: inherit; font-size: 0.8125rem; font-weight: 500; background: var(--burgundy); color: white; border: none; border-radius: 8px; padding: 8px 16px; cursor: pointer; transition: opacity 0.15s; }
+    .btn-regen:hover { opacity: 0.88; }
+    .btn-regen:disabled { opacity: 0.5; cursor: not-allowed; }
   </style>
 </head>
 <body>
@@ -279,6 +326,39 @@
         <p class="lede" id="fbLede"></p>
         <div id="fbList"></div>
       </section>
+
+      <section class="block">
+        <div class="section-head">
+          <h2>Open-ended answers</h2>
+        </div>
+        <p class="lede" id="freeformLede">Freeform text submitted on "something else" options, within the selected range.</p>
+        <div id="freeformList"></div>
+      </section>
+
+      <section class="block">
+        <h2>Answers chosen per question</h2>
+        <p class="lede">All-time distribution across completed sessions. Dominant answers (>60%) or empty ones (&lt;3%) may need revision.</p>
+        <select id="answerDistFilter" aria-label="Filter question"><option value="0">All questions</option></select>
+        <div id="answerDist"></div>
+      </section>
+
+      <section class="block">
+        <div class="section-head">
+          <h2>Improvement findings</h2>
+          <select id="reviewStatusFilter">
+            <option value="">All</option>
+            <option value="pending">Pending</option>
+            <option value="accepted">Accepted</option>
+            <option value="dismissed">Dismissed</option>
+          </select>
+        </div>
+        <p class="lede">AI-generated findings about question coverage, scoring, and copy. Accept items you want to act on, then apply them.</p>
+        <div class="regen-row">
+          <button type="button" class="btn-regen" id="regenBtn">Analyze quiz →</button>
+          <span class="regen-status" id="regenStatus"></span>
+        </div>
+        <div id="reviewList" style="margin-top:18px"></div>
+      </section>
     </div>
   </main>
 
@@ -291,11 +371,13 @@
       ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
     const SELF_URL = location.origin + location.pathname;
     const DAY_MS = 24 * 60 * 60 * 1000;
-    const TOTAL_QUESTIONS = 20;
+    const TOTAL_QUESTIONS = 12; // 12 core questions (tag questions are optional follow-ups)
 
     let allEvents = [];
     let allSessions = [];
     let allFeedback = [];
+    let allAnswers = [];
+    let allReviewItems = [];
     let rangeDays = 30;
 
     /* ── Auth ──────────────────────────────────────────────────────────────── */
@@ -366,7 +448,7 @@
       $('errorView').hidden = true;
 
       try {
-        const [ev, se, fb] = await Promise.all([
+        const [ev, se, fb, ans, rv] = await Promise.all([
           supabase.from('enm_quiz_events')
             .select('run_id, event, question_number, meta, created_at')
             .order('created_at', { ascending: false })
@@ -379,13 +461,26 @@
             .select('question_number, question_title, feedback, selected_texts, created_at')
             .order('created_at', { ascending: false })
             .limit(1000),
+          supabase.from('enm_quiz_answers')
+            .select('question_number, question_title, option_texts')
+            .order('question_number')
+            .limit(100000),
+          supabase.from('enm_quiz_review_items')
+            .select('id, question_number, category, title, finding, recommendation, status, source, created_at')
+            .order('question_number').order('sort_order')
+            .limit(200),
         ]);
         if (ev.error) throw new Error(`events: ${ev.error.message}`);
         if (se.error) throw new Error(`sessions: ${se.error.message}`);
         if (fb.error) throw new Error(`feedback: ${fb.error.message}`);
+        if (ans.error) console.warn('[quiz-dash] answers fetch failed', ans.error.message);
+        if (rv.error) console.warn('[quiz-dash] review items fetch failed', rv.error.message);
 
         allEvents = ev.data ?? [];
         allSessions = se.data ?? [];
+        allFeedback = fb.data ?? [];
+        allAnswers = ans.data ?? [];
+        allReviewItems = rv.data ?? [];
         render();
       } catch (e) {
         showError(e.message || String(e));
@@ -414,6 +509,9 @@
       renderChart(events, cut);
       renderDist(sessions);
       renderFeedback(feedback);
+      renderFreeformAnswers(events);
+      renderAnswerDist(allAnswers); // all-time, not range-filtered
+      renderReviewItems(allReviewItems);
     }
 
     function renderStats(events, sessions, feedback) {
@@ -497,7 +595,7 @@
         const med = sorted[Math.floor(sorted.length / 2)];
         $('funnelLede').textContent =
           `Across ${fmt(startedIds.size)} started runs: average furthest question ` +
-          `${avg.toFixed(1)}, median ${med}, of 20.`;
+          `${avg.toFixed(1)}, median ${med}, of ${TOTAL_QUESTIONS} core questions.`;
       } else {
         $('funnelLede').textContent =
           'Step-by-step progress is recorded from when event tracking went live; ' +
@@ -592,6 +690,157 @@
         `</div>`
       ).join('');
     }
+
+    /* ── Freeform event answers ─────────────────────────────────────────────── */
+    function renderFreeformAnswers(events) {
+      const items = events
+        .filter(e => e.event === 'question_answered' && e.meta && e.meta.freeform)
+        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+      $('freeformLede').textContent = items.length
+        ? `${items.length} open-ended answer${items.length === 1 ? '' : 's'} in this range.`
+        : 'No "something else" answers in this range yet.';
+      $('freeformList').innerHTML = items.length ? items.map(e =>
+        `<div class="fb-item">` +
+        `<div class="head"><span class="qnum">Q${e.question_number}</span>` +
+        `<span class="when">${when(e.created_at)}</span></div>` +
+        `<div class="said">${esc(e.meta.freeform)}</div></div>`
+      ).join('') : '';
+    }
+
+    /* ── Answer distribution ─────────────────────────────────────────────────── */
+    function renderAnswerDist(answers) {
+      if (!answers.length) {
+        $('answerDist').innerHTML = '<p class="lede" style="margin:0">No answer data yet — complete a run to populate this.</p>';
+        return;
+      }
+      const byQ = new Map();
+      answers.forEach(row => {
+        const q = row.question_number;
+        if (!byQ.has(q)) byQ.set(q, { title: row.question_title || `Q${q}`, counts: new Map(), total: 0 });
+        const entry = byQ.get(q);
+        entry.total++;
+        (row.option_texts || []).forEach(text => {
+          entry.counts.set(text, (entry.counts.get(text) || 0) + 1);
+        });
+      });
+
+      const qs = [...byQ.keys()].sort((a, b) => a - b);
+      const filterSel = $('answerDistFilter');
+      const prevVal = Number(filterSel.value) || 0;
+      filterSel.innerHTML = '<option value="0">All questions</option>' +
+        qs.map(q => `<option value="${q}"${q === prevVal ? ' selected' : ''}>Q${q}</option>`).join('');
+      const showQ = prevVal && byQ.has(prevVal) ? [prevVal] : qs;
+
+      let html = '';
+      for (const qNum of showQ) {
+        const { title, counts, total } = byQ.get(qNum);
+        const sorted = [...counts.entries()].sort((a, b) => b[1] - a[1]);
+        const maxCount = sorted[0]?.[1] || 1;
+        html += `<div class="dist-q">` +
+          `<div class="q-head"><span class="qnum-badge">Q${qNum}</span>` +
+          `<span class="q-title">${esc(title)}</span>` +
+          `<span class="q-count">${fmt(total)} response${total === 1 ? '' : 's'}</span></div>` +
+          sorted.map(([text, n]) => {
+            const pct = Math.round((n / total) * 100);
+            const flagStyle = (pct >= 60 || (pct <= 2 && total > 10))
+              ? ' style="background:linear-gradient(90deg,#fef9c3,#fde68a)"' : '';
+            return `<div class="ans-row">` +
+              `<div class="ans-label" title="${esc(text)}">${esc(text)}</div>` +
+              `<div class="ans-track"><div class="ans-fill"${flagStyle} style="width:${Math.round((n/maxCount)*100)}%"></div></div>` +
+              `<div class="ans-val">${fmt(n)} · ${pct}%</div></div>`;
+          }).join('') + `</div>`;
+      }
+      $('answerDist').innerHTML = html;
+    }
+
+    $('answerDistFilter').addEventListener('change', () => renderAnswerDist(allAnswers));
+
+    /* ── AI review items ─────────────────────────────────────────────────────── */
+    function renderReviewItems(items) {
+      const statusFilter = $('reviewStatusFilter').value;
+      const shown = statusFilter ? items.filter(i => (i.status || 'pending') === statusFilter) : items;
+      if (!shown.length) {
+        $('reviewList').innerHTML = items.length
+          ? `<p class="fb-empty">No ${statusFilter} items.</p>`
+          : `<p class="fb-empty">No findings yet. Click "Analyze quiz →" to generate them.</p>`;
+        return;
+      }
+      $('reviewList').innerHTML = shown.map(item => {
+        const status = item.status || 'pending';
+        const cat = item.category || 'clarity';
+        return `<div class="review-item" data-id="${esc(item.id)}" data-status="${esc(status)}">` +
+          `<div class="rv-head">` +
+          `<span class="qnum-badge">${item.question_number > 0 ? `Q${item.question_number}` : 'Overall'}</span>` +
+          `<span class="rv-cat rv-cat-${esc(cat)}">${esc(cat)}</span>` +
+          `<span class="rv-title">${esc(item.title)}</span>` +
+          `<span class="rv-status rv-status-${esc(status)}">${esc(status)}</span>` +
+          `</div>` +
+          `<div class="rv-body">` +
+          `<div class="rv-finding">${esc(item.finding)}</div>` +
+          `<div class="rv-rec"><strong>Recommendation:</strong> ${esc(item.recommendation)}</div>` +
+          `</div>` +
+          `<div class="rv-actions">` +
+          (status !== 'accepted'  ? `<button type="button" class="btn-rv btn-rv-accept"  onclick="updateReviewItem('${esc(item.id)}','accepted')">Accept</button>` : '') +
+          (status !== 'dismissed' ? `<button type="button" class="btn-rv btn-rv-dismiss" onclick="updateReviewItem('${esc(item.id)}','dismissed')">Dismiss</button>` : '') +
+          (status !== 'pending'   ? `<button type="button" class="btn-rv btn-rv-dismiss" onclick="updateReviewItem('${esc(item.id)}','pending')">Reset</button>` : '') +
+          `</div></div>`;
+      }).join('');
+    }
+
+    $('reviewStatusFilter').addEventListener('change', () => renderReviewItems(allReviewItems));
+
+    window.updateReviewItem = async function(id, newStatus) {
+      const el = document.querySelector(`.review-item[data-id="${id}"]`);
+      if (el) el.querySelectorAll('.btn-rv').forEach(b => b.disabled = true);
+      const { error } = await supabase.from('enm_quiz_review_items')
+        .update({ status: newStatus }).eq('id', id);
+      if (error) { alert('Update failed: ' + error.message); renderReviewItems(allReviewItems); return; }
+      const item = allReviewItems.find(i => i.id === id);
+      if (item) item.status = newStatus;
+      renderReviewItems(allReviewItems);
+    };
+
+    $('regenBtn').addEventListener('click', async () => {
+      const btn = $('regenBtn');
+      const statusEl = $('regenStatus');
+      btn.disabled = true;
+      btn.textContent = 'Analyzing…';
+      statusEl.textContent = '';
+
+      try {
+        // Build quiz_text from all-time answer data so the AI sees real question titles + options
+        const byQ = new Map();
+        allAnswers.forEach(row => {
+          if (!byQ.has(row.question_number))
+            byQ.set(row.question_number, { title: row.question_title || `Q${row.question_number}`, options: new Set() });
+          (row.option_texts || []).forEach(t => { if (t) byQ.get(row.question_number).options.add(t); });
+        });
+        const quizText = [...byQ.keys()].sort((a, b) => a - b)
+          .map(q => { const { title, options } = byQ.get(q); return `Q${q}. ${title}\n${[...options].map(o => `  • ${o}`).join('\n')}`; })
+          .join('\n\n') || '(no answer data available yet)';
+
+        const { data, error } = await supabase.functions.invoke('enm-quiz-ai', {
+          body: { action: 'review', quiz_text: quizText },
+        });
+        if (error) throw error;
+        if (data?.error) throw new Error(data.error);
+
+        const added = data?.added ?? 0;
+        statusEl.textContent = added > 0
+          ? `Added ${added} new finding${added === 1 ? '' : 's'}.`
+          : 'No new findings — all have already been logged.';
+
+        const { data: fresh, error: rErr } = await supabase.from('enm_quiz_review_items')
+          .select('id, question_number, category, title, finding, recommendation, status, source, created_at')
+          .order('question_number').order('sort_order').limit(200);
+        if (!rErr) { allReviewItems = fresh ?? []; renderReviewItems(allReviewItems); }
+      } catch (e) {
+        statusEl.textContent = `Failed: ${e.message || String(e)}`;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Analyze quiz →';
+      }
+    });
 
     /* ── Helpers ───────────────────────────────────────────────────────────── */
     const fmt = n => Number(n).toLocaleString();

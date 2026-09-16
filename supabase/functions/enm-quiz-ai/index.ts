@@ -206,18 +206,23 @@ async function actionSummary(payload: any) {
   return { status: 200, body: { summary, cached: false } };
 }
 
-const REVIEW_SYSTEM = `You are a senior UX researcher reviewing a 20-question personality quiz about
-ethical non-monogamy, for the team that owns it. You are looking for problems worth fixing, not praise.
+const REVIEW_SYSTEM = `You are a senior UX researcher reviewing a 12-question core quiz about
+ethical non-monogamy (ENM), for the team that owns it. The quiz covers 11 ENM styles:
+Monogamish, Swinging, Hotwife/Hothusbxand, Cuckolding, Hierarchical Poly, RA, Solo Poly,
+Open Relationship, Polyamory, and M/P (one partner non-mono, one mono). After the 12 core
+questions, optional tag questions deepen the result but do not affect primary routing.
+
+You are looking for problems worth fixing, not praise.
 
 Weight these concerns heavily:
-- Coverage: which real user situations have no honest answer?
+- Coverage: which real user situations have no honest answer? Which ENM styles are undertested?
 - Self vs partner: is it clear whose view each question records? Can a single person answer?
 - Scoring: options that score nothing, or that score in a way the wording does not justify.
 - Safety: anything that mishandles consent, disclosure, or a partner who has not agreed.
 - Copy: typos, mixed voice, leading or loaded wording.
 
 Return ONLY a JSON object: {"items": [...]} where each item is
-{"question_number": 0 for whole-quiz else 1-20,
+{"question_number": 0 for whole-quiz else 1-12,
  "category": one of coverage|clarity|self-vs-partner|scoring|flow|safety|copy,
  "title": "short imperative finding, under 12 words",
  "finding": "2-4 sentences of specific evidence, quoting the actual wording",
