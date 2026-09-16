@@ -1,12 +1,12 @@
 {
-  "version": "v260915.01 7:07p",
+  "version": "v260916.01 5:26p",
   "release": 1,
-  "sha": "e88cd34",
-  "fullSha": "e88cd34b5b8041277d2fe23b1447b9b3ab8d0cbb",
+  "sha": "0b4f96b",
+  "fullSha": "0b4f96bd263b8ad8dc331b315366f55464585f33",
   "actor": "chloeprent",
   "source": "cloudflare-pages-deploy",
   "model": "ci",
   "machine": "runnervmlun5p",
-  "pushedAt": "2026-09-15T14:07:29-05:00",
-  "commits": [{"sha":"e88cd34","message":"enm-quiz: routing overhaul — weighted scores, Q3→TAG5 swap, freeform inputs","author":"Chloe Prentoulis"}]
+  "pushedAt": "2026-09-16T12:26:21-05:00",
+  "commits": [{"sha":"f18e988","message":"quiz dashboard: fix feedback bug, add answer dist + freeform + AI findings","author":"Chloe Prentoulis"},{"sha":"0b4f96b","message":"Merge pull request #9 from chloeprent/claude/objective-pare-d8624f","author":"chloeprent"}]
 }
