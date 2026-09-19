@@ -15,19 +15,19 @@
   <link rel="icon" href="./favicon-r.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=PT+Serif:ital@1&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #f4eee9;
-      --text: #000000;
+      --bg: #f8f3f1;
+      --text: #1c1212;
       --btn: #fc6a77;
       --btn-hover: #e0606b;
       --btn-font: #ffffff;
       --progress: #e8505e;
       --option: rgb(244, 225, 226);
       --option-selected: #fc6a77;
-      --option-font: #000000;
-      --radius: 8px;
+      --option-font: #1c1212;
+      --radius: 10px;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -38,7 +38,7 @@
     html, body { height: 100%; }
 
     body {
-      font-family: 'Golos Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-family: 'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       background: var(--bg);
       color: var(--text);
       line-height: 1.5;
@@ -48,12 +48,14 @@
 
     /* ── Progress bar pinned to the very top, as in the source quiz ── */
     .progress-track {
-      position: fixed; top: 0; left: 0; right: 0; height: 5px;
-      background: transparent; z-index: 20;
+      position: fixed; top: 0; left: 0; right: 0; height: 7px;
+      background: rgba(252,106,119,.12); z-index: 20;
     }
     .progress-fill {
-      height: 100%; width: 0; background: var(--progress);
-      transition: width .35s ease;
+      height: 100%; width: 0;
+      background: linear-gradient(90deg, #f4768a, #fc6a77);
+      border-radius: 0 4px 4px 0;
+      transition: width .45s cubic-bezier(.22,.61,.36,1);
     }
 
     .stage {
@@ -68,6 +70,7 @@
     @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 
     h1.headline {
+      font-family: 'Marcellus', Georgia, serif;
       font-size: clamp(1.5rem, 4vw, 2.125rem);
       font-weight: 400; line-height: 1.25;
       text-align: center; margin-bottom: 28px;
@@ -102,8 +105,9 @@
 
     .cover-title {
       margin: 18px 0 0;
-      font-size: clamp(2.05rem, 5vw, 3rem);
-      font-weight: 700; line-height: 1.08; letter-spacing: -.022em;
+      font-family: 'Marcellus', Georgia, serif;
+      font-size: clamp(2.1rem, 5vw, 3.1rem);
+      font-weight: 400; line-height: 1.1; letter-spacing: -.01em;
     }
 
     .cover-desc { margin-top: 18px; font-size: 1.0325rem; color: #4a4a4a; }
@@ -147,6 +151,7 @@
       width: 100%; aspect-ratio: 5 / 4;
       border-radius: 24px; overflow: hidden;
       box-shadow: 0 30px 60px -20px rgba(90,55,55,.35), 0 6px 18px rgba(90,55,55,.1);
+      filter: brightness(1.13) saturate(1.07);
     }
 
     .float-chip {
@@ -213,21 +218,29 @@
     .option {
       display: flex; align-items: center; gap: 14px;
       width: 100%; text-align: left;
-      background: var(--option); color: var(--option-font);
-      border: 0; border-radius: var(--radius);
+      background: #fff; color: var(--option-font);
+      border: 1.5px solid rgba(210,175,175,.28);
+      border-radius: var(--radius);
       font-family: inherit; font-size: .9375rem; line-height: 1.4;
       padding: 14px 18px; cursor: pointer;
-      transition: background .18s ease, color .18s ease;
+      transition: background .18s ease, color .18s ease, box-shadow .18s ease, border-color .18s ease;
     }
-    .option:hover { background: #f2d4d6; }
-    .option .box {
-      flex: 0 0 18px; width: 18px; height: 18px;
-      background: #fff; border-radius: 3px;
-      display: flex; align-items: center; justify-content: center;
+    .option:hover { background: #fff8f7; border-color: rgba(252,106,119,.3); box-shadow: 0 2px 8px rgba(252,106,119,.08); }
+    .opt-letter {
+      flex: 0 0 26px; width: 26px; height: 26px; border-radius: 50%;
+      background: rgba(248,243,241,1); border: 1px solid rgba(200,165,165,.3);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+      font-size: .6875rem; font-weight: 700; letter-spacing: .03em; color: #9a7070;
+      transition: background .18s, color .18s, border-color .18s;
     }
-    .option .box svg { width: 12px; height: 12px; opacity: 0; transition: opacity .15s ease; }
-    .option.selected { background: var(--option-selected); color: #fff; }
-    .option.selected .box svg { opacity: 1; }
+    .option.selected {
+      background: var(--option-selected); color: #fff;
+      border-color: var(--option-selected);
+      box-shadow: 0 4px 16px -4px rgba(252,106,119,.35);
+    }
+    .option.selected .opt-letter {
+      background: rgba(255,255,255,.2); color: #fff; border-color: rgba(255,255,255,.3);
+    }
 
     /* Image-answer questions render as a grid of picture cards */
     .options.image-grid {
@@ -243,7 +256,7 @@
       background-size: cover; background-position: center;
     }
     .options.image-grid .option .label { padding: 12px 14px; }
-    .options.image-grid .option .box { display: none; }
+    .options.image-grid .option .opt-letter { display: none; }
     .freeform-input {
       width: 100%; margin-top: 4px; padding: 12px 14px;
       border: 1.5px solid var(--option-selected, #fc6a77);
@@ -305,7 +318,8 @@
       border-radius: var(--radius); margin-bottom: 24px;
     }
     .result-title {
-      font-size: clamp(1.5rem, 4vw, 2rem); font-weight: 700;
+      font-family: 'Marcellus', Georgia, serif;
+      font-size: clamp(1.6rem, 4vw, 2.1rem); font-weight: 400;
       text-align: center; margin-bottom: 22px; line-height: 1.25;
     }
     .top-results { margin-top: 44px; border-top: 1px solid rgba(60,60,60,.18); padding-top: 26px; }
@@ -370,13 +384,16 @@
     }
 
     /* ── Per-question feedback ── */
-    .q-feedback { text-align: center; margin-top: 20px; }
+    .q-feedback { text-align: center; margin-top: 24px; }
     .q-feedback button {
-      background: none; border: 0; font-family: inherit; font-size: .75rem;
-      color: var(--text); opacity: .5; cursor: pointer; text-decoration: underline;
-      text-underline-offset: 3px; padding: 4px;
+      display: inline-flex; align-items: center; gap: 5px;
+      background: none; border: 1px solid transparent; font-family: inherit; font-size: .75rem;
+      color: var(--text); opacity: 0; cursor: pointer;
+      padding: 5px 10px; border-radius: 20px;
+      transition: opacity .25s, background .18s, border-color .18s;
     }
-    .q-feedback button:hover { opacity: .85; }
+    .q-feedback button.fb-visible { opacity: .4; }
+    .q-feedback button:hover { opacity: .8; background: rgba(252,106,119,.06); border-color: rgba(252,106,119,.2); }
     .q-feedback .thanks { font-size: .75rem; opacity: .6; }
 
     .modal-backdrop {
@@ -507,9 +524,24 @@
     .danger { border: 1px solid rgba(252,106,119,.5); }
     .danger h3 { color: #c0392b; }
 
+    /* ── Intro screen ── */
+    .intro-wrap { max-width: 480px; margin: 0 auto; text-align: center; padding: 12px 0 20px; }
+    .intro-eyebrow {
+      font-family: 'PT Serif', Georgia, serif;
+      font-style: italic; font-size: 1.0625rem;
+      opacity: .55; margin-bottom: 36px; letter-spacing: .01em;
+    }
+    .intro-list { list-style: none; padding: 0; }
+    .intro-list li {
+      font-size: 1.125rem; line-height: 1.65; color: #2a1a1a;
+      padding: 20px 0; border-bottom: 1px solid rgba(60,40,40,.1);
+    }
+    .intro-list li:last-child { border-bottom: 0; }
+
     @media (max-width: 600px) {
       .stage { padding: 34px 16px 84px; }
       .option { font-size: .875rem; padding: 13px 15px; }
+      .intro-list li { font-size: 1rem; padding: 17px 0; }
     }
   </style>
 </head>
@@ -567,6 +599,24 @@
       </div>
     </section>
 
+    <!-- ── Intro ── -->
+    <section class="screen" id="screenIntro">
+      <div class="intro-wrap">
+        <p class="intro-eyebrow">Three things to know</p>
+        <ul class="intro-list">
+          <li>Be honest with yourself, not the version you think you should be.</li>
+          <li>There are no wrong answers.</li>
+          <li>Your answers stay completely private.</li>
+        </ul>
+        <div class="btn-row" style="margin-top: 40px;">
+          <button class="btn btn-hero" id="introBtn">
+            <span>Start the quiz!</span>
+            <svg class="arr" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><polyline points="13 6 19 12 13 18"></polyline></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
     <!-- ── Email gate (moved ahead of the questions) ── -->
     <section class="screen" id="screenGate">
       <div class="gate">
@@ -603,7 +653,10 @@
       </div>
       <p class="hint" id="multiHint" hidden></p>
       <div class="q-feedback">
-        <button type="button" id="feedbackOpen">Give feedback on this question</button>
+        <button type="button" id="feedbackOpen">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+          Something off?
+        </button>
         <span class="thanks" id="feedbackThanks" hidden>Thanks &mdash; that's logged.</span>
       </div>
       <div class="q-notes" id="questionNotes" hidden></div>
@@ -851,6 +904,10 @@
     $('coverChipTime').textContent = `~${Math.max(3, Math.ceil(coverQCount / 5))} min`;
     $('startBtn').querySelector('.label').textContent = QUIZ.startButton.label.trim();
     $('startBtn').addEventListener('click', () => {
+      show('screenIntro');
+    });
+
+    $('introBtn').addEventListener('click', () => {
       state.startedAt = new Date();
       state.current = 0;
       track('start');
@@ -868,6 +925,11 @@
       $('questionTitle').textContent = q.title;
       $('feedbackThanks').hidden = true;
       $('feedbackOpen').hidden = false;
+      $('feedbackOpen').classList.remove('fb-visible');
+      clearTimeout($('feedbackOpen')._fbTimer);
+      $('feedbackOpen')._fbTimer = setTimeout(() => {
+        if (!$('feedbackOpen').hidden) $('feedbackOpen').classList.add('fb-visible');
+      }, 2000);
 
       const wrap = $('questionOptions');
       wrap.className = 'options' + (q.answerType === 'image' ? ' image-grid' : '');
@@ -889,7 +951,10 @@
           label.textContent = opt.text;
           btn.appendChild(label);
         } else {
-          btn.innerHTML = `<span class="box">${CHECK}</span>`;
+          const letter = document.createElement('span');
+          letter.className = 'opt-letter';
+          letter.textContent = 'ABCDEFGHIJ'[idx] || '';
+          btn.appendChild(letter);
           const label = document.createElement('span');
           label.textContent = opt.text;
           btn.appendChild(label);
