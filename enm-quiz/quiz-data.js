@@ -353,7 +353,7 @@ export const QUIZ = {
         {
           "uid": "a_rHUpj3LqNJ",
           "text": "Honestly, none of this is me ",
-          "result": 0
+          "result": [[7, 2]]
         }
       ]
     },
@@ -449,6 +449,96 @@ export const QUIZ = {
           "uid": "a_JGGlfBAKQp",
           "text": "Light and unattached to a plan — free to say yes when connections present, enjoying the ride with my partner. ",
           "result": [[2, 2]]
+        }
+      ]
+    },
+    {
+      "uid": "q_Kp2mNvXtYr",
+      "title": "When you imagine 'opening up', whose side of the experience are you drawn to?",
+      "answerType": "text",
+      "multi": false,
+      "min": 1,
+      "max": 1,
+      "options": [
+        {
+          "uid": "a_Kp2mNvXtYs",
+          "text": "My partner's — I love the idea of them out there, being desired, while I hold the base.",
+          "result": [[5, 3]]
+        },
+        {
+          "uid": "a_Kp2mNvXtYt",
+          "text": "My own — I want to be the one having adventures, with my partner's awareness.",
+          "result": [[11, 3], [10, 1]]
+        },
+        {
+          "uid": "a_Kp2mNvXtYu",
+          "text": "Both equally — same freedom for both of us, whether together or separately.",
+          "result": [[4, 3], [2, 2]]
+        },
+        {
+          "uid": "a_Kp2mNvXtYv",
+          "text": "Whoever finds something real first — I'm not into assigning roles.",
+          "result": [[3, 2], [9, 1]]
+        }
+      ]
+    },
+    {
+      "uid": "q_Rz9qWsLfBm",
+      "title": "If you had to describe where you land, which feels most true?",
+      "answerType": "text",
+      "multi": false,
+      "min": 1,
+      "max": 1,
+      "options": [
+        {
+          "uid": "a_Rz9qWsLfBn",
+          "text": "We're basically monogamous — this would be rare, an occasional thrill.",
+          "result": [[7, 3]]
+        },
+        {
+          "uid": "a_Rz9qWsLfBo",
+          "text": "We love having adventures together that keep our bond sexy.",
+          "result": [[4, 2], [2, 1], [8, 1]]
+        },
+        {
+          "uid": "a_Rz9qWsLfBp",
+          "text": "I want the option of separate connections, experiences we have together, a range of possibilities — without putting strict limits on it.",
+          "result": [[2, 3]]
+        },
+        {
+          "uid": "a_Rz9qWsLfBq",
+          "text": "I want multiple relationships where real love can develop.",
+          "result": [[3, 3]]
+        }
+      ]
+    },
+    {
+      "uid": "q_Hx4jCpVdNe",
+      "title": "In your imagination, what does the outside person who sleeps with your partner represent?",
+      "answerType": "text",
+      "multi": false,
+      "min": 1,
+      "max": 1,
+      "options": [
+        {
+          "uid": "a_Hx4jCpVdNf",
+          "text": "An erotic experience you're both in on — no deeper meaning than that.",
+          "result": [[4, 3], [2, 1]]
+        },
+        {
+          "uid": "a_Hx4jCpVdNg",
+          "text": "Someone your partner genuinely desires and connects with, which you love watching.",
+          "result": [[5, 2], [3, 1]]
+        },
+        {
+          "uid": "a_Hx4jCpVdNh",
+          "text": "Someone who holds something you can't provide — and that gap is part of the turn-on.",
+          "result": [[6, 3]]
+        },
+        {
+          "uid": "a_Hx4jCpVdNi",
+          "text": "A real person with their own ongoing place in the picture.",
+          "result": [[3, 3], [9, 1], [8, 1]]
         }
       ]
     },
@@ -914,5 +1004,5 @@ export const QUIZ = {
       }
     }
   ],
-  "coreQuestionsCount": 12
+  "coreQuestionsCount": 15
 };
