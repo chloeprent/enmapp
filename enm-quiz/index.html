@@ -289,6 +289,10 @@
     }
     .quiz-footer .back.show { display: flex; }
     .quiz-footer .back:hover { background: var(--btn-hover); }
+    .quiz-footer .back-hint {
+      position: absolute; right: 18px;
+      font-size: .7rem; opacity: .4; pointer-events: none; letter-spacing: .01em;
+    }
 
     /* ── Email gate ── */
     .gate { max-width: 520px; margin: 0 auto; }
@@ -782,6 +786,7 @@
            stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
     </button>
     <span id="counter"></span>
+    <span class="back-hint">← go back a question</span>
   </div>
 
   <!--
@@ -901,10 +906,6 @@
     $('coverChipTime').textContent = `~${Math.max(3, Math.ceil(coverQCount / 5))} min`;
     $('startBtn').querySelector('.label').textContent = QUIZ.startButton.label.trim();
     $('startBtn').addEventListener('click', () => {
-      show('screenIntro');
-    });
-
-    $('introBtn').addEventListener('click', () => {
       state.startedAt = new Date();
       state.current = 0;
       track('start');
