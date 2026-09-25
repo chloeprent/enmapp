@@ -18,7 +18,7 @@ export const QUIZ = {
     "optionFontColor": "#3C3C3C"
   },
   "startButton": {
-    "label": "Take THE Quiz! ",
+    "label": "Take the Quiz!",
     "btnColor": "#fc6a77",
     "btnColorHover": "#e0606b"
   },

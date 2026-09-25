@@ -594,7 +594,7 @@
           </div>
           <p class="cover-trust">
             <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>
-            Private &amp; judgment-free &mdash; your answers stay yours.
+            Private &amp; judgment-free.
           </p>
         </div>
       </div>
@@ -660,7 +660,6 @@
         </button>
         <span class="thanks" id="feedbackThanks" hidden>Thanks &mdash; that's logged.</span>
       </div>
-      <div class="q-notes" id="questionNotes" hidden></div>
     </section>
 
     <!-- ── Result ── -->
@@ -713,12 +712,6 @@
       <p class="save-note" id="tagThanksNote" hidden>Thanks — we'll use your answers to personalize the guidance we send you.</p>
     </section>
 
-    <!-- Shown only to admin/staff. Sits directly under the per-question notes
-         at the foot of the stage, pointing at the whole-quiz notes below. -->
-    <button class="admin-bar" id="adminBar" hidden>
-      General Quiz Notes for Admin <span id="adminJumpCount"></span>
-      <span class="chev">&#x2193;</span>
-    </button>
   </div>
 
   <!-- Feedback from quiz takers, opened from the link above each question. -->
@@ -734,51 +727,6 @@
     </div>
   </div>
 
-  <!--
-    Admin surface. Hidden unless the signed-in app_user is admin or staff; the
-    data behind it is RLS-protected either way, so a hidden panel is a nicety
-    rather than the security boundary.
-  -->
-  <section class="admin" id="adminPanel" hidden>
-    <h2>General Quiz Notes for Admin</h2>
-    <p class="lede">Findings about the quiz as a whole. Notes on individual questions appear
-       above each question as you go through it. Decide each one, then rebuild the page from
-       everything you have accepted &mdash; wherever you accepted it.</p>
-    <div id="adminItems"></div>
-
-    <div class="admin-tools">
-      <div class="tool">
-        <h3>Ask GLM 5.3 about this quiz</h3>
-        <p>Free-form prompt. Nothing here changes the page.</p>
-        <textarea id="promptBox" placeholder="e.g. Rewrite Q7 so it works for a single person&hellip;"></textarea>
-        <div class="btn-row" style="text-align:left;margin-top:10px">
-          <button class="btn" type="button" id="promptSend">Send prompt</button>
-        </div>
-        <div class="out" id="promptOut"></div>
-      </div>
-
-      <div class="tool">
-        <h3>Regenerate findings</h3>
-        <p>Re-reads the quiz and any feedback takers have left, and adds findings not already listed.</p>
-        <div class="btn-row" style="text-align:left">
-          <button class="btn" type="button" id="reviewRefresh">Run review</button>
-        </div>
-        <div class="out" id="reviewOut"></div>
-      </div>
-
-      <div class="tool danger">
-        <h3>Update site</h3>
-        <p>Applies every <b>accepted</b> item to this page, commits to main and deploys.
-           Scoped to <code>enm-quiz/</code> &mdash; nothing else can be touched.
-           You will get an email when it is live.</p>
-        <input type="email" id="adminEmail" placeholder="your@email.com — where the confirmation goes">
-        <div class="btn-row" style="text-align:left">
-          <button class="btn" type="button" id="updateSite">Update site</button>
-        </div>
-        <div class="out" id="updateOut"></div>
-      </div>
-    </div>
-  </section>
 
   <div class="quiz-footer" id="quizFooter" hidden>
     <button class="back" id="backBtn" aria-label="Previous question">
@@ -1446,253 +1394,7 @@
       }
     });
 
-    /* ── Admin review ──────────────────────────────────────────────────────── */
-    /* Loaded last and entirely optional: any failure here must leave the quiz
-       itself working for the public.
-
-       Notes are split by where they are useful. A finding about question 7 is
-       only actionable while you are looking at question 7, so it renders inline
-       above that question. Findings about the quiz as a whole have no such
-       anchor and live in the panel below the stage. Both are decided the same
-       way and both feed the same rebuild. */
-    (async function initAdmin() {
-      /* Rights here are page-scoped: site admin/staff, or an email on the
-         enm_quiz_admins allowlist. enm_is_quiz_admin() is the same predicate the
-         RLS policies use, so the panel can never show to someone whose reads
-         would come back empty anyway. */
-      let canAdmin = false;
-      try {
-        await waitForAuthReady();
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session) return;
-        const { data, error } = await supabase.rpc('enm_is_quiz_admin');
-        if (error) throw error;
-        canAdmin = data === true;
-      } catch (e) {
-        console.debug('[enm-quiz] admin check unavailable, notes stay hidden', e);
-        return;
-      }
-      if (!canAdmin) return;
-
-      admin.active = true;
-      const panel = $('adminPanel');
-      panel.hidden = false;
-      $('adminBar').hidden = false;
-      $('adminEmail').value = localStorage.getItem(ADMIN_EMAIL_KEY) || '';
-
-      $('adminBar').addEventListener('click', () => {
-        panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      });
-
-      /* Yes / No / Postpone, shared by the inline notes and the panel. Clicking
-         the current status again clears it back to pending. */
-      function decideControls(item, onChange) {
-        const wrap = document.createElement('div');
-        wrap.className = 'decide';
-        [['accepted', 'Yes'], ['declined', 'No'], ['postponed', 'Postpone']].forEach(([value, label]) => {
-          const b = document.createElement('button');
-          b.type = 'button';
-          b.textContent = label;
-          b.setAttribute('aria-pressed', String(item.status === value));
-          b.addEventListener('click', async () => {
-            const next = item.status === value ? 'pending' : value;
-            const { error } = await supabase
-              .from('enm_quiz_review_items')
-              .update({ status: next, decided_at: new Date().toISOString(), updated_at: new Date().toISOString() })
-              .eq('id', item.id);
-            if (error) { alert(`Could not save: ${error.message}`); return; }
-            item.status = next;
-            wrap.querySelectorAll('button').forEach(x =>
-              x.setAttribute('aria-pressed', String(x === b && next !== 'pending')));
-            onChange?.(next);
-          });
-          wrap.appendChild(b);
-        });
-
-        if (item.applied_at) {
-          const applied = document.createElement('span');
-          applied.className = 'applied';
-          applied.textContent = `applied ${new Date(item.applied_at).toLocaleDateString()}`;
-          wrap.appendChild(applied);
-        }
-        return wrap;
-      }
-
-      /* Above the fold: this question's findings, plus anything a taker said
-         about this exact question. */
-      admin.refreshQuestion = function refreshQuestion() {
-        const host = $('questionNotes');
-        if (!host || !admin.active) return;
-
-        const number = state.current + 1;
-        const items = admin.items.filter(i => i.question_number === number);
-        const said = admin.feedback.get(number) || [];
-        if (!items.length && !said.length) { host.hidden = true; return; }
-
-        host.hidden = false;
-        host.innerHTML = '<h4>Notes for admin &middot; the question above</h4>';
-
-        items.forEach(item => {
-          const el = document.createElement('div');
-          el.className = 'note';
-          el.innerHTML =
-            `<p class="note-title">${esc(item.title)}</p>` +
-            `<p class="note-body">${esc(item.finding)}</p>` +
-            `<p class="note-rec"><b>Do this:</b> ${esc(item.recommendation)}</p>`;
-          el.appendChild(decideControls(item));
-          host.appendChild(el);
-        });
-
-        said.slice(0, 5).forEach(text => {
-          const el = document.createElement('div');
-          el.className = 'note';
-          el.innerHTML = `<div class="taker-fb"><em>A quiz taker said</em>${esc(text)}</div>`;
-          host.appendChild(el);
-        });
-      };
-
-      async function loadItems() {
-        const [{ data, error }, { data: fb }] = await Promise.all([
-          supabase.from('enm_quiz_review_items')
-            .select('id, question_number, category, title, finding, recommendation, status, applied_at')
-            .order('sort_order').order('question_number'),
-          supabase.from('enm_quiz_question_feedback')
-            .select('question_number, feedback')
-            .order('created_at', { ascending: false }).limit(200),
-        ]);
-
-        const host = $('adminItems');
-        if (error) { host.textContent = `Could not load notes: ${error.message}`; return; }
-
-        admin.items = data ?? [];
-        admin.feedback = new Map();
-        (fb ?? []).forEach(row => {
-          const list = admin.feedback.get(row.question_number) || [];
-          list.push(row.feedback);
-          admin.feedback.set(row.question_number, list);
-        });
-
-        const general = admin.items.filter(i => i.question_number === 0);
-        const perQuestion = admin.items.length - general.length;
-        $('adminJumpCount').textContent = `(${general.length})`;
-
-        host.innerHTML = '';
-        if (!general.length) {
-          host.textContent = 'No general notes yet. Run a review below.';
-        } else {
-          general.forEach(item => {
-            const el = document.createElement('div');
-            el.className = 'item';
-            el.dataset.status = item.status;
-            el.innerHTML =
-              `<div class="head">
-                 <span class="qnum">Quiz</span>
-                 <span class="cat">${esc(item.category)}</span>
-                 <span class="title">${esc(item.title)}</span>
-               </div>
-               <p class="finding">${esc(item.finding)}</p>
-               <p class="rec"><b>Do this:</b> ${esc(item.recommendation)}</p>`;
-            el.appendChild(decideControls(item, next => { el.dataset.status = next; }));
-            host.appendChild(el);
-          });
-        }
-
-        if (perQuestion) {
-          const hint = document.createElement('p');
-          hint.className = 'lede';
-          hint.style.marginTop = '16px';
-          hint.textContent =
-            `${perQuestion} more note${perQuestion === 1 ? '' : 's'} about individual questions ` +
-            `appear above those questions as you go through the quiz.`;
-          host.appendChild(hint);
-        }
-
-        admin.refreshQuestion();
-      }
-
-      await loadItems();
-
-      async function callAi(body, outEl, button, workingLabel) {
-        const original = button.textContent;
-        button.disabled = true;
-        button.textContent = workingLabel;
-        outEl.classList.add('show');
-        outEl.textContent = 'Working…';
-        try {
-          const { data, error } = await supabase.functions.invoke(AI_FN, { body });
-          if (error) throw error;
-          if (data?.error) throw new Error(data.error);
-          return data;
-        } catch (e) {
-          outEl.textContent = `Failed: ${e.message || e}`;
-          return null;
-        } finally {
-          button.disabled = false;
-          button.textContent = original;
-        }
-      }
-
-      $('promptSend').addEventListener('click', async () => {
-        const prompt = $('promptBox').value.trim();
-        if (!prompt) return;
-        const data = await callAi({ action: 'prompt', prompt }, $('promptOut'), $('promptSend'), 'Thinking…');
-        if (data) $('promptOut').textContent = data.reply || '(empty response)';
-      });
-
-      $('reviewRefresh').addEventListener('click', async () => {
-        /* Hand the model the quiz as it actually stands rather than a summary. */
-        const quizText = QUIZ.questions.map((q, i) =>
-          `Q${i + 1} [${q.multi ? 'multi' : 'single'}${q.answerType === 'image' ? ', image' : ''}]: ${q.title}\n` +
-          q.options.map((o, j) =>
-            `   ${j}. ${o.text}  -> result ${JSON.stringify(o.result)}`).join('\n'),
-        ).join('\n\n') + '\n\nResults: ' + QUIZ.results.map(r => `${r.index}=${r.title}`).join(', ');
-
-        const data = await callAi({ action: 'review', quiz_text: quizText },
-          $('reviewOut'), $('reviewRefresh'), 'Reviewing…');
-        if (data) {
-          $('reviewOut').textContent = `Added ${data.added} new note(s).`;
-          await loadItems();
-        }
-      });
-
-      $('updateSite').addEventListener('click', async () => {
-        const email = $('adminEmail').value.trim();
-        const out = $('updateOut');
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
-          out.classList.add('show');
-          out.textContent = 'Enter the email address that should get the confirmation.';
-          $('adminEmail').focus();
-          return;
-        }
-        localStorage.setItem(ADMIN_EMAIL_KEY, email);
-
-        const { data: accepted } = await supabase
-          .from('enm_quiz_review_items').select('id').eq('status', 'accepted').is('applied_at', null);
-
-        if (!accepted?.length) {
-          out.classList.add('show');
-          out.textContent = 'Nothing to apply — mark at least one note Yes first, here or above a question.';
-          return;
-        }
-
-        if (!confirm(
-          `Apply ${accepted.length} accepted note(s) to this page, commit to main and deploy?\n\n` +
-          `Only enm-quiz/ can be changed. You will get an email at ${email} when it is live.`
-        )) return;
-
-        const data = await callAi(
-          { action: 'site-update', email, review_item_ids: accepted.map(i => i.id) },
-          out, $('updateSite'), 'Queuing…');
-
-        if (data) {
-          out.textContent = data.dispatched
-            ? `Queued and CI started. Change ${data.change_id.slice(0, 8)}. ` +
-              `You will get an email at ${email} when the deploy is live.`
-            : `Queued as change ${data.change_id.slice(0, 8)}. No dispatch token is configured, ` +
-              `so the scheduled run will pick it up within 15 minutes and email ${email}.`;
-        }
-      });
-    })();
+    /* Admin tools removed from client-facing page. */
   </script>
 </body>
 </html>
