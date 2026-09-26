@@ -1,12 +1,12 @@
 {
-  "version": "v260926.01 1:17p",
-  "release": 1,
-  "sha": "5bce29b",
-  "fullSha": "5bce29b8f8e182679180b7b9956c09ecfcbe319e",
+  "version": "v260926.02 9:16p",
+  "release": 2,
+  "sha": "399cd03",
+  "fullSha": "399cd031727cf7c6dde547384acebafd6d15c3d5",
   "actor": "chloeprent",
   "source": "cloudflare-pages-deploy",
   "model": "ci",
   "machine": "runnervmtr4k5",
-  "pushedAt": "2026-09-26T08:17:03-05:00",
-  "commits": [{"sha":"4ca112c","message":"enm-quiz: revert headings to Golos Text (keep all other redesign changes)","author":"Chloe Prentoulis"},{"sha":"667a3a8","message":"enm-quiz: remove intro screen, add back-arrow hint in footer","author":"Chloe Prentoulis"},{"sha":"950d723","message":"enm-quiz: fix button text, trust copy, remove admin panel from public page","author":"Chloe Prentoulis"},{"sha":"cae25c9","message":"enm-quiz: fix six copy defects in quiz-data.js","author":"Chloe Prentoulis"},{"sha":"5bce29b","message":"Merge pull request #11 from chloeprent/claude/objective-pare-d8624f","author":"chloeprent"}]
+  "pushedAt": "2026-09-26T16:16:12-05:00",
+  "commits": [{"sha":"8d9d559","message":"enm-quiz: visual polish + heading update","author":"Chloe Prentoulis"},{"sha":"399cd03","message":"Merge pull request #12 from chloeprent/claude/objective-pare-d8624f","author":"chloeprent"}]
 }
