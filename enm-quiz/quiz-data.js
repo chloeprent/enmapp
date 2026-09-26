@@ -18,7 +18,7 @@ export const QUIZ = {
     "optionFontColor": "#3C3C3C"
   },
   "startButton": {
-    "label": "Take THE Quiz! ",
+    "label": "Take the Quiz!",
     "btnColor": "#fc6a77",
     "btnColorHover": "#e0606b"
   },
@@ -221,7 +221,7 @@ export const QUIZ = {
         },
         {
           "uid": "a_TEVkeqlF_3",
-          "text": "With can date separately, with our partner knowing. It's mostly casual.",
+          "text": "We can date separately, with our partner knowing. It's mostly casual.",
           "result": [[2, 2]]
         },
         {
@@ -279,7 +279,7 @@ export const QUIZ = {
     },
     {
       "uid": "q_mdmXGt_0ya",
-      "title": "How does the idea of a life partner and the  standard relationship progression feel?",
+      "title": "How does the idea of a life partner and the standard relationship progression feel?",
       "answerType": "text",
       "multi": false,
       "min": 1,
@@ -292,7 +292,7 @@ export const QUIZ = {
         },
         {
           "uid": "a_rN1RP6oA_Z",
-          "text": "Like a cultural script Ive always secretly questioned. Why just accept the rules? I'd rather make my own with people individually.",
+          "text": "Like a cultural script I've always secretly questioned. Why just accept the rules? I'd rather make my own with people individually.",
           "result": [[9, 3]]
         },
         {
@@ -572,7 +572,7 @@ export const QUIZ = {
         },
         {
           "uid": "a_e37IBqRMy0",
-          "text": " We know other couples exploring this and it looks enjoyable.",
+          "text": "We know other couples exploring this and it looks enjoyable.",
           "result": 0
         },
         {
@@ -612,7 +612,7 @@ export const QUIZ = {
         },
         {
           "uid": "a_Tt-CGxJdj8",
-          "text": "One of us wants our partner with a particular gender while we watch or know about it. ",
+          "text": "One of us wants our partner with a particular gender while we watch or know about it.",
           "result": [
             5,
             6
@@ -635,7 +635,7 @@ export const QUIZ = {
       "options": [
         {
           "uid": "a_bET3KtXHAw",
-          "text": " Losing my partner.",
+          "text": "Losing my partner.",
           "result": [
             [
               1,
