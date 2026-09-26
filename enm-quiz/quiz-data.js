@@ -157,7 +157,7 @@ export const QUIZ = {
         {
           "uid": "a_1kXbEX00PU",
           "text": "Only physical fun, I don't really want emotional connections.",
-          "result": [[4, 3]]
+          "result": [[4, 3], [5, 2]]
         },
         {
           "uid": "a_wBWlBZQWj2",
@@ -258,7 +258,7 @@ export const QUIZ = {
         {
           "uid": "a_o22r_N2a7M",
           "text": "Pride — I love seeing how wanted they are.",
-          "result": [[5, 6]]
+          "result": [[5, 8]]
         },
         {
           "uid": "a_aVgAaJQYDq",
@@ -303,7 +303,7 @@ export const QUIZ = {
         {
           "uid": "a_ziDpvaqkNO",
           "text": "A life partner and stable home base feels great, and I hope we can add some uncomplicated sex and novelty into it!",
-          "result": [[4, 3]]
+          "result": [[4, 3], [5, 2]]
         },
         {
           "uid": "a_iPpoAKpzRz",
@@ -417,8 +417,8 @@ export const QUIZ = {
         },
         {
           "uid": "a_h8XQIi_GFs",
-          "text": "Simple, clear guardrails and contained fun — not something we need to keep processing. ",
-          "result": [[4, 3]]
+          "text": "Simple, clear guardrails and contained fun — not something we need to keep processing.",
+          "result": [[4, 3], [5, 2]]
         }
       ]
     },
@@ -463,7 +463,7 @@ export const QUIZ = {
         {
           "uid": "a_Kp2mNvXtYs",
           "text": "My partner's — I love the idea of them out there, being desired, while I hold the base.",
-          "result": [[5, 6]]
+          "result": [[5, 8]]
         },
         {
           "uid": "a_Kp2mNvXtYt",
