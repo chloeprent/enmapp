@@ -245,7 +245,8 @@ export const QUIZ = {
           "result": [[1, 1]],
           "freeform": true
         }
-      ]
+      ],
+      "img": { "src": "img/q6-watching.webp" }
     },
     {
       "uid": "q_2SoZCLKDoU",
@@ -275,7 +276,11 @@ export const QUIZ = {
           "text": "Not sure.",
           "result": 0
         }
-      ]
+      ],
+      "img": {
+        "src": "img/q7-couple-date.webp",
+        "crop": { "x": 20, "y": 0, "width": 80, "height": 100 }
+      }
     },
     {
       "uid": "q_mdmXGt_0ya",
@@ -355,7 +360,8 @@ export const QUIZ = {
           "text": "Honestly, none of this is me ",
           "result": [[7, 2]]
         }
-      ]
+      ],
+      "img": { "src": "img/q9-poly-couple.webp" }
     },
     {
       "uid": "q_iVBwBebqvd",
@@ -390,7 +396,8 @@ export const QUIZ = {
           "text": "We want to basically be monogamous with occasional fun and thrilling experiences",
           "result": [[7, 3]]
         }
-      ]
+      ],
+      "img": { "src": "img/q10-solo.webp" }
     },
     {
       "uid": "q_uwGiBZrBMA",
