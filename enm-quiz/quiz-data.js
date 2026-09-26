@@ -303,7 +303,7 @@ export const QUIZ = {
         {
           "uid": "a_ziDpvaqkNO",
           "text": "A life partner and stable home base feels great, and I hope we can add some uncomplicated sex and novelty into it!",
-          "result": [[4, 3], [5, 2]]
+          "result": [[4, 3], [5, 2], [7, 2]]
         },
         {
           "uid": "a_iPpoAKpzRz",
@@ -418,7 +418,7 @@ export const QUIZ = {
         {
           "uid": "a_h8XQIi_GFs",
           "text": "Simple, clear guardrails and contained fun — not something we need to keep processing.",
-          "result": [[4, 3], [5, 2]]
+          "result": [[4, 3], [5, 2], [7, 2]]
         }
       ]
     },
@@ -523,7 +523,7 @@ export const QUIZ = {
         {
           "uid": "a_Hx4jCpVdNf",
           "text": "An erotic experience you're both in on — no deeper meaning than that.",
-          "result": [[4, 3], [2, 1]]
+          "result": [[4, 3], [2, 1], [7, 2]]
         },
         {
           "uid": "a_Hx4jCpVdNg",
