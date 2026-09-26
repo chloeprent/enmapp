@@ -1,12 +1,12 @@
 {
-  "version": "v260926.02 9:16p",
-  "release": 2,
-  "sha": "399cd03",
-  "fullSha": "399cd031727cf7c6dde547384acebafd6d15c3d5",
+  "version": "v260926.03 9:20p",
+  "release": 3,
+  "sha": "028bc3c",
+  "fullSha": "028bc3cad557bae2171213d1a3e39b9531cc8fb2",
   "actor": "chloeprent",
   "source": "cloudflare-pages-deploy",
   "model": "ci",
   "machine": "runnervmtr4k5",
-  "pushedAt": "2026-09-26T16:16:12-05:00",
-  "commits": [{"sha":"8d9d559","message":"enm-quiz: visual polish + heading update","author":"Chloe Prentoulis"},{"sha":"399cd03","message":"Merge pull request #12 from chloeprent/claude/objective-pare-d8624f","author":"chloeprent"}]
+  "pushedAt": "2026-09-26T16:20:39-05:00",
+  "commits": [{"sha":"c2ed898","message":"enm-quiz: boost Hotwife, Cuck, Monogamish signature scores to +6","author":"Chloe Prentoulis"},{"sha":"028bc3c","message":"Merge pull request #13 from chloeprent/claude/objective-pare-d8624f","author":"chloeprent"}]
 }
