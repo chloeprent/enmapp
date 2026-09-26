@@ -1,12 +1,12 @@
 {
-  "version": "v260926.05 9:39p",
-  "release": 5,
-  "sha": "d910d7d",
-  "fullSha": "d910d7d260dcd0c4a86e2448ff9d688bb7c80ded",
+  "version": "v260926.06 9:42p",
+  "release": 6,
+  "sha": "7144f50",
+  "fullSha": "7144f5053df96bfd6bd0722e1b04749de63e5f6b",
   "actor": "chloeprent",
   "source": "cloudflare-pages-deploy",
   "model": "ci",
   "machine": "runnervmtr4k5",
-  "pushedAt": "2026-09-26T16:39:27-05:00",
-  "commits": [{"sha":"be697aa","message":"enm-quiz: add Monogamish co-scoring to SW-overlap answers","author":"Chloe Prentoulis"},{"sha":"d910d7d","message":"Merge pull request #15 from chloeprent/claude/objective-pare-d8624f","author":"chloeprent"}]
+  "pushedAt": "2026-09-26T16:42:39-05:00",
+  "commits": [{"sha":"155093a","message":"enm-quiz: remove opt-in checkbox, make newsletter subscription implicit","author":"Chloe Prentoulis"},{"sha":"7144f50","message":"Merge pull request #16 from chloeprent/claude/objective-pare-d8624f","author":"chloeprent"}]
 }
