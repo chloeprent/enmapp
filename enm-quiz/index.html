@@ -113,6 +113,10 @@
       font-weight: 700; line-height: 1.08; letter-spacing: -.025em;
     }
 
+    .cover-tagline {
+      margin-top: 12px; font-size: .9rem; color: #7a5a5a; font-style: italic; letter-spacing: .01em;
+    }
+
     .cover-desc { margin-top: 18px; font-size: 1.0325rem; color: #4a4a4a; }
     .cover-desc p { text-align: left !important; color: inherit; }
     .cover-desc p:empty { display: none; }
@@ -278,6 +282,14 @@
     }
 
     .hint { text-align: center; font-size: .8125rem; opacity: .6; margin-top: 16px; }
+
+    .quiz-hint {
+      background: rgba(252,106,119,.06); border: 1px solid rgba(252,106,119,.18);
+      border-radius: var(--radius); padding: 14px 18px; margin-bottom: 22px;
+      font-size: .875rem; line-height: 1.6; color: #4a3232;
+    }
+    .quiz-hint p { margin: 0; }
+    .quiz-hint p + p { margin-top: 8px; }
 
     /* ── Footer: back arrow + counter, matching the source layout ── */
     .quiz-footer {
@@ -569,6 +581,7 @@
         <div class="cover-head">
           <span class="eyebrow"><span class="dot"></span>Free &middot; <span id="coverMetaQ"></span>&nbsp;questions &middot; Instant result</span>
           <h1 class="cover-title" id="coverTitle"></h1>
+          <p class="cover-tagline">For couples exploring ENM together &mdash; answer for yourself, then have your partner take it too.</p>
           <div class="rich cover-desc" id="coverDesc"></div>
         </div>
         <div class="cover-visual">
@@ -649,6 +662,10 @@
 
     <!-- ── Questions ── -->
     <section class="screen" id="screenQuestion">
+      <div class="quiz-hint" id="quizHint" hidden>
+        <p><strong>Answer for yourself</strong> &mdash; have your partner take it separately and compare. (That conversation alone is worth it!)</p>
+        <p>Read <em>all</em> answer choices carefully before picking &mdash; several will sound right, but one will fit best. You can go back anytime with the &larr; arrow at the bottom.</p>
+      </div>
       <div class="question-img" id="questionImg" hidden></div>
       <h1 class="headline" id="questionTitle"></h1>
       <div class="options" id="questionOptions"></div>
@@ -870,6 +887,7 @@
       const q = QUIZ.questions[state.current];
       const selected = state.answers[state.current];
 
+      $('quizHint').hidden = state.current !== 0;
       applyImage($('questionImg'), q.img);
       $('questionTitle').textContent = q.title;
       $('feedbackThanks').hidden = true;
