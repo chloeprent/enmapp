@@ -639,14 +639,10 @@
             <label for="email">Email address</label>
             <input type="email" id="email" name="email" autocomplete="email" required placeholder="you@example.com">
           </div>
-          <label class="consent">
-            <input type="checkbox" id="consent">
-            <span id="consentText"></span>
-          </label>
           <p class="form-error" id="gateError" role="alert"></p>
           <div class="btn-row"><button class="btn" type="submit" id="gateSubmit">Start the quiz</button></div>
         </form>
-        <p class="privacy">Your answers stay private. We never share them, and you can unsubscribe at any time.</p>
+        <p class="privacy">By submitting you'll receive your result and be added to my newsletter. You can unsubscribe at any time.</p>
         <p class="privacy" id="gateProgress">That's all 20 questions &mdash; this is the last step.</p>
       </div>
     </section>
@@ -1141,7 +1137,6 @@
     /* ── Email gate ────────────────────────────────────────────────────────── */
     $('gateHeading').textContent = QUIZ.emailGate.heading;
     $('gateSub').textContent = QUIZ.emailGate.subheading;
-    $('consentText').textContent = QUIZ.emailGate.confirmText;
 
     $('gateForm').addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -1160,7 +1155,7 @@
       btn.disabled = true;
       btn.textContent = 'Working…';
 
-      await persist(email, firstName, $('consent').checked);
+      await persist(email, firstName, true);
 
       btn.disabled = false;
       btn.textContent = 'See my result';
