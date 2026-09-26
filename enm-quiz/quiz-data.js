@@ -127,7 +127,7 @@ export const QUIZ = {
         {
           "uid": "a_503dROP3FJ",
           "text": "Once or twice a year, when those rare opportunities spark.",
-          "result": [[7, 3]]
+          "result": [[7, 6]]
         },
         {
           "uid": "a_ouHVAQhCyn",
@@ -258,12 +258,12 @@ export const QUIZ = {
         {
           "uid": "a_o22r_N2a7M",
           "text": "Pride — I love seeing how wanted they are.",
-          "result": [[5, 3]]
+          "result": [[5, 6]]
         },
         {
           "uid": "a_aVgAaJQYDq",
           "text": "Submission & the \"I'm not enough for you\" feeling - that's the turn-on.",
-          "result": [[6, 3]]
+          "result": [[6, 6]]
         },
         {
           "uid": "a_-zJJTRw2Vb",
@@ -463,7 +463,7 @@ export const QUIZ = {
         {
           "uid": "a_Kp2mNvXtYs",
           "text": "My partner's — I love the idea of them out there, being desired, while I hold the base.",
-          "result": [[5, 3]]
+          "result": [[5, 6]]
         },
         {
           "uid": "a_Kp2mNvXtYt",
@@ -493,7 +493,7 @@ export const QUIZ = {
         {
           "uid": "a_Rz9qWsLfBn",
           "text": "We're basically monogamous — this would be rare, an occasional thrill.",
-          "result": [[7, 3]]
+          "result": [[7, 6]]
         },
         {
           "uid": "a_Rz9qWsLfBo",
@@ -533,7 +533,7 @@ export const QUIZ = {
         {
           "uid": "a_Hx4jCpVdNh",
           "text": "Someone who holds something you can't provide — and that gap is part of the turn-on.",
-          "result": [[6, 3]]
+          "result": [[6, 6]]
         },
         {
           "uid": "a_Hx4jCpVdNi",
