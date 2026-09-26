@@ -4,7 +4,7 @@
 // Weighted tuples: [[styleIndex, pts], ...] give each style a specific point value.
 
 export const QUIZ = {
-  "title": "Discover your ENM Style",
+  "title": "What's your ENM style?",
   "description": "<p data-rep=\"true\" style=\"text-align:center\"><strong>Curious about ethical non-monogamy, but not sure where to begin?</strong></p><p data-rep=\"true\" style=\"text-align:center\"></p><p data-rep=\"true\" style=\"text-align:center\">Take the quiz to discover the relationship style that may fit you best, understand how different ENM dynamics actually work, and get clear next steps for what to explore, what to avoid, and how to move forward with more confidence.</p><p data-rep=\"true\" style=\"text-align:center\"></p><p data-rep=\"true\" style=\"text-align:center\"><strong>Judgment-free, and created by a coach who has lived this work for <em>14 years.</em></strong></p>",
   "design": {
     "bgColor": "#f4eee9",
