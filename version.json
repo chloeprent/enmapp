@@ -1,12 +1,12 @@
 {
-  "version": "v260919.01 5:05p",
+  "version": "v260926.01 1:17p",
   "release": 1,
-  "sha": "1674a46",
-  "fullSha": "1674a4636a742abd4ab79913821725e4fcf7b17c",
+  "sha": "5bce29b",
+  "fullSha": "5bce29b8f8e182679180b7b9956c09ecfcbe319e",
   "actor": "chloeprent",
   "source": "cloudflare-pages-deploy",
   "model": "ci",
-  "machine": "runnervmlun5p",
-  "pushedAt": "2026-09-19T12:05:24-05:00",
-  "commits": [{"sha":"f552037","message":"enm-quiz: add 3 new core questions + fix HW, MONO, CUCK routing gaps","author":"Chloe Prentoulis"},{"sha":"a3d4a65","message":"enm-quiz: visual redesign — fonts, intro screen, option letters, feedback nudge","author":"Chloe Prentoulis"},{"sha":"1674a46","message":"Merge pull request #10 from chloeprent/claude/objective-pare-d8624f","author":"chloeprent"}]
+  "machine": "runnervmtr4k5",
+  "pushedAt": "2026-09-26T08:17:03-05:00",
+  "commits": [{"sha":"4ca112c","message":"enm-quiz: revert headings to Golos Text (keep all other redesign changes)","author":"Chloe Prentoulis"},{"sha":"667a3a8","message":"enm-quiz: remove intro screen, add back-arrow hint in footer","author":"Chloe Prentoulis"},{"sha":"950d723","message":"enm-quiz: fix button text, trust copy, remove admin panel from public page","author":"Chloe Prentoulis"},{"sha":"cae25c9","message":"enm-quiz: fix six copy defects in quiz-data.js","author":"Chloe Prentoulis"},{"sha":"5bce29b","message":"Merge pull request #11 from chloeprent/claude/objective-pare-d8624f","author":"chloeprent"}]
 }
