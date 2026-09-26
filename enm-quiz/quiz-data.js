@@ -276,11 +276,7 @@ export const QUIZ = {
           "text": "Not sure.",
           "result": 0
         }
-      ],
-      "img": {
-        "src": "img/q7-couple-date.webp",
-        "crop": { "x": 20, "y": 0, "width": 80, "height": 100 }
-      }
+      ]
     },
     {
       "uid": "q_mdmXGt_0ya",
@@ -457,7 +453,11 @@ export const QUIZ = {
           "text": "Light and unattached to a plan — free to say yes when connections present, enjoying the ride with my partner. ",
           "result": [[2, 2]]
         }
-      ]
+      ],
+      "img": {
+        "src": "img/q12-couple-poly.webp",
+        "crop": { "x": 20, "y": 0, "width": 80, "height": 100 }
+      }
     },
     {
       "uid": "q_Kp2mNvXtYr",
