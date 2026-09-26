@@ -246,7 +246,7 @@ export const QUIZ = {
           "freeform": true
         }
       ],
-      "img": { "src": "img/q6-watching.jpg" }
+      "img": { "src": "img/q6-watching.webp" }
     },
     {
       "uid": "q_2SoZCLKDoU",
@@ -278,7 +278,7 @@ export const QUIZ = {
         }
       ],
       "img": {
-        "src": "img/q7-couple-date.jpg",
+        "src": "img/q7-couple-date.webp",
         "crop": { "x": 20, "y": 0, "width": 80, "height": 100 }
       }
     },
@@ -361,7 +361,7 @@ export const QUIZ = {
           "result": [[7, 2]]
         }
       ],
-      "img": { "src": "img/q9-poly-couple.jpg" }
+      "img": { "src": "img/q9-poly-couple.webp" }
     },
     {
       "uid": "q_iVBwBebqvd",
@@ -397,7 +397,7 @@ export const QUIZ = {
           "result": [[7, 3]]
         }
       ],
-      "img": { "src": "img/q10-solo.jpg" }
+      "img": { "src": "img/q10-solo.webp" }
     },
     {
       "uid": "q_uwGiBZrBMA",
