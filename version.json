@@ -1,12 +1,12 @@
 {
-  "version": "v261006.02 5:49p",
-  "release": 2,
-  "sha": "258972d",
-  "fullSha": "258972d49deefeba28ebc9c2c47571bc2f3e341d",
+  "version": "v261006.03 5:57p",
+  "release": 3,
+  "sha": "fd12efd",
+  "fullSha": "fd12efdb9881665e1b6fbbfa44aeea4b85ed31e7",
   "actor": "chloeprent",
   "source": "cloudflare-pages-deploy",
   "model": "ci",
-  "machine": "runnervmmprz5",
-  "pushedAt": "2026-10-07T01:48:54+08:00",
-  "commits": [{"sha":"258972d","message":"ci: trim whitespace from Supabase deploy token (#23)","author":"chloeprent"}]
+  "machine": "runnervm8df0l",
+  "pushedAt": "2026-10-07T01:57:46+08:00",
+  "commits": [{"sha":"fd12efd","message":"ci: extract sbp_ token from pasted secret and log a safe hint on failure (#24)","author":"chloeprent"}]
 }
