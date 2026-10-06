@@ -1259,6 +1259,16 @@
         $('saveNote').textContent = 'Your result has been saved.';
         track('result', { result_uid: winner.uid, result_title: winner.title });
 
+        /* Send the taker to Kit with their top 3 results. Fire-and-forget: a
+           Kit failure must never get in the way of showing the result. */
+        supabase.functions.invoke(INVITE_FN, {
+          body: {
+            action: 'kit',
+            run_id: state.runId,
+            results: state.finalTop.slice(0, 3).map(({ result }) => result.title),
+          },
+        }).catch(e => console.error('[enm-quiz] kit sync failed', e));
+
         /* Arrived from a partner's invite link — tie the two runs together. */
         if (state.inviteToken) {
           supabase.functions.invoke(INVITE_FN, {
