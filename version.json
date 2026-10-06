@@ -1,12 +1,12 @@
 {
-  "version": "v261006.01 5:47p",
-  "release": 1,
-  "sha": "fe61b1b",
-  "fullSha": "fe61b1b7a40bdb29db547708154d4bafcf2ce28a",
+  "version": "v261006.02 5:49p",
+  "release": 2,
+  "sha": "258972d",
+  "fullSha": "258972d49deefeba28ebc9c2c47571bc2f3e341d",
   "actor": "chloeprent",
   "source": "cloudflare-pages-deploy",
   "model": "ci",
   "machine": "runnervmmprz5",
-  "pushedAt": "2026-10-07T01:47:15+08:00",
-  "commits": [{"sha":"fe61b1b","message":"ENM quiz: send quiz takers to Kit with top 3 results (#22)","author":"chloeprent"}]
+  "pushedAt": "2026-10-07T01:48:54+08:00",
+  "commits": [{"sha":"258972d","message":"ci: trim whitespace from Supabase deploy token (#23)","author":"chloeprent"}]
 }
