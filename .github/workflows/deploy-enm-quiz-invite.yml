@@ -1,0 +1,40 @@
+# Deploy the enm-quiz-invite edge function to Supabase whenever its code lands
+# on main. Needs the SUPABASE_ACCESS_TOKEN repository secret (a Supabase
+# access token with Edge Functions write access to this project).
+#
+# Scoped to this one function on purpose: other functions need their own
+# --no-verify-jwt choice (see docs/KEY-FILES.md), so they are not auto-deployed.
+
+name: Deploy enm-quiz-invite
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "supabase/functions/enm-quiz-invite/**"
+      - "supabase/functions/_shared/api-helpers.ts"
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: deploy-enm-quiz-invite
+      cancel-in-progress: false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Deploy function
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          supabase functions deploy enm-quiz-invite \
+            --project-ref ohcdjvbveokyyilceenf \
+            --no-verify-jwt \
+            --use-api
