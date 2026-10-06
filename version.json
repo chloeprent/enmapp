@@ -1,12 +1,12 @@
 {
-  "version": "v261006.03 5:57p",
-  "release": 3,
-  "sha": "fd12efd",
-  "fullSha": "fd12efdb9881665e1b6fbbfa44aeea4b85ed31e7",
+  "version": "v261006.04 6:00p",
+  "release": 4,
+  "sha": "4c13596",
+  "fullSha": "4c13596da3fe7e4e65d91c339484c88ad71666aa",
   "actor": "chloeprent",
   "source": "cloudflare-pages-deploy",
   "model": "ci",
   "machine": "runnervm8df0l",
-  "pushedAt": "2026-10-07T01:57:46+08:00",
-  "commits": [{"sha":"fd12efd","message":"ci: extract sbp_ token from pasted secret and log a safe hint on failure (#24)","author":"chloeprent"}]
+  "pushedAt": "2026-10-07T02:00:10+08:00",
+  "commits": [{"sha":"4c13596","message":"ci: accept an autocorrected Sbp_ prefix on the Supabase deploy token (#25)","author":"chloeprent"}]
 }
