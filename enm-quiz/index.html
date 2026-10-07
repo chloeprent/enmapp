@@ -543,6 +543,8 @@
       .stage { padding: 34px 16px 84px; }
       .option { font-size: .875rem; padding: 13px 15px; }
       .intro-list li { font-size: 1rem; padding: 17px 0; }
+      /* Result description body reads a touch smaller on phones; headings stay as they are. */
+      #resultDesc p, #resultDesc li { font-size: .9375rem; line-height: 1.55; }
     }
 
     /* ── Results logo, call button and site footer ── */
@@ -844,7 +846,7 @@
         <p class="note" id="partnerNote" hidden></p>
       </div>
 
-      <p class="save-note" id="saveNote"></p>
+      <p class="save-note" id="saveNote" hidden></p>
 
       <div class="tag-prompt" id="tagPromptBanner" hidden>
         <h3>Want more personalized guidance?</h3>
@@ -1406,7 +1408,6 @@
           if (aErr) throw aErr;
         }
 
-        $('saveNote').textContent = 'Your result has been saved.';
         track('result', { result_uid: winner.uid, result_title: winner.title });
 
         /* Send the taker to Kit with their top 3 results. Fire-and-forget: a
