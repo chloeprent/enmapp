@@ -1,12 +1,12 @@
 {
-  "version": "v261007.01 4:38p",
-  "release": 1,
-  "sha": "588d75c",
-  "fullSha": "588d75c6edc1cbbc5ff5e2a4f1add43350a03370",
+  "version": "v261007.02 6:08p",
+  "release": 2,
+  "sha": "35660ff",
+  "fullSha": "35660ff9d421736e77bddf3c0760a20aefe84b88",
   "actor": "chloeprent",
   "source": "cloudflare-pages-deploy",
   "model": "ci",
   "machine": "runnervm8df0l",
-  "pushedAt": "2026-10-08T00:37:48+08:00",
-  "commits": [{"sha":"588d75c","message":"ENM quiz: Save as PDF, logo, cleaner results, new photos, refreshed invite email (#26)","author":"chloeprent"}]
+  "pushedAt": "2026-10-08T02:08:35+08:00",
+  "commits": [{"sha":"35660ff","message":"ENM quiz: result rating, results logo, call button, footer, phone text size (#27)","author":"chloeprent"}]
 }
