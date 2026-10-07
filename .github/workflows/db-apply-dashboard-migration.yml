@@ -1,0 +1,31 @@
+# Applies the quiz dashboard migration to the live database, then runs the
+# read-only checks that confirm it landed. Additive only (new nullable columns,
+# views and read-only functions), so the live quiz and dashboard keep working.
+name: DB apply dashboard migration
+
+on:
+  push:
+    branches: [claude/elegant-cannon-bdq3j0]
+    paths:
+      - "supabase/migrations/2026100701_enm_quiz_dashboard.sql"
+      - "supabase/checks/dashboard_after_migration.sql"
+      - ".github/scripts/apply_sql_file.py"
+      - ".github/workflows/db-apply-dashboard-migration.yml"
+  workflow_dispatch:
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: db-apply-dashboard-migration
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply migration
+        env:
+          RAW_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: python3 .github/scripts/apply_sql_file.py ohcdjvbveokyyilceenf supabase/migrations/2026100701_enm_quiz_dashboard.sql
+      - name: Verify
+        env:
+          RAW_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: python3 .github/scripts/run_readonly_sql.py ohcdjvbveokyyilceenf supabase/checks/dashboard_after_migration.sql

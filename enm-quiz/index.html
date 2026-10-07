@@ -996,6 +996,25 @@
        the first question has already rendered, so both paths re-render. */
     const admin = { active: false, items: [], feedback: new Map(), refreshQuestion: () => {} };
 
+    /* ── Where people came from ───────────────────────────────────────────── */
+    /* utm_source / utm_medium / utm_campaign from the link they arrived on,
+       kept for the rest of the browser session (so a refresh keeps them) and
+       saved with every event and with the quiz submission. */
+    const UTM = (() => {
+      const KEY = 'enmquiz.utm';
+      const params = new URLSearchParams(location.search);
+      let utm = {};
+      ['source', 'medium', 'campaign'].forEach(k => {
+        const v = (params.get('utm_' + k) || '').trim();
+        if (v) utm[k] = v.slice(0, 120);
+      });
+      try {
+        if (Object.keys(utm).length) sessionStorage.setItem(KEY, JSON.stringify(utm));
+        else utm = JSON.parse(sessionStorage.getItem(KEY) || '{}') || {};
+      } catch { /* storage blocked: use what the link had */ }
+      return Object.keys(utm).length ? utm : null;
+    })();
+
     /* ── Funnel analytics ──────────────────────────────────────────────────── */
     /* One tiny row per step: page_view, start, question_answered (1..N), gate,
        result. Read by the admin analytics page at /quiz on in.swoon.coach.
@@ -1005,7 +1024,7 @@
         run_id: state.runId,
         event,
         question_number: questionNumber,
-        meta,
+        meta: UTM ? { ...meta, utm: UTM } : meta,
         referrer: document.referrer || null,
         user_agent: navigator.userAgent,
       }).then(({ error }) => {
@@ -1360,6 +1379,9 @@
           source: 'enmtest',
           referrer: document.referrer || null,
           user_agent: navigator.userAgent,
+          utm_source: UTM?.source ?? null,
+          utm_medium: UTM?.medium ?? null,
+          utm_campaign: UTM?.campaign ?? null,
         });
         if (lErr) throw lErr;
 
@@ -1511,6 +1533,8 @@
         a.textContent = result.cta.label;
         a.href = result.cta.url;
         a.target = result.cta.blank === false ? '_self' : '_blank';
+        a.dataset.uid = result.uid;
+        a.dataset.title = result.title;
       } else {
         $('resultCtaRow').hidden = true;
       }
@@ -1693,6 +1717,9 @@
     $('saveBannerClose').addEventListener('click', hideSaveBanner);
 
     $('bookCallBtn').addEventListener('click', () => track('book_call_click'));
+    $('resultCta').addEventListener('click', (e) => track('roadmap_click', {
+      result_uid: e.currentTarget.dataset.uid || null, result_title: e.currentTarget.dataset.title || null,
+    }));
 
     const BANNER_SEEN_KEY = 'enmquiz.saveBannerSeen';
     let bannerTimer = null;
@@ -1737,6 +1764,7 @@
         $('partnerForm').hidden = true;
         note.hidden = false;
         note.textContent = `Invite sent to ${partnerEmail}.`;
+        track('partner_invite_sent');
       } catch (err) {
         console.error('[enm-quiz] invite failed', err);
         note.hidden = false;

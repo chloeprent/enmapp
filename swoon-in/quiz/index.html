@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quiz Dashboard — Swoon</title>
+  <title>Quiz Dashboard | Swoon</title>
   <meta name="robots" content="noindex">
   <link rel="icon" href="../favicon-r.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -194,11 +194,74 @@
       position: fixed; bottom: 8px; right: 12px; z-index: 5;
       font-size: .65rem; opacity: .3; letter-spacing: .04em; pointer-events: none;
     }
+
+    /* ── Tabs, toggle and filters ── */
+    .tabs { display: flex; gap: 4px; margin-bottom: 18px; border-bottom: 1px solid var(--border); }
+    .tab {
+      font-family: inherit; font-size: .875rem; font-weight: 500; color: var(--muted);
+      background: none; border: 0; border-bottom: 2px solid transparent;
+      padding: 9px 14px; cursor: pointer; margin-bottom: -1px;
+    }
+    .tab[aria-selected="true"] { color: var(--burg); border-bottom-color: var(--rose); }
+    .toggle { display: inline-flex; align-items: center; gap: 7px; font-size: .78rem; color: var(--muted); cursor: pointer; user-select: none; }
+    .toggle input { appearance: none; width: 30px; height: 17px; border-radius: 20px; background: var(--border); position: relative; cursor: pointer; transition: background .15s; }
+    .toggle input::after { content: ''; position: absolute; top: 2px; left: 2px; width: 13px; height: 13px; border-radius: 50%; background: #fff; transition: transform .15s; }
+    .toggle input:checked { background: var(--rose); }
+    .toggle input:checked::after { transform: translateX(13px); }
+    .filters { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+    .filters input[type="search"] {
+      font-family: inherit; font-size: .8rem; border: 1px solid var(--border); border-radius: 7px;
+      padding: 6px 11px; min-width: 200px; flex: 1; background: var(--surface); color: var(--text);
+    }
+    .soon { color: var(--faint); font-size: .75rem; font-weight: 500; }
+    .stat.soon-card .stat-value { font-size: .95rem; color: var(--faint); font-weight: 500; padding-top: 8px; }
+
+    /* ── Collapsible sections ── */
+    details.card { padding: 0; }
+    details.card > summary {
+      list-style: none; cursor: pointer; padding: 16px 22px;
+      font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 500;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    details.card > summary::-webkit-details-marker { display: none; }
+    details.card > summary::after { content: '+'; font-family: 'Inter', sans-serif; color: var(--faint); font-size: 1.1rem; }
+    details.card[open] > summary::after { content: '\2212'; }
+    details.card > .body { padding: 0 22px 20px; }
+    details.inline { margin-top: 14px; border-top: 1px solid var(--border); padding-top: 10px; }
+    details.inline > summary { cursor: pointer; font-size: .8rem; font-weight: 600; color: var(--muted); }
+
+    /* ── Small tables and lists ── */
+    .kv { display: grid; grid-template-columns: 1fr auto; gap: 6px 16px; font-size: .82rem; }
+    .kv span:nth-child(even) { text-align: right; font-variant-numeric: tabular-nums; color: var(--muted); }
+    .mini th, .mini td { font-size: .78rem; }
+    .num { text-align: right; font-variant-numeric: tabular-nums; }
+    .tick { color: var(--green); font-weight: 600; }
+    .dash { color: var(--faint); }
+    tr.clickable { cursor: pointer; }
+    .pager { display: flex; gap: 10px; align-items: center; justify-content: flex-end; margin-top: 12px; font-size: .78rem; color: var(--muted); }
+    .stage-list .dist-fill { background: var(--rose); }
+    .stage-list .soon-row .dist-label, .stage-list .soon-row .dist-val { color: var(--faint); }
+
+    /* ── Person timeline panel ── */
+    .panel-backdrop { position: fixed; inset: 0; background: rgba(40,30,30,.35); z-index: 40; }
+    .panel {
+      position: fixed; top: 0; right: 0; bottom: 0; width: min(440px, 100%); z-index: 41;
+      background: var(--surface); box-shadow: -8px 0 30px rgba(0,0,0,.12);
+      padding: 22px 22px 40px; overflow-y: auto;
+    }
+    .panel h2 { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 500; }
+    .panel .close { position: absolute; top: 14px; right: 16px; font-size: 1.4rem; background: none; border: 0; cursor: pointer; color: var(--faint); }
+    .timeline { list-style: none; margin-top: 16px; border-left: 2px solid var(--border); padding-left: 16px; }
+    .timeline li { position: relative; margin-bottom: 14px; }
+    .timeline li::before { content: ''; position: absolute; left: -22px; top: 5px; width: 10px; height: 10px; border-radius: 50%; background: var(--rose); }
+    .timeline .when { font-size: .7rem; color: var(--faint); }
+    .timeline .what { font-size: .85rem; font-weight: 500; }
+    .timeline .detail { font-size: .78rem; color: var(--muted); }
   </style>
 </head>
 <body>
-  <!-- Stamped with the site-wide canonical version by scripts/bump-version.sh
-       (CI) on every push to main. Keep the data-site-version attribute exactly as it is. -->v261007.03 6:15p<div class="version-badge" data-site-version>v0</div>
+  <!-- The version text below is stamped by scripts/bump-version.sh on every push to main. -->
+  <div class="version-badge" data-site-version>v0</div>
 
   <!-- Top bar (hidden until signed in) -->
   <div class="topbar" id="topbar" hidden>
@@ -208,6 +271,7 @@
         <small>ENM style quiz &middot; swoon.coach</small>
       </div>
       <div class="topbar-controls">
+        <label class="toggle" title="Hide internal and test emails"><input type="checkbox" id="excludeTests" checked>Exclude tests</label>
         <select id="rangeSel" aria-label="Date range">
           <option value="7">Last 7 days</option>
           <option value="30" selected>Last 30 days</option>
@@ -243,65 +307,150 @@
     </div>
 
     <div class="loading-msg" id="loadingView" hidden>Checking who you are&hellip;</div>
-    <div class="loading-msg" id="dataLoading" hidden>Loading&hellip;</div>
     <div class="error-card" id="errorView" hidden>
       <h2>Could not load data</h2>
       <p id="errorMsg"></p>
     </div>
 
-    <!-- Dashboard -->
     <div id="dash" hidden>
-      <!-- Stat chips -->
-      <div class="stats-row" id="statsRow"></div>
-
-      <!-- Results breakdown -->
-      <div class="card">
-        <div class="card-head"><h2>Results breakdown</h2></div>
-        <p class="card-sub" id="distSub"></p>
-        <div id="dist"></div>
+      <div class="tabs" role="tablist">
+        <button class="tab" role="tab" data-tab="overview" aria-selected="true">Overview</button>
+        <button class="tab" role="tab" data-tab="people" aria-selected="false">People</button>
+        <button class="tab" role="tab" data-tab="feedback" aria-selected="false">Feedback</button>
       </div>
+      <div class="loading-msg" id="dataLoading" hidden>Loading&hellip;</div>
 
-      <!-- Recent submissions -->
-      <div class="card">
-        <div class="card-head"><h2>Recent submissions</h2></div>
-        <p class="card-sub">People who completed the quiz and left their email.</p>
-        <div class="table-wrap">
-          <table id="recentTable">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Result</th>
-                <th>Time</th>
-              </tr>
-            </thead>
-            <tbody id="recentBody"></tbody>
-          </table>
+      <!-- ── Overview ── -->
+      <section id="tab-overview">
+        <div class="stats-row" id="statsRow"></div>
+
+        <div class="card">
+          <div class="card-head"><h2>Journey</h2></div>
+          <p class="card-sub">Everyone who opened the quiz in this period, and how far they got.</p>
+          <div id="funnel"></div>
         </div>
-        <p class="card-sub" id="recentEmpty" style="margin-top:10px"></p>
-      </div>
 
-      <!-- Activity chart -->
-      <div class="card">
-        <div class="card-head"><h2>Activity over time</h2></div>
-        <p class="card-sub" id="chartSub"></p>
-        <div class="chart-wrap" id="chartBars"></div>
-        <div class="chart-x" id="chartX"></div>
-        <div class="legend">
-          <span><span class="legend-dot" style="background:var(--rose-dim)"></span>page loads</span>
-          <span><span class="legend-dot" style="background:var(--rose)"></span>quiz starts</span>
+        <div class="card">
+          <div class="card-head"><h2>Where they come from</h2></div>
+          <p class="card-sub">Quiz completions by source, from the link they arrived on.</p>
+          <div id="sources"></div>
+          <details class="inline">
+            <summary>By campaign</summary>
+            <div class="table-wrap"><table class="mini"><thead><tr><th>Source</th><th>Campaign</th><th class="num">Completions</th></tr></thead><tbody id="campaigns"></tbody></table></div>
+          </details>
         </div>
-      </div>
 
-      <!-- Funnel -->
-      <div class="card">
-        <div class="card-head"><h2>Drop-off</h2></div>
-        <p class="card-sub" id="funnelSub"></p>
-        <div id="funnel"></div>
-      </div>
+        <div class="card">
+          <div class="card-head"><h2>Results</h2></div>
+          <p class="card-sub" id="resultsSub"></p>
+          <div id="results"></div>
+          <details class="inline">
+            <summary>2nd and 3rd matches</summary>
+            <div class="table-wrap"><table class="mini"><thead><tr><th>Style</th><th class="num">As 2nd match</th><th class="num">As 3rd match</th></tr></thead><tbody id="matches"></tbody></table></div>
+          </details>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h2>What they buy</h2></div>
+          <p class="card-sub soon">Coming soon: purchases by product, once Stripe is connected.</p>
+        </div>
+
+        <details class="card">
+          <summary>Question drop-off</summary>
+          <div class="body">
+            <p class="card-sub">Of the people who pressed start, how many answered each question.</p>
+            <div id="questions"></div>
+          </div>
+        </details>
+
+        <details class="card">
+          <summary>Results page actions</summary>
+          <div class="body"><div class="kv" id="actions"></div></div>
+        </details>
+
+        <details class="card">
+          <summary>Most bought roadmaps</summary>
+          <div class="body"><p class="card-sub soon">Coming soon, once Stripe is connected.</p></div>
+        </details>
+
+        <details class="card">
+          <summary>What people told us (polls)</summary>
+          <div class="body"><p class="card-sub soon">Coming soon, once Kit is connected.</p></div>
+        </details>
+
+        <details class="card">
+          <summary>Devices</summary>
+          <div class="body">
+            <div class="table-wrap"><table class="mini"><thead><tr><th>Device</th><th class="num">Visits</th><th class="num">Completions</th><th class="num">Completion rate</th></tr></thead><tbody id="devices"></tbody></table></div>
+          </div>
+        </details>
+      </section>
+
+      <!-- ── People ── -->
+      <section id="tab-people" hidden>
+        <div class="card">
+          <div class="card-head"><h2>Where people are</h2></div>
+          <p class="card-sub" id="stagesSub"></p>
+          <div class="stage-list" id="stages"></div>
+        </div>
+
+        <div class="card">
+          <div class="filters">
+            <input type="search" id="pSearch" placeholder="Search name or email">
+            <select id="pStage" aria-label="Stage"></select>
+            <select id="pStyle" aria-label="Top style"></select>
+            <select id="pSource" aria-label="Source"></select>
+            <select id="pPurchase" aria-label="Purchase type" disabled title="Coming soon"><option>Purchase type (coming soon)</option></select>
+            <button type="button" class="btn-sm" id="pCsv">Export CSV</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr>
+                <th>Name</th><th>Email</th><th>Quiz date</th><th>Top style</th><th>Source</th><th>Stage</th>
+                <th class="num">Purchases</th><th class="num">Spent</th><th>PDF</th><th>Feedback</th><th>Call</th>
+              </tr></thead>
+              <tbody id="peopleBody"></tbody>
+            </table>
+          </div>
+          <p class="card-sub" id="peopleEmpty" style="margin-top:10px"></p>
+          <div class="pager"><span id="pPage"></span><button class="btn-sm" id="pPrev">Previous</button><button class="btn-sm" id="pNext">Next</button></div>
+        </div>
+      </section>
+
+      <!-- ── Feedback ── -->
+      <section id="tab-feedback" hidden>
+        <div class="stats-row" id="fbStats"></div>
+        <div class="card">
+          <div class="filters">
+            <input type="search" id="fSearch" placeholder="Search name, email or note">
+            <select id="fAnswer" aria-label="Answer">
+              <option value="">All answers</option>
+              <option value="spot_on">Spot on</option>
+              <option value="partly">Partly</option>
+              <option value="not_really">Not really</option>
+            </select>
+            <button type="button" class="btn-sm" id="fCsv">Export CSV</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Date</th><th>Name</th><th>Email</th><th>Top style</th><th>Answer</th><th class="num">Stars</th><th>Note</th></tr></thead>
+              <tbody id="fbBody"></tbody>
+            </table>
+          </div>
+          <p class="card-sub" id="fbEmpty" style="margin-top:10px"></p>
+          <div class="pager"><span id="fPage"></span><button class="btn-sm" id="fPrev">Previous</button><button class="btn-sm" id="fNext">Next</button></div>
+        </div>
+      </section>
     </div>
   </main>
+
+  <div class="panel-backdrop" id="panelBackdrop" hidden></div>
+  <aside class="panel" id="panel" hidden aria-label="Person timeline">
+    <button class="close" id="panelClose" aria-label="Close">&times;</button>
+    <h2 id="panelName"></h2>
+    <p class="card-sub" id="panelSub"></p>
+    <ul class="timeline" id="panelItems"></ul>
+  </aside>
 
   <script src="../vendor/supabase-js-2.39.3.min.js"></script>
   <script type="module">
@@ -310,13 +459,47 @@
     const $ = id => document.getElementById(id);
     const esc = v => String(v ?? '').replace(/[&<>"]/g,
       c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-    const fmt = n => Number(n).toLocaleString();
-    const TOTAL_QUESTIONS = 15;
+    const fmt = n => Number(n || 0).toLocaleString();
+    const pct = (n, base) => base ? Math.round((n / base) * 100) : 0;
     const SELF_URL = location.origin + location.pathname;
-    const DAY_MS = 864e5;
+    const PAGE = 50;
+    const ppl = n => `${fmt(n)} ${Number(n) === 1 ? 'person' : 'people'}`;
+    const clk = n => `${fmt(n)} ${Number(n) === 1 ? 'click' : 'clicks'}`;
 
-    let allEvents = [], allSessions = [], allLeads = [];
-    let rangeDays = 30;
+    /* The 11 quiz results, in quiz order, so charts show every style even at zero. */
+    const STYLES = [
+      ['r_z1_KbCVyDt', 'Still Exploring'], ['r_Q23t28UcGsm', 'Open Relationship'],
+      ['r_zSSpoo1B8J', 'Polyamory'], ['r_a_57itxla3f', 'Swinging / The Lifestyle'],
+      ['r_twVl5hnSB3Y', 'Hotwife / Stag & Vixen'], ['r_xGAqpa2lp0c', 'Cuckolding'],
+      ['r_vBMS3JX76g', 'Monogamish'], ['r_IlnWBruy-C', 'Hierarchical Polyamory'],
+      ['r_lsP7N-LvTv', 'Relationship Anarchy'], ['r_aPwM1WGTMl', 'Solo Polyamory'],
+      ['r_wo9ZhTvshw', 'Mono/Poly'],
+    ];
+    const shortStyle = t => String(t || '').split(' (')[0];
+    const SOURCES = ['Email', 'Blog', 'Instagram DMs (ManyChat)', 'Instagram bio', 'Facebook',
+      'TikTok', 'Website', 'Direct / unknown', 'Other'];
+    /* Furthest stage first; the ones that need Stripe, Kit or TidyCal come later. */
+    const STAGES = [
+      ['Booked a call', false], ['Bought Bundle + 7 Conversations', false], ['Bought Bundle', false],
+      ['Bought Solo + 7 Conversations', false], ['Bought Solo', false], ['Bought 7 Conversations only', false],
+      ['Finished non-buyer emails (no purchase)', false], ['In non-buyer emails', false],
+      ['Results email sent', false], ['Took the quiz', true],
+    ];
+    const ANSWERS = { spot_on: 'Spot on', partly: 'Partly', not_really: 'Not really' };
+
+    /* ── Filters shared by every tab ── */
+    const ui = { tab: 'overview', peopleOffset: 0, fbOffset: 0 };
+    function range() {
+      const days = Number($('rangeSel').value);
+      const to = new Date(Date.now() + 864e5);
+      const from = days ? new Date(Date.now() - days * 864e5) : new Date('2020-01-01');
+      return { p_from: from.toISOString(), p_to: to.toISOString(), p_exclude_tests: $('excludeTests').checked };
+    }
+    async function rpc(name, args) {
+      const { data, error } = await supabase.rpc(name, args);
+      if (error) throw new Error(error.message);
+      return data;
+    }
 
     /* ── Auth ── */
     async function init() {
@@ -337,8 +520,10 @@
         }
       } catch (e) { showError(`Admin check failed: ${e.message}`); return; }
 
+      fillFilterOptions();
       $('topbar').hidden = false;
-      await loadAndRender();
+      $('dash').hidden = false;
+      await loadTab();
     }
 
     $('googleBtn').addEventListener('click', async () => {
@@ -348,226 +533,250 @@
       });
       if (error) { $('notice').textContent = error.message; $('googleBtn').disabled = false; }
     });
-
-    $('signOutBtn').addEventListener('click', async () => {
-      await supabase.auth.signOut(); location.reload();
-    });
+    $('signOutBtn').addEventListener('click', async () => { await supabase.auth.signOut(); location.reload(); });
 
     function showError(msg) {
       $('loadingView').hidden = $('dataLoading').hidden = true;
       $('errorMsg').textContent = msg; $('errorView').hidden = false;
     }
 
-    /* ── Data ── */
-    async function loadAndRender() {
-      $('dataLoading').hidden = false; $('dash').hidden = true; $('errorView').hidden = true;
+    /* ── Tabs and controls ── */
+    document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
+      ui.tab = t.dataset.tab;
+      document.querySelectorAll('.tab').forEach(x => x.setAttribute('aria-selected', String(x === t)));
+      ['overview', 'people', 'feedback'].forEach(k => { $('tab-' + k).hidden = k !== ui.tab; });
+      loadTab();
+    }));
+    const reloadAll = () => { ui.peopleOffset = 0; ui.fbOffset = 0; loadTab(); };
+    $('rangeSel').addEventListener('change', reloadAll);
+    $('excludeTests').addEventListener('change', reloadAll);
+    $('refreshBtn').addEventListener('click', loadTab);
+
+    async function loadTab() {
+      $('dataLoading').hidden = false; $('errorView').hidden = true;
       try {
-        const [ev, se, le] = await Promise.all([
-          supabase.from('enm_quiz_events')
-            .select('run_id, event, question_number, created_at')
-            .order('created_at', { ascending: false }).limit(50000),
-          supabase.from('enm_quiz_sessions')
-            .select('result_title, completed_at, duration_seconds, lead_id')
-            .order('completed_at', { ascending: false }).limit(20000),
-          supabase.from('enm_quiz_leads')
-            .select('id, email, first_name, created_at')
-            .order('created_at', { ascending: false }).limit(1000),
-        ]);
-        if (ev.error) throw new Error(`events: ${ev.error.message}`);
-        if (se.error) throw new Error(`sessions: ${se.error.message}`);
-        // leads failure is non-fatal
-        allEvents   = ev.data ?? [];
-        allSessions = se.data ?? [];
-        allLeads    = le.error ? [] : (le.data ?? []);
-        render();
-      } catch (e) { showError(e.message); return; }
-      $('dataLoading').hidden = true; $('dash').hidden = false;
+        if (ui.tab === 'overview') await loadOverview();
+        else if (ui.tab === 'people') await loadPeople();
+        else await loadFeedback();
+      } catch (e) { showError(e.message); }
+      $('dataLoading').hidden = true;
     }
 
-    $('refreshBtn').addEventListener('click', loadAndRender);
-    $('rangeSel').addEventListener('change', e => { rangeDays = Number(e.target.value); render(); });
-
-    const cutoff = () => rangeDays > 0 ? new Date(Date.now() - rangeDays * DAY_MS) : null;
-    const inRange = (iso, cut) => !cut || new Date(iso) >= cut;
-
-    /* ── Render ── */
-    function render() {
-      const cut = cutoff();
-      const events   = allEvents.filter(e => inRange(e.created_at, cut));
-      const sessions = allSessions.filter(s => inRange(s.completed_at, cut));
-      const leads    = allLeads.filter(l => inRange(l.created_at, cut));
-      renderStats(events, sessions, leads);
-      renderDist(sessions);
-      renderRecent(sessions);
-      renderChart(events, cut);
-      renderFunnel(events, sessions);
+    /* ── Shared bits ── */
+    function bars(rows, { total } = {}) {
+      const max = Math.max(1, ...rows.map(r => r.n));
+      return rows.map(r => `<div class="dist-row">
+          <div class="dist-label">${esc(r.label)}</div>
+          <div class="dist-track"><div class="dist-fill" style="width:${(r.n / max) * 100}%"></div></div>
+          <div class="dist-val">${fmt(r.n)}${total ? ` <span style="color:var(--faint)">&middot; ${pct(r.n, total)}%</span>` : ''}${r.extra ? `<br><span style="color:var(--faint)">${esc(r.extra)}</span>` : ''}</div>
+        </div>`).join('');
     }
+    const statCard = (label, value, note, soon) => `<div class="stat${soon ? ' soon-card' : ''}">
+        <div class="stat-label">${esc(label)}</div>
+        <div class="stat-value">${soon ? 'Coming soon' : esc(value)}</div>
+        ${note ? `<div class="stat-note">${esc(note)}</div>` : ''}</div>`;
+    const date = iso => iso ? new Date(iso).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' }) : '';
+    const dateTime = iso => iso ? new Date(iso).toLocaleString(undefined, { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' }) : '';
 
-    /* ── Stats ── */
-    function renderStats(events, sessions, leads) {
-      const starts = new Set(events.filter(e => e.event === 'start').map(e => e.run_id)).size;
-      const durations = sessions.map(s => s.duration_seconds).filter(n => Number.isFinite(n)).sort((a, b) => a - b);
-      const median = durations.length ? durations[Math.floor(durations.length / 2)] : null;
-      const convRate = starts ? Math.round((sessions.length / starts) * 100) : 0;
+    /* ── Overview ── */
+    async function loadOverview() {
+      const d = await rpc('enm_dash_overview', range());
+      const f = d.funnel || {};
+      const retakes = Math.max(0, (d.completions || 0) - (d.unique_people || 0));
+      $('statsRow').innerHTML =
+        statCard('Quiz completions', fmt(d.completions), `${ppl(d.unique_people)}, ${fmt(retakes)} ${retakes === 1 ? 'retake' : 'retakes'}`) +
+        statCard('Purchases', '', 'after Stripe is connected', true) +
+        statCard('Revenue', '', 'after Stripe is connected', true) +
+        statCard('Calls booked', '', `${fmt(d.actions?.call_people)} clicked Schedule a call`, true);
 
-      const chips = [
-        { label: 'Completions',  value: fmt(sessions.length),  note: 'reached their result' },
-        { label: 'Emails collected', value: fmt(leads.length),  note: 'in this period' },
-        { label: 'Conversion',   value: starts ? convRate + '%' : '—', note: 'of who started' },
-        { label: 'Median time',  value: median != null ? fmtDur(median) : '—', note: 'start → result' },
-      ];
-      $('statsRow').innerHTML = chips.map(c =>
-        `<div class="stat">
-          <div class="stat-label">${esc(c.label)}</div>
-          <div class="stat-value">${esc(c.value)}</div>
-          <div class="stat-note">${esc(c.note)}</div>
-        </div>`
-      ).join('');
-    }
-
-    /* ── Results breakdown ── */
-    function renderDist(sessions) {
-      if (!sessions.length) {
-        $('distSub').textContent = 'No completed runs in this range yet.';
-        $('dist').innerHTML = '';
-        return;
-      }
-      const counts = new Map();
-      sessions.forEach(s => {
-        const t = s.result_title || '(unknown)';
-        counts.set(t, (counts.get(t) ?? 0) + 1);
-      });
-      const sorted = [...counts.entries()].sort((a, b) => b[1] - a[1]);
-      const max = sorted[0][1];
-      $('distSub').textContent = `${fmt(sessions.length)} completed run${sessions.length === 1 ? '' : 's'} in this period.`;
-      $('dist').innerHTML = sorted.map(([title, n]) => {
-        const pct = Math.round((n / sessions.length) * 100);
-        return `<div class="dist-row">
-          <div class="dist-label" title="${esc(title)}">${esc(title)}</div>
-          <div class="dist-track"><div class="dist-fill" style="width:${Math.round((n/max)*100)}%"></div></div>
-          <div class="dist-val">${n} &middot; ${pct}%</div>
-        </div>`;
-      }).join('');
-    }
-
-    /* ── Recent submissions ── */
-    function renderRecent(sessions) {
-      // Build a lead lookup by id
-      const leadMap = new Map(allLeads.map(l => [l.id, l]));
-      // Only sessions that have a matching lead
-      const rows = sessions
-        .filter(s => s.lead_id && leadMap.has(s.lead_id))
-        .slice(0, 40)
-        .map(s => ({ ...s, lead: leadMap.get(s.lead_id) }));
-
-      if (!rows.length) {
-        $('recentEmpty').textContent = 'No submissions with email in this period yet.';
-        $('recentBody').innerHTML = '';
-        return;
-      }
-      $('recentEmpty').textContent = '';
-      $('recentBody').innerHTML = rows.map(r => {
-        const d = new Date(r.completed_at);
-        const dateStr = d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: '2-digit' });
-        const timeStr = d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
-        const dur = r.duration_seconds != null ? fmtDur(r.duration_seconds) : '—';
-        return `<tr>
-          <td class="td-muted" title="${esc(d.toISOString())}">${esc(dateStr)} <span style="color:var(--faint)">${esc(timeStr)}</span></td>
-          <td>${esc(r.lead.first_name || '—')}</td>
-          <td class="td-email">${esc(r.lead.email || '—')}</td>
-          <td><span class="result-pill">${esc(r.result_title || '—')}</span></td>
-          <td class="td-muted">${esc(dur)}</td>
-        </tr>`;
-      }).join('');
-    }
-
-    /* ── Activity chart ── */
-    function renderChart(events, cut) {
-      const days = rangeDays > 0 ? rangeDays : 60;
-      const start = cut ? new Date(cut) : new Date(Date.now() - (days - 1) * DAY_MS);
-      start.setHours(0, 0, 0, 0);
-      const today = new Date(); today.setHours(0, 0, 0, 0);
-      const n = Math.round((today - start) / DAY_MS) + 1;
-      const loads = new Array(n).fill(0), starts = new Array(n).fill(0);
-      events.forEach(e => {
-        const d = new Date(e.created_at); d.setHours(0, 0, 0, 0);
-        const i = Math.round((d - start) / DAY_MS);
-        if (i < 0 || i >= n) return;
-        if (e.event === 'page_view') loads[i]++;
-        else if (e.event === 'start') starts[i]++;
-      });
-      const max = Math.max(1, ...loads);
-      let bars = '';
-      for (let i = 0; i < n; i++) {
-        const hL = Math.max(loads[i] ? 2 : 0, Math.round((loads[i] / max) * 100));
-        const hSinner = hL > 0 ? Math.round((starts[i] / loads[i]) * 100) : 0;
-        const lbl = new Date(start.getTime() + i * DAY_MS)
-          .toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
-        bars += `<div class="chart-col" title="${lbl}: ${loads[i]} load${loads[i]===1?'':'s'}, ${starts[i]} start${starts[i]===1?'':'s'}">
-          <div style="position:relative;height:${hL}%;border-radius:3px 3px 0 0;background:var(--rose-dim)">
-            <div style="position:absolute;bottom:0;left:0;right:0;height:${hSinner}%;background:var(--rose);border-radius:3px 3px 0 0"></div>
-          </div>
-        </div>`;
-      }
-      $('chartBars').innerHTML = bars;
-      const step = Math.max(1, Math.floor(n / 8));
-      $('chartX').innerHTML = Array.from({ length: n }, (_, i) => {
-        const d = new Date(start.getTime() + i * DAY_MS);
-        return `<span>${i % step === 0 ? d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : ''}</span>`;
-      }).join('');
-      $('chartSub').textContent = `Quiz page loads and quiz starts per day${rangeDays > 0 ? ` over the last ${rangeDays} days` : ' (last 60 days shown)'}.`;
-    }
-
-    /* ── Funnel (key milestones only) ── */
-    function renderFunnel(events, sessions) {
-      const setOf = ev => new Set(ev.map(e => e.run_id));
-      const opened  = setOf(events.filter(e => e.event === 'page_view'));
-      const started = setOf(events.filter(e => e.event === 'start'));
-      const gate    = setOf(events.filter(e => e.event === 'gate'));
-      const result  = setOf(events.filter(e => e.event === 'result'));
-
-      // Average furthest question reached
-      const perRun = new Map();
-      events.filter(e => e.event === 'question_answered')
-        .forEach(e => perRun.set(e.run_id, Math.max(perRun.get(e.run_id) ?? 0, e.question_number)));
-      const reached = [...started].map(id => perRun.get(id) ?? 0).filter(n => n > 0);
-      const avgQ = reached.length ? (reached.reduce((a, b) => a + b, 0) / reached.length).toFixed(1) : null;
-
-      const base = started.size || opened.size || 1;
+      const base = f.visited || 0;
       const steps = [
-        { label: 'Opened quiz',        n: opened.size,  major: true },
-        { label: 'Pressed start',      n: started.size, major: true },
-        { label: 'Reached email gate', n: gate.size,    major: true },
-        { label: 'Got their result',   n: result.size,  major: true },
+        ['Visited quiz', f.visited], ['Started', f.started], ['Finished (gave email)', f.finished],
+        ['Bought', null], ['Booked a call', null],
       ];
-
-      let prev = null;
-      $('funnel').innerHTML = steps.map(({ label, n, major }) => {
-        const pct = Math.round((n / base) * 100);
-        const drop = prev != null && prev > 0 ? Math.round((1 - n / prev) * 100) : null;
-        prev = n;
+      $('funnel').innerHTML = steps.map(([label, n]) => {
+        const soon = n == null;
+        const p = soon ? 0 : pct(n, base);
         return `<div class="funnel-step">
           <div class="funnel-label"><b>${esc(label)}</b></div>
-          <div class="funnel-track">
-            <div class="funnel-fill ${major ? 'fill-major' : 'fill-minor'}" style="width:${pct}%"></div>
-          </div>
-          <div class="funnel-val">
-            ${fmt(n)} <span style="color:var(--faint)">· ${pct}%</span>
-            ${drop != null && drop > 5 ? `<span class="drop">-${drop}% drop</span>` : ''}
-          </div>
+          <div class="funnel-track"><div class="funnel-fill fill-major" style="width:${p}%"></div></div>
+          <div class="funnel-val">${soon ? '<span class="soon">Coming soon</span>' : `${fmt(n)} <span style="color:var(--faint)">&middot; ${p}%</span>`}</div>
         </div>`;
       }).join('');
 
-      $('funnelSub').textContent = avgQ
-        ? `Average furthest question reached: ${avgQ} of ${TOTAL_QUESTIONS}.`
-        : 'Shows where people leave the quiz.';
+      const bySource = new Map((d.sources || []).map(s => [s.source, s]));
+      const srcRows = SOURCES.filter(s => s !== 'Other' || bySource.has('Other')).map(s => ({
+        label: s, n: bySource.get(s)?.completions || 0,
+        extra: bySource.get(s) ? `${fmt(bySource.get(s).visits)} visits` : '',
+      }));
+      $('sources').innerHTML = bars(srcRows, { total: d.completions });
+      $('campaigns').innerHTML = (d.campaigns || []).length
+        ? d.campaigns.slice(0, 20).map(c => `<tr><td>${esc(c.source)}</td><td>${esc(c.campaign)}</td><td class="num">${fmt(c.completions)}</td></tr>`).join('')
+        : '<tr><td colspan="3" class="td-muted">No campaign tags yet.</td></tr>';
+
+      $('resultsSub').textContent = `Top result for each quiz completion (${fmt(d.completions)}).`;
+      $('results').innerHTML = bars(STYLES.map(([uid, t]) => ({ label: t, n: d.results?.[uid] || 0 })), { total: d.completions });
+      $('matches').innerHTML = STYLES.map(([uid, t]) =>
+        `<tr><td>${esc(t)}</td><td class="num">${fmt(d.second?.[uid])}</td><td class="num">${fmt(d.third?.[uid])}</td></tr>`).join('');
+
+      const qs = d.questions || [];
+      const started = f.started || 0;
+      let prev = started;
+      $('questions').innerHTML = qs.map(q => {
+        const quit = Math.max(0, prev - q.answered); prev = q.answered;
+        return `<div class="funnel-step">
+          <div class="funnel-label"><b>Question ${q.n}</b></div>
+          <div class="funnel-track"><div class="funnel-fill fill-minor" style="width:${pct(q.answered, started)}%"></div></div>
+          <div class="funnel-val">${fmt(q.answered)} <span style="color:var(--faint)">&middot; ${pct(q.answered, started)}%</span>${quit ? `<span class="drop">${fmt(quit)} left here</span>` : ''}</div>
+        </div>`;
+      }).join('');
+
+      const a = d.actions || {};
+      $('actions').innerHTML = [
+        ['Saved their results (PDF)', `${ppl(a.pdf_people)} (${clk(a.pdf_clicks)})`],
+        ['Clicked their roadmap', `${ppl(a.roadmap_people)} (${clk(a.roadmap_clicks)})`],
+        ['Clicked Schedule a call', `${ppl(a.call_people)} (${clk(a.call_clicks)})`],
+        ['Invited a partner', fmt(a.invites)],
+        ['Rated their result', fmt(a.rated)],
+      ].map(([k, v]) => `<span>${esc(k)}</span><span>${esc(v)}</span>`).join('');
+
+      $('devices').innerHTML = (d.devices || []).map(x =>
+        `<tr><td>${esc(x.device)}</td><td class="num">${fmt(x.visits)}</td><td class="num">${fmt(x.completions)}</td><td class="num">${pct(x.completions, x.visits)}%</td></tr>`).join('')
+        || '<tr><td colspan="4" class="td-muted">No visits yet.</td></tr>';
     }
 
-    /* ── Helpers ── */
-    function fmtDur(sec) {
-      const m = Math.floor(sec / 60), s = Math.round(sec % 60);
-      return m ? `${m}m ${s}s` : `${s}s`;
+    /* ── People ── */
+    function fillFilterOptions() {
+      $('pStage').innerHTML = '<option value="">All stages</option>' +
+        STAGES.map(([s, live]) => `<option value="${esc(s)}"${live ? '' : ' disabled'}>${esc(s)}${live ? '' : ' (coming soon)'}</option>`).join('');
+      $('pStyle').innerHTML = '<option value="">All styles</option>' +
+        STYLES.map(([uid, t]) => `<option value="${esc(uid)}">${esc(t)}</option>`).join('');
+      $('pSource').innerHTML = '<option value="">All sources</option>' +
+        SOURCES.map(s => `<option value="${esc(s)}">${esc(s)}</option>`).join('');
     }
+    const peopleArgs = (limit, offset) => ({
+      ...range(), p_search: $('pSearch').value.trim() || null, p_stage: $('pStage').value || null,
+      p_style: $('pStyle').value || null, p_source: $('pSource').value || null, p_limit: limit, p_offset: offset,
+    });
+    let pTimer = null;
+    $('pSearch').addEventListener('input', () => { clearTimeout(pTimer); pTimer = setTimeout(() => { ui.peopleOffset = 0; loadTab(); }, 350); });
+    ['pStage', 'pStyle', 'pSource'].forEach(id => $(id).addEventListener('change', () => { ui.peopleOffset = 0; loadTab(); }));
+    $('pPrev').addEventListener('click', () => { ui.peopleOffset = Math.max(0, ui.peopleOffset - PAGE); loadTab(); });
+    $('pNext').addEventListener('click', () => { ui.peopleOffset += PAGE; loadTab(); });
+
+    const yes = v => v ? '<span class="tick">&#10003;</span>' : '<span class="dash">&middot;</span>';
+    async function loadPeople() {
+      const d = await rpc('enm_dash_people', peopleArgs(PAGE, ui.peopleOffset));
+      const total = d.people_total || 0;
+      $('stagesSub').textContent = `${ppl(total)} (one per email) whose latest quiz falls in this period.`;
+      $('stages').innerHTML = STAGES.map(([s, live]) => {
+        const n = d.stages?.[s] || 0;
+        return `<div class="dist-row${live ? '' : ' soon-row'}">
+          <div class="dist-label">${esc(s)}</div>
+          <div class="dist-track"><div class="dist-fill" style="width:${pct(n, total)}%"></div></div>
+          <div class="dist-val">${live ? `${fmt(n)} &middot; ${pct(n, total)}%` : 'Coming soon'}</div></div>`;
+      }).join('');
+
+      $('peopleBody').innerHTML = (d.rows || []).map(p => `<tr class="clickable" data-email="${esc(p.email)}">
+          <td>${esc(p.name || '')}</td>
+          <td class="td-email">${esc(p.email)}</td>
+          <td class="td-muted">${esc(date(p.last_quiz_at))}${p.quizzes > 1 ? ` <span class="soon">(${p.quizzes} times)</span>` : ''}</td>
+          <td><span class="result-pill">${esc(shortStyle(p.top_style))}</span></td>
+          <td class="td-muted">${esc(p.source)}${p.campaign ? `<br><span class="soon">${esc(p.campaign)}</span>` : ''}</td>
+          <td>${esc(p.stage)}</td>
+          <td class="num dash">soon</td><td class="num dash">soon</td>
+          <td>${yes(p.saved_pdf)}</td><td>${yes(p.gave_feedback)}</td><td class="dash">soon</td>
+        </tr>`).join('');
+      $('peopleEmpty').textContent = (d.rows || []).length ? '' : 'Nobody matches these filters.';
+      const shown = d.total || 0;
+      $('pPage').textContent = shown ? `${ui.peopleOffset + 1} to ${Math.min(ui.peopleOffset + PAGE, shown)} of ${fmt(shown)}` : '';
+      $('pPrev').disabled = ui.peopleOffset === 0;
+      $('pNext').disabled = ui.peopleOffset + PAGE >= shown;
+    }
+    $('peopleBody').addEventListener('click', (e) => {
+      const row = e.target.closest('tr[data-email]');
+      if (row) openPerson(row.dataset.email);
+    });
+
+    /* ── Person timeline ── */
+    async function openPerson(email) {
+      $('panelName').textContent = email; $('panelSub').textContent = 'Loading…'; $('panelItems').innerHTML = '';
+      $('panel').hidden = $('panelBackdrop').hidden = false;
+      try {
+        const d = await rpc('enm_dash_person', { p_email: email });
+        const p = d.person || {};
+        $('panelName').textContent = p.name || email;
+        $('panelSub').textContent = [email, shortStyle(p.top_style), p.source, p.stage].filter(Boolean).join(' · ');
+        $('panelItems').innerHTML = (d.items || []).map(i => `<li>
+            <div class="when">${esc(dateTime(i.at))}</div>
+            <div class="what">${esc(i.what)}</div>
+            ${i.detail ? `<div class="detail">${esc(i.detail)}</div>` : ''}</li>`).join('')
+          + '<li><div class="what soon">Results email, email steps, purchases and calls: coming soon</div></li>';
+      } catch (e) { $('panelSub').textContent = e.message; }
+    }
+    const closePanel = () => { $('panel').hidden = $('panelBackdrop').hidden = true; };
+    $('panelClose').addEventListener('click', closePanel);
+    $('panelBackdrop').addEventListener('click', closePanel);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closePanel(); });
+
+    /* ── Feedback ── */
+    const fbArgs = (limit, offset) => ({
+      ...range(), p_search: $('fSearch').value.trim() || null, p_answer: $('fAnswer').value || null,
+      p_limit: limit, p_offset: offset,
+    });
+    let fTimer = null;
+    $('fSearch').addEventListener('input', () => { clearTimeout(fTimer); fTimer = setTimeout(() => { ui.fbOffset = 0; loadTab(); }, 350); });
+    $('fAnswer').addEventListener('change', () => { ui.fbOffset = 0; loadTab(); });
+    $('fPrev').addEventListener('click', () => { ui.fbOffset = Math.max(0, ui.fbOffset - PAGE); loadTab(); });
+    $('fNext').addEventListener('click', () => { ui.fbOffset += PAGE; loadTab(); });
+
+    async function loadFeedback() {
+      const d = await rpc('enm_dash_feedback', fbArgs(PAGE, ui.fbOffset));
+      const s = d.summary || {};
+      const n = s.responses || 0;
+      $('fbStats').innerHTML =
+        statCard('Responses', fmt(n), `${fmt(s.with_note)} left a note`) +
+        statCard('Spot on', `${pct(s.spot_on, n)}%`, ppl(s.spot_on)) +
+        statCard('Partly', `${pct(s.partly, n)}%`, ppl(s.partly)) +
+        statCard('Not really', `${pct(s.not_really, n)}%`, ppl(s.not_really)) +
+        statCard('Average stars', s.avg_stars != null ? Number(s.avg_stars).toFixed(1) : '·', 'out of 5');
+      $('fbBody').innerHTML = (d.rows || []).map(r => `<tr>
+          <td class="td-muted">${esc(date(r.at))}</td><td>${esc(r.name || '')}</td>
+          <td class="td-email">${esc(r.email || '')}</td>
+          <td><span class="result-pill">${esc(shortStyle(r.style))}</span></td>
+          <td>${esc(ANSWERS[r.answer] || r.answer || '')}</td>
+          <td class="num">${r.stars ?? ''}</td><td>${esc(r.note || '')}</td></tr>`).join('');
+      $('fbEmpty').textContent = (d.rows || []).length ? '' : 'No feedback in this period yet.';
+      const shown = d.total || 0;
+      $('fPage').textContent = shown ? `${ui.fbOffset + 1} to ${Math.min(ui.fbOffset + PAGE, shown)} of ${fmt(shown)}` : '';
+      $('fPrev').disabled = ui.fbOffset === 0;
+      $('fNext').disabled = ui.fbOffset + PAGE >= shown;
+    }
+
+    /* ── CSV export of the current filters (up to 5,000 rows) ── */
+    function downloadCsv(name, header, rows) {
+      const cell = v => `"${String(v ?? '').replace(/"/g, '""')}"`;
+      const csv = [header, ...rows].map(r => r.map(cell).join(',')).join('\r\n');
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' }));
+      a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    }
+    $('pCsv').addEventListener('click', async () => {
+      try {
+        const d = await rpc('enm_dash_people', peopleArgs(5000, 0));
+        downloadCsv('quiz-people.csv',
+          ['Name', 'Email', 'First quiz', 'Latest quiz', 'Times taken', 'Top style', 'Source', 'Campaign', 'Stage', 'Saved PDF', 'Gave feedback'],
+          (d.rows || []).map(p => [p.name, p.email, p.first_quiz_at, p.last_quiz_at, p.quizzes, shortStyle(p.top_style),
+            p.source, p.campaign, p.stage, p.saved_pdf ? 'yes' : 'no', p.gave_feedback ? 'yes' : 'no']));
+      } catch (e) { alert(e.message); }
+    });
+    $('fCsv').addEventListener('click', async () => {
+      try {
+        const d = await rpc('enm_dash_feedback', fbArgs(5000, 0));
+        downloadCsv('quiz-feedback.csv', ['Date', 'Name', 'Email', 'Top style', 'Answer', 'Stars', 'Note'],
+          (d.rows || []).map(r => [r.at, r.name, r.email, shortStyle(r.style), ANSWERS[r.answer] || r.answer, r.stars, r.note]));
+      } catch (e) { alert(e.message); }
+    });
 
     init();
   </script>
