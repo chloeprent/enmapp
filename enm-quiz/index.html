@@ -552,12 +552,11 @@
       background: #fff7ee; border: 1px solid #fde3c4; border-radius: 16px; padding: 12px 16px 16px;
     }
     .rate-stars { display: inline-flex; gap: 2px; margin-bottom: 6px; }
-    .rate-stars button {
-      background: none; border: 0; cursor: pointer; padding: 2px 3px; line-height: 1;
-      font-size: 1.625rem; color: #f3d7b4; transition: color .12s ease, transform .12s ease;
+    .rate-stars span {
+      display: inline-block; padding: 2px 3px; line-height: 1;
+      font-size: 1.625rem; color: #f3d7b4; transition: color .2s ease, transform .2s ease;
     }
-    .rate-stars button.on { color: var(--rate); }
-    .rate-stars button:active { transform: scale(.9); }
+    .rate-stars span.on { color: var(--rate); transform: scale(1.08); }
     .rate-q { font-size: .9375rem; font-weight: 600; color: #6b3d00; margin-bottom: 10px; }
     .rate-btns { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
     .rate-btns button {
@@ -583,6 +582,7 @@
       opacity: 0; transition: opacity .3s ease, height .3s ease, margin .3s ease;
     }
     .rate-thanks.show { opacity: 1; height: 1.4em; margin-top: 10px; }
+    .rate-box.done { opacity: 0; transform: scale(.97); transition: opacity .45s ease, transform .45s ease; }
 
     /* ── Save as PDF ── */
     .save-pdf-row { margin-top: 40px; }
@@ -788,12 +788,8 @@
         <a class="btn" id="resultCta" target="_blank" rel="noopener"></a>
       </div>
       <div class="rate-box" id="rateBox" hidden>
-        <div class="rate-stars" id="rateStars" role="radiogroup" aria-label="Rate your result">
-          <button type="button" data-stars="1" role="radio" aria-checked="false" aria-label="1 star">&#9733;</button>
-          <button type="button" data-stars="2" role="radio" aria-checked="false" aria-label="2 stars">&#9733;</button>
-          <button type="button" data-stars="3" role="radio" aria-checked="false" aria-label="3 stars">&#9733;</button>
-          <button type="button" data-stars="4" role="radio" aria-checked="false" aria-label="4 stars">&#9733;</button>
-          <button type="button" data-stars="5" role="radio" aria-checked="false" aria-label="5 stars">&#9733;</button>
+        <div class="rate-stars" id="rateStars" aria-hidden="true">
+          <span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span>
         </div>
         <p class="rate-q">Does this result feel like you?</p>
         <div class="rate-btns" id="rateBtns">
@@ -1478,78 +1474,64 @@
     }
 
     /* ── Result rating ──────────────────────────────────────────────────────── */
-    /* Stars plus a one-tap "does this feel like you?". Both can be changed at
-       any time; each change is saved (after a short pause, so a few quick taps
-       make one save) as a quiz event, and the latest one per run is the answer.
-       A low score or a "Partly"/"Not really" offers an optional note. */
-    const rating = { stars: null, fit: null };
-    let rateTimer = null, thanksTimer = null;
+    /* One tap on "does this feel like you?"; the stars fill in to match the
+       answer (they are not clicked). The answer can be changed until the
+       feedback is finished, and each change is saved (after a short pause) as a
+       result_rating event. "Spot on" finishes on its own; "Partly"/"Not really"
+       offer an optional note and finish on Send. Then the card folds away. */
+    const FIT_STARS = { spot_on: 5, partly: 3, not_really: 1 };
+    let rateFit = null, rateTimer = null, finishTimer = null;
 
     function ratingMeta(extra) {
       const top = state.finalTop?.[0]?.result;
       return { result_uid: top?.uid ?? null, result_title: top?.title ?? null,
-        stars: rating.stars, rating: rating.fit, ...extra };
+        rating: rateFit, stars: FIT_STARS[rateFit] ?? null, ...extra };
     }
 
-    function flashThanks() {
-      const el = $('rateThanks');
-      clearTimeout(thanksTimer);
-      el.classList.add('show');
-      thanksTimer = setTimeout(() => el.classList.remove('show'), 2200);
+    function paintStars(n) {
+      $('rateStars').querySelectorAll('span').forEach((st, i) => st.classList.toggle('on', i < n));
     }
 
     function saveRatingSoon() {
       clearTimeout(rateTimer);
-      rateTimer = setTimeout(() => { track('result_rating', ratingMeta()); flashThanks(); }, 900);
+      rateTimer = setTimeout(() => track('result_rating', ratingMeta()), 900);
     }
 
-    function paintStars(n) {
-      $('rateStars').querySelectorAll('button').forEach(b => {
-        const v = Number(b.dataset.stars);
-        b.classList.toggle('on', n != null && v <= n);
-        b.setAttribute('aria-checked', String(v === rating.stars));
-      });
+    /* Say thanks, then fold the card away. */
+    function finishRating(delay) {
+      clearTimeout(finishTimer);
+      finishTimer = setTimeout(() => {
+        $('rateThanks').classList.add('show');
+        setTimeout(() => $('rateBox').classList.add('done'), 1400);
+        setTimeout(() => { $('rateBox').hidden = true; }, 1900);
+      }, delay);
     }
-
-    function updateNoteBox() {
-      const wantsNote = rating.fit === 'partly' || rating.fit === 'not_really'
-        || (rating.stars != null && rating.stars <= 3);
-      $('rateMore').hidden = !wantsNote;
-    }
-
-    $('rateStars').addEventListener('click', (e) => {
-      const btn = e.target.closest('button[data-stars]');
-      if (!btn) return;
-      rating.stars = Number(btn.dataset.stars);
-      paintStars(rating.stars);
-      updateNoteBox();
-      saveRatingSoon();
-    });
-    /* Preview on hover (desktop), snap back to the chosen score on leave. */
-    $('rateStars').addEventListener('mouseover', (e) => {
-      const btn = e.target.closest('button[data-stars]');
-      if (btn) paintStars(Number(btn.dataset.stars));
-    });
-    $('rateStars').addEventListener('mouseleave', () => paintStars(rating.stars));
 
     $('rateBtns').addEventListener('click', (e) => {
       const btn = e.target.closest('button[data-rating]');
-      if (!btn) return;
-      rating.fit = btn.dataset.rating;
+      if (!btn || $('rateBox').classList.contains('done')) return;
+      rateFit = btn.dataset.rating;
       $('rateBtns').querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b === btn)));
-      updateNoteBox();
+      paintStars(FIT_STARS[rateFit]);
       saveRatingSoon();
+      clearTimeout(finishTimer);
+      if (rateFit === 'spot_on') {
+        $('rateMore').hidden = true;
+        finishRating(1200);           /* a moment to change their mind */
+      } else {
+        $('rateMore').hidden = false;
+      }
     });
 
+    /* Send works with or without a note, since the note is optional. */
     $('rateSend').addEventListener('click', () => {
       const comment = $('rateText').value.trim();
-      if (!comment) { $('rateText').focus(); return; }
       clearTimeout(rateTimer);
       track('result_rating', ratingMeta());
-      track('result_rating_comment', ratingMeta({ comment: comment.slice(0, 1000) }));
-      $('rateText').value = '';
+      if (comment) track('result_rating_comment', ratingMeta({ comment: comment.slice(0, 1000) }));
       $('rateMore').hidden = true;
-      flashThanks();
+      $('rateBtns').querySelectorAll('button').forEach(b => { b.disabled = true; });
+      finishRating(0);
     });
 
     /* ── Save as PDF ───────────────────────────────────────────────────────── */
