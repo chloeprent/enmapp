@@ -88,6 +88,7 @@
       gap: 30px;
     }
     .cover-head { grid-area: head; }
+    .brand-logo { display: block; width: 132px; height: auto; margin-bottom: 18px; }
     .cover-body { grid-area: body; }
     .cover-visual {
       grid-area: visual; position: relative;
@@ -599,7 +600,8 @@
       #printResults * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       #printResults h1, #printResults h2, #printResults h3 { break-after: avoid; page-break-after: avoid; }
       #printResults p, #printResults li, #printResults .card { break-inside: avoid; page-break-inside: avoid; }
-      .pr-head { text-align: center; margin: 10pt 0 22pt; }
+      .pr-head { text-align: center; margin: 4pt 0 22pt; }
+      .pr-logo { display: block; width: 44mm; height: auto; margin: 0 auto 12pt; }
       .pr-kicker {
         font-size: 9pt; font-weight: 700; letter-spacing: .08em;
         text-transform: uppercase; color: var(--progress);
@@ -658,9 +660,10 @@
     <section class="screen active" id="screenCover">
       <div class="cover-grid">
         <div class="cover-head">
+          <img class="brand-logo" src="./img/swoon-logo.png" alt="Swoon" width="132" height="68">
           <span class="eyebrow"><span class="dot"></span>Free &middot; <span id="coverMetaQ"></span>&nbsp;questions &middot; Instant result</span>
           <h1 class="cover-title" id="coverTitle"></h1>
-          <p class="cover-tagline">For couples exploring ENM together &mdash; answer for yourself, then have your partner take it too.</p>
+          <p class="cover-tagline">For couples exploring ENM together, answer for yourself, then have your partner take it too.</p>
           <div class="rich cover-desc" id="coverDesc"></div>
         </div>
         <div class="cover-visual">
@@ -680,7 +683,7 @@
         </div>
         <div class="cover-body">
           <ul class="checks">
-            <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span>Your primary ENM style &mdash; and what it actually means</span></li>
+            <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span>Your primary ENM style, and what it actually means</span></li>
             <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span>How different ENM dynamics really work in practice</span></li>
             <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span>Clear next steps: what to explore, what to avoid</span></li>
             <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span>Guidance from a coach who has lived this work for 14 years</span></li>
@@ -735,15 +738,15 @@
           <div class="btn-row"><button class="btn" type="submit" id="gateSubmit">Start the quiz</button></div>
         </form>
         <p class="privacy">By submitting you'll receive your result and be added to my newsletter. You can unsubscribe at any time.</p>
-        <p class="privacy" id="gateProgress">That's all 20 questions &mdash; this is the last step.</p>
+        <p class="privacy" id="gateProgress">That's all 20 questions, this is the last step.</p>
       </div>
     </section>
 
     <!-- ── Questions ── -->
     <section class="screen" id="screenQuestion">
       <div class="quiz-hint" id="quizHint" hidden>
-        <p><strong>Answer for yourself</strong> &mdash; have your partner take it separately and compare.</p>
-        <p>Read <em>all</em> answer choices carefully before picking &mdash; several will sound right, but one will fit best. You can go back anytime with the &larr; arrow at the bottom.</p>
+        <p><strong>Answer for yourself</strong>, have your partner take it separately and compare.</p>
+        <p>Read <em>all</em> answer choices carefully before picking, several will sound right, but one will fit best. You can go back anytime with the &larr; arrow at the bottom.</p>
       </div>
       <div class="question-img" id="questionImg" hidden></div>
       <h1 class="headline" id="questionTitle"></h1>
@@ -757,7 +760,7 @@
           <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
           Something off?
         </button>
-        <span class="thanks" id="feedbackThanks" hidden>Thanks &mdash; that's logged.</span>
+        <span class="thanks" id="feedbackThanks" hidden>Thanks, that's logged.</span>
       </div>
     </section>
 
@@ -794,7 +797,7 @@
 
       <div class="partner-box" id="partnerBox" hidden>
         <h3>Invite your partner to take it too</h3>
-        <p>They get their own link and answer for themselves &mdash; you will not see their
+        <p>They get their own link and answer for themselves, you will not see their
            answers unless they show you. We tag the two runs as a pair so you can compare.</p>
         <form class="row" id="partnerForm">
           <input type="email" id="partnerEmail" placeholder="their@email.com" autocomplete="off">
@@ -807,13 +810,13 @@
 
       <div class="tag-prompt" id="tagPromptBanner" hidden>
         <h3>Want more personalized guidance?</h3>
-        <p>Answer 6 quick questions and we'll tailor your aftercare emails to your specific situation — your fears, your pace, your vision.</p>
+        <p>Answer 6 quick questions and we'll tailor your aftercare emails to your specific situation, your fears, your pace, your vision.</p>
         <div class="tag-prompt-btns">
           <button class="btn" type="button" id="tagYesBtn">Yes, personalize my emails</button>
           <button class="btn-ghost" type="button" id="tagNoBtn">No thanks, I'm done</button>
         </div>
       </div>
-      <p class="save-note" id="tagThanksNote" hidden>Thanks — we'll use your answers to personalize the guidance we send you.</p>
+      <p class="save-note" id="tagThanksNote" hidden>Thanks, we'll use your answers to personalize the guidance we send you.</p>
     </section>
 
   </div>
@@ -1195,7 +1198,7 @@
 
       const coreCount = QUIZ.coreQuestionsCount ?? QUIZ.questions.length;
       $('gateProgress').textContent =
-        `That's all ${coreCount} questions — one step away from your result.`;
+        `That's all ${coreCount} questions, one step away from your result.`;
       $('gateSubmit').textContent = 'See my result';
 
       show('screenGate');
@@ -1499,7 +1502,8 @@
       const name = $('firstName').value.trim();
       const date = new Date().toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' });
       const head =
-        `<header class="pr-head"><p class="pr-kicker">Your ENM style results</p>` +
+        `<header class="pr-head"><img class="pr-logo" src="./img/swoon-logo.png" alt="Swoon">` +
+        `<p class="pr-kicker">Your ENM style results</p>` +
         `<h1>Hi ${esc(name || 'there')}, thanks for taking the quiz.</h1>` +
         `<p class="pr-intro">${top.length > 1
           ? 'Here are your top matches. Each one is explained in full on the pages that follow.'

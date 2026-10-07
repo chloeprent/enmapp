@@ -131,7 +131,7 @@ export const QUIZ = {
         },
         {
           "uid": "a_ouHVAQhCyn",
-          "text": "A real, regular part of life — not an occasional thing.",
+          "text": "A real, regular part of life, not an occasional thing.",
           "result": [[3, 2], [2, 1]]
         },
         {
@@ -178,7 +178,7 @@ export const QUIZ = {
     },
     {
       "uid": "q_qQxmbqtPEk",
-      "title": "Picture your partner really hitting it off with someone else — a great date, real chemistry, obvious happiness. Your honest gut reaction?",
+      "title": "Picture your partner really hitting it off with someone else, a great date, real chemistry, obvious happiness. Your honest gut reaction?",
       "answerType": "text",
       "multi": false,
       "min": 1,
@@ -186,12 +186,12 @@ export const QUIZ = {
       "options": [
         {
           "uid": "a_za3EkPYpae",
-          "text": "Happy for them — their joy feels good to me, not a threat.",
+          "text": "Happy for them, their joy feels good to me, not a threat.",
           "result": [[3, 3]]
         },
         {
           "uid": "a_TIeJp-ILGP",
-          "text": "Okay — a wobble at first, but I'd manage and talk it through.",
+          "text": "Okay, a wobble at first, but I'd manage and talk it through.",
           "result": [[2, 2]]
         },
         {
@@ -250,7 +250,7 @@ export const QUIZ = {
     },
     {
       "uid": "q_2SoZCLKDoU",
-      "title": "If the idea of your partner being with someone else appeals to you — when you picture it, what's the turn on?",
+      "title": "If the idea of your partner being with someone else appeals to you, when you picture it, what's the turn on?",
       "answerType": "text",
       "multi": false,
       "min": 1,
@@ -258,7 +258,7 @@ export const QUIZ = {
       "options": [
         {
           "uid": "a_o22r_N2a7M",
-          "text": "Pride — I love seeing how wanted they are.",
+          "text": "Pride, I love seeing how wanted they are.",
           "result": [[5, 8]]
         },
         {
@@ -268,7 +268,7 @@ export const QUIZ = {
         },
         {
           "uid": "a_-zJJTRw2Vb",
-          "text": "Neither — the idea of watching my partner doesn't especially excite me",
+          "text": "Neither, the idea of watching my partner doesn't especially excite me",
           "result": 0
         },
         {
@@ -333,17 +333,17 @@ export const QUIZ = {
       "options": [
         {
           "uid": "a_796OIi4A4B",
-          "text": "One person is my anchor — a primary partner I build my life with — and the others matter, but they orbit that center.",
+          "text": "One person is my anchor, a primary partner I build my life with, and the others matter, but they orbit that center.",
           "result": [[8, 3]]
         },
         {
           "uid": "a_4VxbUdzXqy",
-          "text": "I keep my independence. No merging into a couple-unit, no \"primary\" outranking the rest — I'm my own home base.",
+          "text": "I keep my independence. No merging into a couple-unit, no \"primary\" outranking the rest, I'm my own home base.",
           "result": [[10, 3]]
         },
         {
           "uid": "a_8q4598qFgy",
-          "text": "I refuse to rank them at all — a deep friendship can weigh as much as a romance, and every bond writes its own rules.",
+          "text": "I refuse to rank them at all, a deep friendship can weigh as much as a romance, and every bond writes its own rules.",
           "result": [[9, 3]]
         },
         {
@@ -405,22 +405,22 @@ export const QUIZ = {
       "options": [
         {
           "uid": "a__U_gy0a68P",
-          "text": "Detailed, explicit agreements — we talk things through regularly and keep clear structure so we know where everyone stands.",
+          "text": "Detailed, explicit agreements, we talk things through regularly and keep clear structure so we know where everyone stands.",
           "result": [[8, 3]]
         },
         {
           "uid": "a_r_dBrSKPbC",
-          "text": "A separate understanding built fresh with each connection — no one template. Every relationship is unique.",
+          "text": "A separate understanding built fresh with each connection, no one template. Every relationship is unique.",
           "result": [[9, 3]]
         },
         {
           "uid": "a_qQoi7F046C",
-          "text": "Loose and evolving — we stay flexible and figure out our own flavor as we go, together.",
+          "text": "Loose and evolving, we stay flexible and figure out our own flavor as we go, together.",
           "result": [[2, 2]]
         },
         {
           "uid": "a_h8XQIi_GFs",
-          "text": "Simple, clear guardrails and contained fun — not something we need to keep processing.",
+          "text": "Simple, clear guardrails and contained fun, not something we need to keep processing.",
           "result": [[4, 3], [5, 2], [7, 2]]
         }
       ]
@@ -440,7 +440,7 @@ export const QUIZ = {
         },
         {
           "uid": "a_pjr6eLeSuH",
-          "text": "Grounded with my partner, occasionally lit up by something extra — not a second life, just the rare spark",
+          "text": "Grounded with my partner, occasionally lit up by something extra, not a second life, just the rare spark",
           "result": [[7, 3]]
         },
         {
@@ -450,7 +450,7 @@ export const QUIZ = {
         },
         {
           "uid": "a_JGGlfBAKQp",
-          "text": "Light and unattached to a plan — free to say yes when connections present, enjoying the ride with my partner. ",
+          "text": "Light and unattached to a plan, free to say yes when connections present, enjoying the ride with my partner. ",
           "result": [[2, 2]]
         }
       ],
@@ -469,22 +469,22 @@ export const QUIZ = {
       "options": [
         {
           "uid": "a_Kp2mNvXtYs",
-          "text": "My partner's — I love the idea of them out there, being desired, while I hold the base.",
+          "text": "My partner's, I love the idea of them out there, being desired, while I hold the base.",
           "result": [[5, 8]]
         },
         {
           "uid": "a_Kp2mNvXtYt",
-          "text": "My own — I want to be the one having adventures, with my partner's awareness.",
+          "text": "My own, I want to be the one having adventures, with my partner's awareness.",
           "result": [[11, 3], [10, 1]]
         },
         {
           "uid": "a_Kp2mNvXtYu",
-          "text": "Both equally — same freedom for both of us, whether together or separately.",
+          "text": "Both equally, same freedom for both of us, whether together or separately.",
           "result": [[4, 3], [2, 2]]
         },
         {
           "uid": "a_Kp2mNvXtYv",
-          "text": "Whoever finds something real first — I'm not into assigning roles.",
+          "text": "Whoever finds something real first, I'm not into assigning roles.",
           "result": [[3, 2], [9, 1]]
         }
       ]
@@ -499,7 +499,7 @@ export const QUIZ = {
       "options": [
         {
           "uid": "a_Rz9qWsLfBn",
-          "text": "We're basically monogamous — this would be rare, an occasional thrill.",
+          "text": "We're basically monogamous, this would be rare, an occasional thrill.",
           "result": [[7, 6]]
         },
         {
@@ -509,7 +509,7 @@ export const QUIZ = {
         },
         {
           "uid": "a_Rz9qWsLfBp",
-          "text": "I want the option of separate connections, experiences we have together, a range of possibilities — without putting strict limits on it.",
+          "text": "I want the option of separate connections, experiences we have together, a range of possibilities, without putting strict limits on it.",
           "result": [[2, 3]]
         },
         {
@@ -529,7 +529,7 @@ export const QUIZ = {
       "options": [
         {
           "uid": "a_Hx4jCpVdNf",
-          "text": "An erotic experience you're both in on — no deeper meaning than that.",
+          "text": "An erotic experience you're both in on, no deeper meaning than that.",
           "result": [[4, 3], [2, 1], [7, 2]]
         },
         {
@@ -539,7 +539,7 @@ export const QUIZ = {
         },
         {
           "uid": "a_Hx4jCpVdNh",
-          "text": "Someone who holds something you can't provide — and that gap is part of the turn-on.",
+          "text": "Someone who holds something you can't provide, and that gap is part of the turn-on.",
           "result": [[6, 6]]
         },
         {
@@ -738,7 +738,7 @@ export const QUIZ = {
         },
         {
           "uid": "a_vKLtSHwCU_",
-          "text": "Not over-planning it — we'd rather stay open to different kinds of connection and let our agreement evolve as we go, together.",
+          "text": "Not over-planning it, we'd rather stay open to different kinds of connection and let our agreement evolve as we go, together.",
           "result": 2
         }
       ],
