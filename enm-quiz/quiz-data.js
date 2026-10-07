@@ -246,7 +246,7 @@ export const QUIZ = {
           "freeform": true
         }
       ],
-      "img": { "src": "img/q6-watching.webp" }
+      "img": { "src": "img/q6-watching-v2.webp" }
     },
     {
       "uid": "q_2SoZCLKDoU",
@@ -313,15 +313,7 @@ export const QUIZ = {
           "freeform": true
         }
       ],
-      "img": {
-        "src": "img/q11-c012c1.jpg",
-        "crop": {
-          "x": -5.246178401880751e-14,
-          "y": 47.62228241971675,
-          "width": 100.00000000000004,
-          "height": 29.629629629629623
-        }
-      }
+      "img": { "src": "img/q8-couple-piggyback.webp" }
     },
     {
       "uid": "q_4ho6eLjlBJ",
@@ -357,7 +349,7 @@ export const QUIZ = {
           "result": [[7, 2]]
         }
       ],
-      "img": { "src": "img/q9-poly-couple.webp" }
+      "img": { "src": "img/q9-couple-kiss.webp" }
     },
     {
       "uid": "q_iVBwBebqvd",
@@ -454,10 +446,7 @@ export const QUIZ = {
           "result": [[2, 2]]
         }
       ],
-      "img": {
-        "src": "img/q12-couple-poly.webp",
-        "crop": { "x": 20, "y": 0, "width": 80, "height": 100 }
-      }
+      "img": { "src": "img/q12-tattoo-couple-v2.webp" }
     },
     {
       "uid": "q_Kp2mNvXtYr",
