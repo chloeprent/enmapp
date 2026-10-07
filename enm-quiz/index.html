@@ -761,19 +761,6 @@
       <div class="btn-row" id="resultCtaRow" hidden>
         <a class="btn" id="resultCta" target="_blank" rel="noopener"></a>
       </div>
-      <div class="summary" id="summaryBlock" hidden>
-        <h2>Where this leaves you</h2>
-        <p class="summary-loading" id="summaryLoading">Reading your answers back&hellip;</p>
-        <div id="summaryContent" hidden>
-          <p class="headline" id="summaryHeadline"></p>
-          <div class="body" id="summarySituation"></div>
-          <h3>What is likely to be hard</h3>
-          <div id="summaryChallenges"></div>
-          <h3>Worth learning about next</h3>
-          <div id="summaryTopics"></div>
-        </div>
-      </div>
-
       <div class="btn-row save-pdf-row">
         <button class="btn" type="button" id="savePdfBtn">Save as PDF</button>
         <p class="save-pdf-note" id="savePdfNote" hidden></p>
@@ -1410,7 +1397,6 @@
       $('tagThanksNote').hidden = true;
 
       show('screenResult');
-      loadSummary();
       buildPrintResults();  /* early, so the photos are loaded before saving */
       scheduleSaveBanner();
     }
@@ -1576,40 +1562,6 @@
       clearTimeout(bannerTimer);
       $('saveBanner').hidden = true;
       try { sessionStorage.setItem(BANNER_SEEN_KEY, '1'); } catch { /* storage blocked */ }
-    }
-
-    /* ── AI situation summary ──────────────────────────────────────────────── */
-    async function loadSummary() {
-      if (!state.leadId) return;
-      $('summaryBlock').hidden = false;
-
-      try {
-        const { data, error } = await supabase.functions.invoke(AI_FN, {
-          body: { action: 'summary', run_id: state.runId },
-        });
-        if (error) throw error;
-        const s = data?.summary;
-        if (!s) throw new Error('No summary returned');
-
-        $('summaryHeadline').textContent = s.headline || '';
-        $('summarySituation').innerHTML = String(s.situation || '')
-          .split(/\n{2,}/).filter(Boolean).map(par => `<p>${esc(par)}</p>`).join('');
-
-        $('summaryChallenges').innerHTML = (s.challenges || [])
-          .map(c => `<div class="card"><strong>${esc(c.title)}</strong><span>${esc(c.detail)}</span></div>`)
-          .join('');
-        $('summaryTopics').innerHTML = (s.topics || [])
-          .map(t => `<div class="card"><strong>${esc(t.title)}</strong><span>${esc(t.why)}</span></div>`)
-          .join('');
-
-        $('summaryLoading').hidden = true;
-        $('summaryContent').hidden = false;
-      } catch (e) {
-        console.error('[enm-quiz] summary failed', e);
-        /* The scored result is the product; the summary is a bonus. Drop the
-           whole block rather than leaving a broken spinner on the page. */
-        $('summaryBlock').hidden = true;
-      }
     }
 
     /* ── Partner invite ────────────────────────────────────────────────────── */
