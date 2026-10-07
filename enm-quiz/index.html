@@ -637,8 +637,6 @@
       .pr-cta { text-align: center; margin-top: 10pt; break-inside: avoid; page-break-inside: avoid; }
       .pr-cta .btn { padding: 10pt 24pt; font-size: 11pt; }
       .pr-url { font-size: 8.5pt; color: #7a6a6a; word-break: break-all; margin-top: 5pt; }
-      .pr-summary { break-before: page; page-break-before: always; margin-top: 0; border-top: 0; padding-top: 0; }
-      .pr-summary .card { border: 1px solid #eadfdb; }
       .pr-footer {
         margin-top: 26pt; padding-top: 8pt; border-top: 1px solid rgba(60,60,60,.2);
         text-align: center; font-size: 9pt; color: #7a6a6a;
@@ -1529,27 +1527,15 @@
           `<div class="rich">${result.description}</div>${cta}</section>`;
       }).join('');
 
-      /* The personal summary, only once it has actually loaded. */
-      let summary = '';
-      if (!$('summaryBlock').hidden && !$('summaryContent').hidden) {
-        const copy = $('summaryContent').cloneNode(true);
-        copy.querySelectorAll('[id]').forEach(el => el.removeAttribute('id'));
-        summary = `<section class="summary pr-summary"><h2>Where this leaves you</h2>${copy.innerHTML}</section>`;
-      }
-
-      /* Only rewrite what changed. Rewriting the results part would recreate
-         the photos, and a photo created as printing starts can come out blank. */
+      /* Only rewrite when something changed. Rewriting recreates the photos,
+         and a photo created as printing starts can come out blank. */
       const root = $('printResults');
-      if (!root.firstChild) {
-        root.innerHTML = '<div class="pr-main"></div><div class="pr-extra"></div>' +
-          '<p class="pr-footer">Your ENM style results from swoon.coach</p>';
+      const html = head + overview + results +
+        '<p class="pr-footer">Your ENM style results from swoon.coach</p>';
+      if (root.dataset.html !== html) {
+        root.innerHTML = html;
+        root.dataset.html = html;
       }
-      const main = head + overview + results;
-      if (root.dataset.main !== main) {
-        root.querySelector('.pr-main').innerHTML = main;
-        root.dataset.main = main;
-      }
-      root.querySelector('.pr-extra').innerHTML = summary;
       document.body.classList.add('print-ready');
       return true;
     }
