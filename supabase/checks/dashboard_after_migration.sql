@@ -1,5 +1,5 @@
 -- Read-only checks run right after the dashboard migration is applied.
--- Prints structure and totals only (no personal data).
+-- Prints structure and totals only (no personal data). Safe to re-run.
 
 -- == A. New UTM columns on enm_quiz_leads
 SELECT column_name, data_type FROM information_schema.columns
