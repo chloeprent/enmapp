@@ -1,0 +1,25 @@
+# Read-only look at the live database for the quiz dashboard work.
+# Runs only when the check file changes on the working branch, inside a
+# read-only transaction, and prints structure and counts (no personal data).
+name: DB read-only check
+
+on:
+  push:
+    branches: [claude/elegant-cannon-bdq3j0]
+    paths:
+      - "supabase/checks/**"
+      - ".github/workflows/db-readonly-check.yml"
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install psql
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq postgresql-client >/dev/null
+      - name: Run read-only check
+        env:
+          DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+          PGOPTIONS: "-c default_transaction_read_only=on"
+        run: psql "$DB_URL" -X -f supabase/checks/dashboard_readonly_check.sql
