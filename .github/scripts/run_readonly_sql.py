@@ -18,7 +18,8 @@ for block in blocks:
         stmt = "\n".join(l for l in stmt.splitlines() if not l.strip().startswith("--")).strip()
         if not stmt:
             continue
-        if not re.match(r"(?is)^\s*select\b", stmt):
+        writes = re.search(r"(?i)\b(insert|update|delete|alter|drop|create|truncate|grant|revoke)\b", stmt)
+        if not re.match(r"(?is)^\s*(select|with)\b", stmt) or (stmt.lstrip()[:4].lower() == "with" and writes):
             print("  skipped (not a SELECT)"); continue
         req = urllib.request.Request(
             f"https://api.supabase.com/v1/projects/{ref}/database/query",
