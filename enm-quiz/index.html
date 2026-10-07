@@ -563,6 +563,56 @@
       .option { font-size: .875rem; padding: 13px 15px; }
       .intro-list li { font-size: 1rem; padding: 17px 0; }
     }
+
+    /* ── Save as PDF ── */
+    .save-pdf-row { margin-top: 40px; }
+    .save-pdf-note { font-size: .8125rem; opacity: .75; margin-top: 10px; text-align: center; }
+    .save-banner {
+      position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%);
+      width: calc(100% - 32px); max-width: 460px; z-index: 40;
+      display: flex; align-items: center; gap: 12px;
+      background: #fff; border: 1px solid rgba(252,106,119,.25); border-radius: 14px;
+      padding: 12px 10px 12px 18px; box-shadow: 0 14px 34px -12px rgba(40,30,30,.35);
+    }
+    .save-banner p { flex: 1; font-size: .875rem; line-height: 1.4; }
+    .save-banner .btn { padding: 10px 18px; font-size: .8125rem; white-space: nowrap; }
+    .save-banner-close {
+      background: none; border: 0; color: var(--text); cursor: pointer;
+      font-size: 1.375rem; line-height: 1; opacity: .5; padding: 4px 6px;
+    }
+    .save-banner-close:hover { opacity: 1; }
+    #printResults { display: none; }
+
+    /* Printing (and "Save as PDF") shows only the print copy of the results,
+       built on demand with all three matches written out in full. */
+    @media print {
+      @page { margin: 16mm 14mm; }
+      html, body { height: auto; background: #fff !important; }
+      body.print-ready > *:not(#printResults) { display: none !important; }
+      body.print-ready #printResults { display: block !important; }
+      #printResults { font-size: 11pt; line-height: 1.5; color: var(--text); }
+      #printResults * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      #printResults h1, #printResults h2, #printResults h3 { break-after: avoid; page-break-after: avoid; }
+      #printResults p, #printResults li, #printResults .card { break-inside: avoid; page-break-inside: avoid; }
+      .pr-head { text-align: center; margin-bottom: 20pt; }
+      .pr-head h1 { font-size: 20pt; font-weight: 700; line-height: 1.2; }
+      .pr-head p { font-size: 9.5pt; opacity: .65; margin-top: 4pt; }
+      .pr-result + .pr-result { break-before: page; page-break-before: always; }
+      .pr-label {
+        font-size: 9pt; font-weight: 700; letter-spacing: .06em;
+        text-transform: uppercase; color: var(--progress);
+      }
+      .pr-title { font-size: 18pt; font-weight: 700; line-height: 1.25; margin: 2pt 0 12pt; }
+      .pr-cta { text-align: center; margin-top: 16pt; break-inside: avoid; page-break-inside: avoid; }
+      .pr-cta .btn { padding: 10pt 24pt; font-size: 11pt; }
+      .pr-url { font-size: 8.5pt; color: #7a6a6a; word-break: break-all; margin-top: 5pt; }
+      .pr-summary { break-before: page; page-break-before: always; margin-top: 0; border-top: 0; padding-top: 0; }
+      .pr-summary .card { border: 1px solid #eadfdb; }
+      .pr-footer {
+        margin-top: 26pt; padding-top: 8pt; border-top: 1px solid rgba(60,60,60,.2);
+        text-align: center; font-size: 9pt; color: #7a6a6a;
+      }
+    }
   </style>
 </head>
 <body>
@@ -703,6 +753,11 @@
         </div>
       </div>
 
+      <div class="btn-row save-pdf-row">
+        <button class="btn" type="button" id="savePdfBtn">Save as PDF</button>
+        <p class="save-pdf-note" id="savePdfNote" hidden></p>
+      </div>
+
       <div class="top-results" id="topResults" hidden>
         <h2 id="topResultsTitle"></h2>
         <div id="topResultsBars"></div>
@@ -747,6 +802,16 @@
     </div>
   </div>
 
+
+  <!-- Print-only copy of the results, filled in when someone saves as PDF. -->
+  <div id="printResults" aria-hidden="true"></div>
+
+  <!-- Gentle reminder a few seconds after the results appear, once per visit. -->
+  <div class="save-banner" id="saveBanner" role="dialog" aria-label="Save your results" hidden>
+    <p id="saveBannerText">Want to keep your full results?</p>
+    <button class="btn" type="button" id="saveBannerBtn">Save as PDF</button>
+    <button class="save-banner-close" type="button" id="saveBannerClose" aria-label="Close">&times;</button>
+  </div>
 
   <div class="quiz-footer" id="quizFooter" hidden>
     <button class="back" id="backBtn" aria-label="Previous question">
@@ -1326,6 +1391,7 @@
 
       show('screenResult');
       loadSummary();
+      scheduleSaveBanner();
     }
 
     $('tagYesBtn').addEventListener('click', () => {
@@ -1354,6 +1420,100 @@
       } else {
         $('resultCtaRow').hidden = true;
       }
+    }
+
+    /* ── Save as PDF ───────────────────────────────────────────────────────── */
+    /* The screen shows one result's details at a time, so printing it as-is
+       would lose the 2nd and 3rd matches. Instead, build a print-only copy with
+       every match written out in full, and let the print stylesheet show only
+       that. Uses the browser's own print screen, which offers "Save as PDF". */
+    const MATCH_LABELS = ['Your top style', 'Your 2nd match', 'Your 3rd match'];
+
+    /* In-app browsers (Instagram, Facebook, TikTok...) often ignore print. */
+    const IN_APP_BROWSER =
+      /FBAN|FBAV|FB_IAB|Instagram|TikTok|musical_ly|Bytedance|Snapchat|Line\/|LinkedInApp/i
+        .test(navigator.userAgent);
+    const OPEN_IN_BROWSER_MSG =
+      'To save as PDF, open this page in Safari or Chrome (tap the menu and choose Open in browser).';
+
+    function buildPrintResults() {
+      const list = state.finalTop;
+      if (!list || !list.length) return false;
+
+      const date = new Date().toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' });
+      const head =
+        `<header class="pr-head"><h1>${esc(QUIZ.title)}</h1><p>Your results, ${esc(date)}</p></header>`;
+
+      const results = list.slice(0, 3).map(({ result, points }, i) => {
+        const pct = state.finalTotal ? Math.round((points / state.finalTotal) * 100) : 0;
+        const cta = result.cta
+          ? `<div class="pr-cta"><a class="btn" href="${esc(result.cta.url)}">${esc(result.cta.label)}</a>` +
+            `<p class="pr-url">${esc(result.cta.url)}</p></div>`
+          : '';
+        return `<section class="pr-result">` +
+          `<p class="pr-label">${MATCH_LABELS[i]}${list.length > 1 ? ` (${pct}%)` : ''}</p>` +
+          `<h2 class="pr-title">${esc(result.title)}</h2>` +
+          `<div class="rich">${result.description}</div>${cta}</section>`;
+      }).join('');
+
+      /* The personal summary, only once it has actually loaded. */
+      let summary = '';
+      if (!$('summaryBlock').hidden && !$('summaryContent').hidden) {
+        const copy = $('summaryContent').cloneNode(true);
+        copy.querySelectorAll('[id]').forEach(el => el.removeAttribute('id'));
+        summary = `<section class="summary pr-summary"><h2>Where this leaves you</h2>${copy.innerHTML}</section>`;
+      }
+
+      const foot = '<p class="pr-footer">Your ENM style results from swoon.coach</p>';
+      $('printResults').innerHTML = head + results + summary + foot;
+      document.body.classList.add('print-ready');
+      return true;
+    }
+
+    /* Also covers printing from the browser menu or Ctrl/Cmd+P. */
+    window.addEventListener('beforeprint', buildPrintResults);
+
+    function saveAsPdf(showMessage) {
+      hideSaveBanner();
+      if (IN_APP_BROWSER || typeof window.print !== 'function') {
+        showMessage(OPEN_IN_BROWSER_MSG);
+        return;
+      }
+      if (!buildPrintResults()) return;
+      track('save_pdf');
+      window.print();
+    }
+
+    $('savePdfBtn').addEventListener('click', () => saveAsPdf(msg => {
+      $('savePdfNote').textContent = msg;
+      $('savePdfNote').hidden = false;
+    }));
+
+    $('saveBannerBtn').addEventListener('click', () => saveAsPdf(msg => {
+      /* Swap the banner into the message rather than closing it. */
+      $('saveBannerText').textContent = msg;
+      $('saveBannerBtn').hidden = true;
+      $('saveBanner').hidden = false;
+    }));
+
+    $('saveBannerClose').addEventListener('click', hideSaveBanner);
+
+    const BANNER_SEEN_KEY = 'enmquiz.saveBannerSeen';
+    let bannerTimer = null;
+
+    function scheduleSaveBanner() {
+      let seen = false;
+      try { seen = sessionStorage.getItem(BANNER_SEEN_KEY) === '1'; } catch { /* storage blocked */ }
+      if (seen || bannerTimer) return;
+      bannerTimer = setTimeout(() => {
+        if ($('screenResult').classList.contains('active')) $('saveBanner').hidden = false;
+      }, 8000);
+    }
+
+    function hideSaveBanner() {
+      clearTimeout(bannerTimer);
+      $('saveBanner').hidden = true;
+      try { sessionStorage.setItem(BANNER_SEEN_KEY, '1'); } catch { /* storage blocked */ }
     }
 
     /* ── AI situation summary ──────────────────────────────────────────────── */
