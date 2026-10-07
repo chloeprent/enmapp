@@ -545,6 +545,33 @@
       .intro-list li { font-size: 1rem; padding: 17px 0; }
     }
 
+    /* ── Result rating ── */
+    .rate-box {
+      margin: 30px auto 0; max-width: 420px; text-align: center;
+      background: #f3effb; border: 1px solid #e0d6f5; border-radius: 16px; padding: 14px 16px 16px;
+    }
+    .rate-q { font-size: .9375rem; font-weight: 600; color: #4b3a78; margin-bottom: 10px; }
+    .rate-btns { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+    .rate-btns button {
+      font-family: inherit; font-size: .8125rem; font-weight: 600; cursor: pointer;
+      background: #fff; color: #5b4790; border: 1px solid #cdbff0; border-radius: 999px; padding: 7px 14px;
+      transition: background .15s ease, color .15s ease;
+    }
+    .rate-btns button:hover { background: #ebe4fa; }
+    .rate-btns button[aria-pressed="true"] { background: #8a6fd1; border-color: #8a6fd1; color: #fff; }
+    .rate-btns button:disabled { cursor: default; }
+    .rate-more { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+    .rate-more textarea {
+      width: 100%; min-height: 64px; resize: vertical; font-family: inherit; font-size: .875rem; color: var(--text);
+      border: 1px solid #d9cdf3; border-radius: 10px; padding: 9px 11px; background: #fff;
+    }
+    .rate-more textarea:focus { outline: 2px solid #b8a4ea; outline-offset: -1px; }
+    .rate-send {
+      align-self: center; font-family: inherit; font-size: .8125rem; font-weight: 600; cursor: pointer;
+      background: #8a6fd1; color: #fff; border: 0; border-radius: 999px; padding: 7px 18px;
+    }
+    .rate-thanks { margin-top: 10px; font-size: .8125rem; color: #5b4790; }
+
     /* ── Save as PDF ── */
     .save-pdf-row { margin-top: 40px; }
     .save-pdf-note { font-size: .8125rem; opacity: .75; margin-top: 10px; text-align: center; }
@@ -748,6 +775,20 @@
       <div class="btn-row" id="resultCtaRow" hidden>
         <a class="btn" id="resultCta" target="_blank" rel="noopener"></a>
       </div>
+      <div class="rate-box" id="rateBox" hidden>
+        <p class="rate-q">Does this result feel like you?</p>
+        <div class="rate-btns" id="rateBtns">
+          <button type="button" data-rating="spot_on">Spot on</button>
+          <button type="button" data-rating="partly">Partly</button>
+          <button type="button" data-rating="not_really">Not really</button>
+        </div>
+        <div class="rate-more" id="rateMore" hidden>
+          <textarea id="rateText" maxlength="1000" placeholder="What felt off? (optional)"></textarea>
+          <button class="rate-send" type="button" id="rateSend">Send</button>
+        </div>
+        <p class="rate-thanks" id="rateThanks" hidden>Thanks!</p>
+      </div>
+
       <div class="btn-row save-pdf-row">
         <button class="btn" type="button" id="savePdfBtn">Save as PDF</button>
         <p class="save-pdf-note" id="savePdfNote" hidden></p>
@@ -1385,6 +1426,7 @@
 
       show('screenResult');
       buildPrintResults();  /* early, so the photos are loaded before saving */
+      $('rateBox').hidden = false;
       scheduleSaveBanner();
     }
 
@@ -1415,6 +1457,40 @@
         $('resultCtaRow').hidden = true;
       }
     }
+
+    /* ── Result rating ──────────────────────────────────────────────────────── */
+    /* One tap on how well the top result fits, saved as a quiz event so it sits
+       alongside the rest of the run. "Partly" and "Not really" offer an
+       optional note on what felt off. */
+    function ratingMeta(extra) {
+      const top = state.finalTop?.[0]?.result;
+      return { result_uid: top?.uid ?? null, result_title: top?.title ?? null, ...extra };
+    }
+
+    $('rateBtns').addEventListener('click', (e) => {
+      const btn = e.target.closest('button[data-rating]');
+      if (!btn || btn.disabled) return;
+      const rating = btn.dataset.rating;
+      $('rateBtns').querySelectorAll('button').forEach(b => {
+        b.setAttribute('aria-pressed', String(b === btn));
+        b.disabled = true;
+      });
+      track('result_rating', ratingMeta({ rating }));
+      if (rating === 'spot_on') {
+        $('rateThanks').hidden = false;
+      } else {
+        $('rateMore').hidden = false;
+        $('rateText').focus({ preventScroll: true });
+      }
+    });
+
+    $('rateSend').addEventListener('click', () => {
+      const comment = $('rateText').value.trim();
+      const rating = $('rateBtns').querySelector('[aria-pressed="true"]')?.dataset.rating ?? null;
+      if (comment) track('result_rating_comment', ratingMeta({ rating, comment: comment.slice(0, 1000) }));
+      $('rateMore').hidden = true;
+      $('rateThanks').hidden = false;
+    });
 
     /* ── Save as PDF ───────────────────────────────────────────────────────── */
     /* The screen shows one result's details at a time, so printing it as-is
