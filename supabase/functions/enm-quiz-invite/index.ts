@@ -19,6 +19,7 @@ import { corsHeaders } from "../_shared/api-helpers.ts";
 const QUIZ_URL = "https://swoon-quiz.pages.dev/";
 const FROM = "Swoon Quiz <quiz@swoon.coach>";
 const COVER_IMG = `${QUIZ_URL}img/cover-e13e86.jpg`;
+const LOGO_IMG = `${QUIZ_URL}img/swoon-logo.png`;
 
 const db = () =>
   createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
@@ -104,13 +105,26 @@ function inviteEmail(inviterName: string | null, link: string) {
     `unless you choose to share.\n\nTake it here: ${link}\n\n` +
     `If this is not something you want, you can ignore this email and we will not write again.`;
 
-  const html = `<div style="font-family:-apple-system,Segoe UI,sans-serif;color:#3c3c3c;max-width:520px;margin:0 auto;padding:24px">
-  <h1 style="font-size:20px;font-weight:600;margin:0 0 16px">${who} invited you to take the ENM Style quiz</h1>
-  <a href="${esc(link)}" style="display:block;margin:0 0 18px"><img src="${COVER_IMG}" alt="What's your ENM style?" width="520" style="display:block;width:100%;max-width:520px;height:auto;border:0;border-radius:12px"></a>
-  <p style="margin:0 0 14px;line-height:1.55">It is 15 questions and it is judgement-free. Your answers are your own, they do not see them unless you choose to share.</p>
-  <p style="margin:0 0 14px;line-height:1.55">When you are done, the two of you can compare where you actually line up, and where you do not.</p>
-  <p style="margin:26px 0"><a href="${esc(link)}" style="background:#fc6a77;color:#fff;text-decoration:none;padding:13px 28px;border-radius:30px;font-weight:600;display:inline-block">Take the quiz</a></p>
-  <p style="margin:0;font-size:12px;color:#8a8a8a;line-height:1.5">If this is not something you want, ignore this email and we will not write again.</p>
+  // Table layout and inline styles only: that is what email apps reliably render.
+  const font = "-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif";
+  const html = `<div style="margin:0;padding:28px 12px;background:#f8f3f1;font-family:${font};color:#3c3c3c">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:20px;border:1px solid #f1dcdd">
+    <tr><td align="center" style="padding:26px 28px 6px">
+      <img src="${LOGO_IMG}" alt="Swoon" width="112" style="display:block;width:112px;height:auto;border:0">
+    </td></tr>
+    <tr><td style="padding:14px 24px 0">
+      <a href="${esc(link)}" style="display:block"><img src="${COVER_IMG}" alt="What's your ENM style?" width="512" style="display:block;width:100%;max-width:512px;height:auto;border:0;border-radius:16px"></a>
+    </td></tr>
+    <tr><td align="center" style="padding:26px 32px 4px">
+      <h1 style="margin:0 0 14px;font-size:23px;line-height:1.3;font-weight:700;color:#1c1212">${who} invited you to take the ENM Style quiz</h1>
+      <p style="margin:0 0 12px;font-size:15.5px;line-height:1.6">It is 15 questions and it is judgement-free. Your answers are your own, they do not see them unless you choose to share.</p>
+      <p style="margin:0;font-size:15.5px;line-height:1.6">When you are done, the two of you can compare where you actually line up, and where you do not.</p>
+    </td></tr>
+    <tr><td align="center" style="padding:26px 32px 30px">
+      <a href="${esc(link)}" style="display:inline-block;background:#fc6a77;color:#ffffff;text-decoration:none;font-size:16px;font-weight:700;padding:14px 34px;border-radius:999px">Take the quiz</a>
+    </td></tr>
+  </table>
+  <p style="max-width:520px;margin:18px auto 0;text-align:center;font-size:12px;line-height:1.5;color:#9a8a8a">If this is not something you want, ignore this email and we will not write again.</p>
 </div>`;
 
   return { html, text };
