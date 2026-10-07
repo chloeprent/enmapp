@@ -1477,8 +1477,8 @@
     /* One tap on "does this feel like you?"; the stars fill in to match the
        answer (they are not clicked). The answer can be changed until the
        feedback is finished, and each change is saved (after a short pause) as a
-       result_rating event. "Spot on" finishes on its own; "Partly"/"Not really"
-       offer an optional note and finish on Send. Then the card folds away. */
+       result_rating event. Each answer offers an optional note and finishes
+       on Send, after which the card folds away. */
     const FIT_STARS = { spot_on: 5, partly: 3, not_really: 1 };
     let rateFit = null, rateTimer = null, finishTimer = null;
 
@@ -1514,13 +1514,11 @@
       $('rateBtns').querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b === btn)));
       paintStars(FIT_STARS[rateFit]);
       saveRatingSoon();
-      clearTimeout(finishTimer);
-      if (rateFit === 'spot_on') {
-        $('rateMore').hidden = true;
-        finishRating(1200);           /* a moment to change their mind */
-      } else {
-        $('rateMore').hidden = false;
-      }
+      /* Every answer gets the optional note, worded to fit the answer. */
+      $('rateText').placeholder = rateFit === 'spot_on'
+        ? 'What did we get right? (optional)'
+        : 'What felt off? (optional)';
+      $('rateMore').hidden = false;
     });
 
     /* Send works with or without a note, since the note is optional. */
