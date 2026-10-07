@@ -435,19 +435,6 @@
     }
     .btn-ghost:hover { background: var(--bg); }
 
-    /* ── AI situation summary on the result screen ── */
-    .summary { margin-top: 40px; border-top: 1px solid rgba(60,60,60,.18); padding-top: 26px; }
-    .summary h2 { font-size: 1.125rem; font-weight: 600; margin-bottom: 6px; }
-    .summary .headline { font-size: 1.0625rem; line-height: 1.45; margin-bottom: 16px; font-weight: 500; }
-    .summary .body p { margin-bottom: 12px; }
-    .summary h3 { font-size: .8125rem; font-weight: 700; letter-spacing: .06em;
-      text-transform: uppercase; opacity: .55; margin: 24px 0 12px; }
-    .card {
-      background: #fff; border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px;
-    }
-    .card strong { display: block; margin-bottom: 4px; font-size: .9375rem; }
-    .card span { font-size: .875rem; line-height: 1.5; }
-    .summary-loading { font-size: .875rem; opacity: .6; padding: 10px 0; }
 
     /* ── Partner invite ── */
     .tag-prompt {
@@ -592,7 +579,7 @@
       #printResults .rich li { margin-bottom: 3pt; }
       #printResults * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       #printResults h1, #printResults h2, #printResults h3 { break-after: avoid; page-break-after: avoid; }
-      #printResults p, #printResults li, #printResults .card { break-inside: avoid; page-break-inside: avoid; }
+      #printResults p, #printResults li { break-inside: avoid; page-break-inside: avoid; }
       .pr-head { text-align: center; margin: 4pt 0 22pt; }
       .pr-logo { display: block; width: 44mm; height: auto; margin: 0 auto 12pt; }
       .pr-kicker {
