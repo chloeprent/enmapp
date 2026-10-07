@@ -590,20 +590,51 @@
       html, body { height: auto; background: #fff !important; }
       body.print-ready > *:not(#printResults) { display: none !important; }
       body.print-ready #printResults { display: block !important; }
-      #printResults { font-size: 11pt; line-height: 1.5; color: var(--text); }
+      #printResults { font-size: 10.5pt; line-height: 1.45; color: var(--text); }
+      #printResults .rich { font-size: 10.5pt; }
+      #printResults .rich p { margin-bottom: 7pt; }
+      #printResults .rich h2 { font-size: 12pt; margin: 10pt 0 6pt; }
+      #printResults .rich hr { margin: 10pt 0; }
+      #printResults .rich li { margin-bottom: 3pt; }
       #printResults * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       #printResults h1, #printResults h2, #printResults h3 { break-after: avoid; page-break-after: avoid; }
       #printResults p, #printResults li, #printResults .card { break-inside: avoid; page-break-inside: avoid; }
-      .pr-head { text-align: center; margin-bottom: 20pt; }
-      .pr-head h1 { font-size: 20pt; font-weight: 700; line-height: 1.2; }
-      .pr-head p { font-size: 9.5pt; opacity: .65; margin-top: 4pt; }
-      .pr-result + .pr-result { break-before: page; page-break-before: always; }
+      .pr-head { text-align: center; margin: 10pt 0 22pt; }
+      .pr-kicker {
+        font-size: 9pt; font-weight: 700; letter-spacing: .08em;
+        text-transform: uppercase; color: var(--progress);
+      }
+      .pr-head h1 { font-size: 22pt; font-weight: 700; line-height: 1.2; margin: 6pt 0 8pt; }
+      .pr-head .pr-intro { font-size: 11.5pt; opacity: .8; }
+      .pr-head .pr-date { font-size: 9pt; opacity: .55; margin-top: 6pt; }
+      .pr-overview { list-style: none; padding: 0; margin: 0; }
+      .pr-overview li {
+        display: flex; gap: 14pt; align-items: flex-start;
+        border: 1px solid #eadfdb; border-radius: 10px; padding: 12pt 14pt; margin-bottom: 10pt;
+      }
+      .pr-rank {
+        flex: 0 0 auto; width: 24pt; height: 24pt; border-radius: 50%;
+        background: var(--btn); color: #fff; font-weight: 700; font-size: 11pt;
+        display: flex; align-items: center; justify-content: center;
+      }
+      .pr-ov-body { flex: 1; }
+      .pr-ov-label { font-size: 8.5pt; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; opacity: .55; }
+      .pr-ov-title { font-size: 14pt; font-weight: 700; line-height: 1.25; }
+      .pr-ov-title span { font-weight: 500; opacity: .6; font-size: 11pt; }
+      .pr-ov-tagline { font-style: italic; font-size: 10.5pt; opacity: .8; margin-top: 2pt; }
+      .pr-ov-link { display: inline-block; margin-top: 5pt; font-size: 10pt; font-weight: 600; color: var(--progress); }
+      .pr-result { break-before: page; page-break-before: always; }
+      .pr-img {
+        position: relative; overflow: hidden; border-radius: 10px;
+        width: 62%; height: 0; padding-top: 34.875%; margin: 0 auto 12pt;
+      }
+      .pr-img img { position: absolute; max-width: none; }
       .pr-label {
         font-size: 9pt; font-weight: 700; letter-spacing: .06em;
         text-transform: uppercase; color: var(--progress);
       }
-      .pr-title { font-size: 18pt; font-weight: 700; line-height: 1.25; margin: 2pt 0 12pt; }
-      .pr-cta { text-align: center; margin-top: 16pt; break-inside: avoid; page-break-inside: avoid; }
+      .pr-title { font-size: 17pt; font-weight: 700; line-height: 1.25; margin: 2pt 0 8pt; }
+      .pr-cta { text-align: center; margin-top: 10pt; break-inside: avoid; page-break-inside: avoid; }
       .pr-cta .btn { padding: 10pt 24pt; font-size: 11pt; }
       .pr-url { font-size: 8.5pt; color: #7a6a6a; word-break: break-all; margin-top: 5pt; }
       .pr-summary { break-before: page; page-break-before: always; margin-top: 0; border-top: 0; padding-top: 0; }
@@ -1391,6 +1422,7 @@
 
       show('screenResult');
       loadSummary();
+      buildPrintResults();  /* early, so the photos are loaded before saving */
       scheduleSaveBanner();
     }
 
@@ -1436,22 +1468,63 @@
     const OPEN_IN_BROWSER_MSG =
       'To save as PDF, open this page in Safari or Chrome (tap the menu and choose Open in browser).';
 
+    /* Same framing as applyImage(), but as a real <img>: unlike a background
+       image, it starts loading while hidden, so it is ready when printing. */
+    function printImage(img) {
+      if (!img) return '';
+      const c = img.crop;
+      let style = 'width:100%;height:100%;left:0;top:0;object-fit:cover';
+      if (c && c.width && c.height) {
+        const w = 10000 / c.width, h = 10000 / c.height;
+        const left = c.width >= 100 ? (100 - w) / 2 : -(c.x / c.width) * 100;
+        const top = c.height >= 100 ? (100 - h) / 2 : -(c.y / c.height) * 100;
+        style = `width:${w}%;height:${h}%;left:${left}%;top:${top}%`;
+      }
+      return `<div class="pr-img"><img src="${esc(img.src)}" alt="" style="${style}"></div>`;
+    }
+
+    /* The one-line tagline each description opens with, for the overview. */
+    function tagline(result) {
+      const h = new DOMParser().parseFromString(result.description || '', 'text/html').querySelector('h2');
+      return h ? h.textContent.trim() : '';
+    }
+
     function buildPrintResults() {
       const list = state.finalTop;
       if (!list || !list.length) return false;
+      const top = list.slice(0, 3).map(({ result, points }, i) => ({
+        result, label: MATCH_LABELS[i],
+        pct: state.finalTotal ? Math.round((points / state.finalTotal) * 100) : 0,
+      }));
+      const showPct = top.length > 1;
 
+      const name = $('firstName').value.trim();
       const date = new Date().toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' });
       const head =
-        `<header class="pr-head"><h1>${esc(QUIZ.title)}</h1><p>Your results, ${esc(date)}</p></header>`;
+        `<header class="pr-head"><p class="pr-kicker">Your ENM style results</p>` +
+        `<h1>Hi ${esc(name || 'there')}, thanks for taking the quiz.</h1>` +
+        `<p class="pr-intro">${top.length > 1
+          ? 'Here are your top matches. Each one is explained in full on the pages that follow.'
+          : 'Here is your result. It is explained in full on the next page.'}</p>` +
+        `<p class="pr-date">${esc(date)}</p></header>`;
 
-      const results = list.slice(0, 3).map(({ result, points }, i) => {
-        const pct = state.finalTotal ? Math.round((points / state.finalTotal) * 100) : 0;
+      const overview = '<ol class="pr-overview">' + top.map(({ result, label, pct }, i) => {
+        const line = tagline(result);
+        return `<li><span class="pr-rank">${i + 1}</span><div class="pr-ov-body">` +
+          `<p class="pr-ov-label">${label}</p>` +
+          `<p class="pr-ov-title">${esc(result.title)}${showPct ? ` <span>${pct}%</span>` : ''}</p>` +
+          (line ? `<p class="pr-ov-tagline">${esc(line)}</p>` : '') +
+          (result.cta ? `<a class="pr-ov-link" href="${esc(result.cta.url)}">${esc(result.cta.label)}</a>` : '') +
+          `</div></li>`;
+      }).join('') + '</ol>';
+
+      const results = top.map(({ result, label, pct }) => {
         const cta = result.cta
           ? `<div class="pr-cta"><a class="btn" href="${esc(result.cta.url)}">${esc(result.cta.label)}</a>` +
             `<p class="pr-url">${esc(result.cta.url)}</p></div>`
           : '';
-        return `<section class="pr-result">` +
-          `<p class="pr-label">${MATCH_LABELS[i]}${list.length > 1 ? ` (${pct}%)` : ''}</p>` +
+        return `<section class="pr-result">${printImage(result.img)}` +
+          `<p class="pr-label">${label}${showPct ? ` (${pct}%)` : ''}</p>` +
           `<h2 class="pr-title">${esc(result.title)}</h2>` +
           `<div class="rich">${result.description}</div>${cta}</section>`;
       }).join('');
@@ -1464,8 +1537,19 @@
         summary = `<section class="summary pr-summary"><h2>Where this leaves you</h2>${copy.innerHTML}</section>`;
       }
 
-      const foot = '<p class="pr-footer">Your ENM style results from swoon.coach</p>';
-      $('printResults').innerHTML = head + results + summary + foot;
+      /* Only rewrite what changed. Rewriting the results part would recreate
+         the photos, and a photo created as printing starts can come out blank. */
+      const root = $('printResults');
+      if (!root.firstChild) {
+        root.innerHTML = '<div class="pr-main"></div><div class="pr-extra"></div>' +
+          '<p class="pr-footer">Your ENM style results from swoon.coach</p>';
+      }
+      const main = head + overview + results;
+      if (root.dataset.main !== main) {
+        root.querySelector('.pr-main').innerHTML = main;
+        root.dataset.main = main;
+      }
+      root.querySelector('.pr-extra').innerHTML = summary;
       document.body.classList.add('print-ready');
       return true;
     }
