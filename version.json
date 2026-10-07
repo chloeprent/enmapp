@@ -1,12 +1,12 @@
 {
-  "version": "v261007.02 6:08p",
-  "release": 2,
-  "sha": "35660ff",
-  "fullSha": "35660ff9d421736e77bddf3c0760a20aefe84b88",
+  "version": "v261007.03 6:15p",
+  "release": 3,
+  "sha": "0ff5cf5",
+  "fullSha": "0ff5cf59ff048a5c827d41f311e8a2569bf02a37",
   "actor": "chloeprent",
   "source": "cloudflare-pages-deploy",
   "model": "ci",
-  "machine": "runnervm8df0l",
-  "pushedAt": "2026-10-08T02:08:35+08:00",
-  "commits": [{"sha":"35660ff","message":"ENM quiz: result rating, results logo, call button, footer, phone text size (#27)","author":"chloeprent"}]
+  "machine": "runnervmmprz5",
+  "pushedAt": "2026-10-08T02:14:47+08:00",
+  "commits": [{"sha":"0ff5cf5","message":"enm-quiz: fuller link-preview tags for Facebook and Messenger (#28)","author":"chloeprent"}]
 }
