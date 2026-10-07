@@ -9,7 +9,7 @@ GROUP BY table_name ORDER BY table_name;
 
 -- == 2. Row level security and policies on quiz tables
 SELECT c.relname AS table_name, c.relrowsecurity AS rls_on,
-       COALESCE(string_agg(p.polname || '(' || p.polcmd || ')', ', ' ORDER BY p.polname), '') AS policies
+       COALESCE(string_agg(p.polname || '(' || p.polcmd::text || ')', ', ' ORDER BY p.polname), '') AS policies
 FROM pg_class c
 JOIN pg_namespace n ON n.oid = c.relnamespace AND n.nspname = 'public'
 LEFT JOIN pg_policy p ON p.polrelid = c.oid
