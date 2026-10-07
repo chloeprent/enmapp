@@ -18,6 +18,7 @@ import { corsHeaders } from "../_shared/api-helpers.ts";
 
 const QUIZ_URL = "https://swoon-quiz.pages.dev/";
 const FROM = "Swoon Quiz <quiz@swoon.coach>";
+const COVER_IMG = `${QUIZ_URL}img/cover-e13e86.jpg`;
 
 const db = () =>
   createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
@@ -99,13 +100,14 @@ function inviteEmail(inviterName: string | null, link: string) {
   const who = inviterName ? esc(inviterName) : "Someone you know";
   const text =
     `${inviterName ?? "Someone you know"} just took the ENM Style quiz and asked us to send you your own copy.\n\n` +
-    `It is about 20 questions, it is judgement-free, and your answers are your own — they do not see them ` +
+    `It is 15 questions, it is judgement-free, and your answers are your own, they do not see them ` +
     `unless you choose to share.\n\nTake it here: ${link}\n\n` +
     `If this is not something you want, you can ignore this email and we will not write again.`;
 
   const html = `<div style="font-family:-apple-system,Segoe UI,sans-serif;color:#3c3c3c;max-width:520px;margin:0 auto;padding:24px">
   <h1 style="font-size:20px;font-weight:600;margin:0 0 16px">${who} invited you to take the ENM Style quiz</h1>
-  <p style="margin:0 0 14px;line-height:1.55">It is about 20 questions and it is judgement-free. Your answers are your own &mdash; they do not see them unless you choose to share.</p>
+  <a href="${esc(link)}" style="display:block;margin:0 0 18px"><img src="${COVER_IMG}" alt="What's your ENM style?" width="520" style="display:block;width:100%;max-width:520px;height:auto;border:0;border-radius:12px"></a>
+  <p style="margin:0 0 14px;line-height:1.55">It is 15 questions and it is judgement-free. Your answers are your own, they do not see them unless you choose to share.</p>
   <p style="margin:0 0 14px;line-height:1.55">When you are done, the two of you can compare where you actually line up, and where you do not.</p>
   <p style="margin:26px 0"><a href="${esc(link)}" style="background:#fc6a77;color:#fff;text-decoration:none;padding:13px 28px;border-radius:30px;font-weight:600;display:inline-block">Take the quiz</a></p>
   <p style="margin:0;font-size:12px;color:#8a8a8a;line-height:1.5">If this is not something you want, ignore this email and we will not write again.</p>
