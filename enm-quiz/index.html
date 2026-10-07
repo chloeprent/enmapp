@@ -88,6 +88,7 @@
       gap: 30px;
     }
     .cover-head { grid-area: head; }
+    .brand-logo { display: block; width: 132px; height: auto; margin-bottom: 18px; }
     .cover-body { grid-area: body; }
     .cover-visual {
       grid-area: visual; position: relative;
@@ -283,13 +284,6 @@
 
     .hint { text-align: center; font-size: .8125rem; opacity: .6; margin-top: 16px; }
 
-    .quiz-hint {
-      background: rgba(252,106,119,.06); border: 1px solid rgba(252,106,119,.18);
-      border-radius: var(--radius); padding: 14px 18px; margin-bottom: 22px;
-      font-size: .875rem; line-height: 1.6; color: #4a3232;
-    }
-    .quiz-hint p { margin: 0; }
-    .quiz-hint p + p { margin-top: 8px; }
 
     /* ── Footer: back arrow + counter, matching the source layout ── */
     .quiz-footer {
@@ -441,19 +435,6 @@
     }
     .btn-ghost:hover { background: var(--bg); }
 
-    /* ── AI situation summary on the result screen ── */
-    .summary { margin-top: 40px; border-top: 1px solid rgba(60,60,60,.18); padding-top: 26px; }
-    .summary h2 { font-size: 1.125rem; font-weight: 600; margin-bottom: 6px; }
-    .summary .headline { font-size: 1.0625rem; line-height: 1.45; margin-bottom: 16px; font-weight: 500; }
-    .summary .body p { margin-bottom: 12px; }
-    .summary h3 { font-size: .8125rem; font-weight: 700; letter-spacing: .06em;
-      text-transform: uppercase; opacity: .55; margin: 24px 0 12px; }
-    .card {
-      background: #fff; border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px;
-    }
-    .card strong { display: block; margin-bottom: 4px; font-size: .9375rem; }
-    .card span { font-size: .875rem; line-height: 1.5; }
-    .summary-loading { font-size: .875rem; opacity: .6; padding: 10px 0; }
 
     /* ── Partner invite ── */
     .tag-prompt {
@@ -563,6 +544,86 @@
       .option { font-size: .875rem; padding: 13px 15px; }
       .intro-list li { font-size: 1rem; padding: 17px 0; }
     }
+
+    /* ── Save as PDF ── */
+    .save-pdf-row { margin-top: 40px; }
+    .save-pdf-note { font-size: .8125rem; opacity: .75; margin-top: 10px; text-align: center; }
+    .save-banner {
+      position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%);
+      width: calc(100% - 32px); max-width: 460px; z-index: 40;
+      display: flex; align-items: center; gap: 12px;
+      background: #fff; border: 1px solid rgba(252,106,119,.25); border-radius: 14px;
+      padding: 12px 10px 12px 18px; box-shadow: 0 14px 34px -12px rgba(40,30,30,.35);
+    }
+    .save-banner p { flex: 1; font-size: .875rem; line-height: 1.4; }
+    .save-banner .btn { padding: 10px 18px; font-size: .8125rem; white-space: nowrap; }
+    .save-banner-close {
+      background: none; border: 0; color: var(--text); cursor: pointer;
+      font-size: 1.375rem; line-height: 1; opacity: .5; padding: 4px 6px;
+    }
+    .save-banner-close:hover { opacity: 1; }
+    #printResults { display: none; }
+
+    /* Printing (and "Save as PDF") shows only the print copy of the results,
+       built on demand with all three matches written out in full. */
+    @media print {
+      @page { margin: 16mm 14mm; }
+      html, body { height: auto; background: #fff !important; }
+      body.print-ready > *:not(#printResults) { display: none !important; }
+      body.print-ready #printResults { display: block !important; }
+      #printResults { font-size: 10.5pt; line-height: 1.45; color: var(--text); }
+      #printResults .rich { font-size: 10.5pt; }
+      #printResults .rich p { margin-bottom: 7pt; }
+      #printResults .rich h2 { font-size: 12pt; margin: 10pt 0 6pt; }
+      #printResults .rich hr { margin: 10pt 0; }
+      #printResults .rich li { margin-bottom: 3pt; }
+      #printResults * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      #printResults h1, #printResults h2, #printResults h3 { break-after: avoid; page-break-after: avoid; }
+      #printResults p, #printResults li { break-inside: avoid; page-break-inside: avoid; }
+      .pr-head { text-align: center; margin: 4pt 0 22pt; }
+      .pr-logo { display: block; width: 44mm; height: auto; margin: 0 auto 12pt; }
+      .pr-kicker {
+        font-size: 9pt; font-weight: 700; letter-spacing: .08em;
+        text-transform: uppercase; color: var(--progress);
+      }
+      .pr-head h1 { font-size: 22pt; font-weight: 700; line-height: 1.2; margin: 6pt 0 8pt; }
+      .pr-head .pr-intro { font-size: 11.5pt; opacity: .8; }
+      .pr-head .pr-date { font-size: 9pt; opacity: .55; margin-top: 6pt; }
+      .pr-overview { list-style: none; padding: 0; margin: 0; }
+      .pr-overview li {
+        display: flex; gap: 14pt; align-items: flex-start;
+        border: 1px solid #eadfdb; border-radius: 10px; padding: 12pt 14pt; margin-bottom: 10pt;
+      }
+      .pr-rank {
+        flex: 0 0 auto; width: 24pt; height: 24pt; border-radius: 50%;
+        background: var(--btn); color: #fff; font-weight: 700; font-size: 11pt;
+        display: flex; align-items: center; justify-content: center;
+      }
+      .pr-ov-body { flex: 1; }
+      .pr-ov-label { font-size: 8.5pt; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; opacity: .55; }
+      .pr-ov-title { font-size: 14pt; font-weight: 700; line-height: 1.25; }
+      .pr-ov-title span { font-weight: 500; opacity: .6; font-size: 11pt; }
+      .pr-ov-tagline { font-style: italic; font-size: 10.5pt; opacity: .8; margin-top: 2pt; }
+      .pr-ov-link { display: inline-block; margin-top: 5pt; font-size: 10pt; font-weight: 600; color: var(--progress); }
+      .pr-result { break-before: page; page-break-before: always; }
+      .pr-img {
+        position: relative; overflow: hidden; border-radius: 10px;
+        width: 62%; height: 0; padding-top: 34.875%; margin: 0 auto 12pt;
+      }
+      .pr-img img { position: absolute; max-width: none; }
+      .pr-label {
+        font-size: 9pt; font-weight: 700; letter-spacing: .06em;
+        text-transform: uppercase; color: var(--progress);
+      }
+      .pr-title { font-size: 17pt; font-weight: 700; line-height: 1.25; margin: 2pt 0 8pt; }
+      .pr-cta { text-align: center; margin-top: 10pt; break-inside: avoid; page-break-inside: avoid; }
+      .pr-cta .btn { padding: 10pt 24pt; font-size: 11pt; }
+      .pr-url { font-size: 8.5pt; color: #7a6a6a; word-break: break-all; margin-top: 5pt; }
+      .pr-footer {
+        margin-top: 26pt; padding-top: 8pt; border-top: 1px solid rgba(60,60,60,.2);
+        text-align: center; font-size: 9pt; color: #7a6a6a;
+      }
+    }
   </style>
 </head>
 <body>
@@ -579,9 +640,10 @@
     <section class="screen active" id="screenCover">
       <div class="cover-grid">
         <div class="cover-head">
+          <img class="brand-logo" src="./img/swoon-logo.png" alt="Swoon" width="132" height="68">
           <span class="eyebrow"><span class="dot"></span>Free &middot; <span id="coverMetaQ"></span>&nbsp;questions &middot; Instant result</span>
           <h1 class="cover-title" id="coverTitle"></h1>
-          <p class="cover-tagline">For couples exploring ENM together &mdash; answer for yourself, then have your partner take it too.</p>
+          <p class="cover-tagline">For couples exploring ENM together, answer for yourself, then have your partner take it too.</p>
           <div class="rich cover-desc" id="coverDesc"></div>
         </div>
         <div class="cover-visual">
@@ -601,7 +663,7 @@
         </div>
         <div class="cover-body">
           <ul class="checks">
-            <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span>Your primary ENM style &mdash; and what it actually means</span></li>
+            <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span>Your primary ENM style, and what it actually means</span></li>
             <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span>How different ENM dynamics really work in practice</span></li>
             <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span>Clear next steps: what to explore, what to avoid</span></li>
             <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span>Guidance from a coach who has lived this work for 14 years</span></li>
@@ -656,16 +718,12 @@
           <div class="btn-row"><button class="btn" type="submit" id="gateSubmit">Start the quiz</button></div>
         </form>
         <p class="privacy">By submitting you'll receive your result and be added to my newsletter. You can unsubscribe at any time.</p>
-        <p class="privacy" id="gateProgress">That's all 20 questions &mdash; this is the last step.</p>
+        <p class="privacy" id="gateProgress">That's all 20 questions, this is the last step.</p>
       </div>
     </section>
 
     <!-- ── Questions ── -->
     <section class="screen" id="screenQuestion">
-      <div class="quiz-hint" id="quizHint" hidden>
-        <p><strong>Answer for yourself</strong> &mdash; have your partner take it separately and compare.</p>
-        <p>Read <em>all</em> answer choices carefully before picking &mdash; several will sound right, but one will fit best. You can go back anytime with the &larr; arrow at the bottom.</p>
-      </div>
       <div class="question-img" id="questionImg" hidden></div>
       <h1 class="headline" id="questionTitle"></h1>
       <div class="options" id="questionOptions"></div>
@@ -678,7 +736,7 @@
           <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
           Something off?
         </button>
-        <span class="thanks" id="feedbackThanks" hidden>Thanks &mdash; that's logged.</span>
+        <span class="thanks" id="feedbackThanks" hidden>Thanks, that's logged.</span>
       </div>
     </section>
 
@@ -690,17 +748,9 @@
       <div class="btn-row" id="resultCtaRow" hidden>
         <a class="btn" id="resultCta" target="_blank" rel="noopener"></a>
       </div>
-      <div class="summary" id="summaryBlock" hidden>
-        <h2>Where this leaves you</h2>
-        <p class="summary-loading" id="summaryLoading">Reading your answers back&hellip;</p>
-        <div id="summaryContent" hidden>
-          <p class="headline" id="summaryHeadline"></p>
-          <div class="body" id="summarySituation"></div>
-          <h3>What is likely to be hard</h3>
-          <div id="summaryChallenges"></div>
-          <h3>Worth learning about next</h3>
-          <div id="summaryTopics"></div>
-        </div>
+      <div class="btn-row save-pdf-row">
+        <button class="btn" type="button" id="savePdfBtn">Save as PDF</button>
+        <p class="save-pdf-note" id="savePdfNote" hidden></p>
       </div>
 
       <div class="top-results" id="topResults" hidden>
@@ -710,7 +760,7 @@
 
       <div class="partner-box" id="partnerBox" hidden>
         <h3>Invite your partner to take it too</h3>
-        <p>They get their own link and answer for themselves &mdash; you will not see their
+        <p>They get their own link and answer for themselves, you will not see their
            answers unless they show you. We tag the two runs as a pair so you can compare.</p>
         <form class="row" id="partnerForm">
           <input type="email" id="partnerEmail" placeholder="their@email.com" autocomplete="off">
@@ -723,13 +773,13 @@
 
       <div class="tag-prompt" id="tagPromptBanner" hidden>
         <h3>Want more personalized guidance?</h3>
-        <p>Answer 6 quick questions and we'll tailor your aftercare emails to your specific situation — your fears, your pace, your vision.</p>
+        <p>Answer 6 quick questions and we'll tailor your aftercare emails to your specific situation, your fears, your pace, your vision.</p>
         <div class="tag-prompt-btns">
           <button class="btn" type="button" id="tagYesBtn">Yes, personalize my emails</button>
           <button class="btn-ghost" type="button" id="tagNoBtn">No thanks, I'm done</button>
         </div>
       </div>
-      <p class="save-note" id="tagThanksNote" hidden>Thanks — we'll use your answers to personalize the guidance we send you.</p>
+      <p class="save-note" id="tagThanksNote" hidden>Thanks, we'll use your answers to personalize the guidance we send you.</p>
     </section>
 
   </div>
@@ -747,6 +797,16 @@
     </div>
   </div>
 
+
+  <!-- Print-only copy of the results, filled in when someone saves as PDF. -->
+  <div id="printResults" aria-hidden="true"></div>
+
+  <!-- Gentle reminder a few seconds after the results appear, once per visit. -->
+  <div class="save-banner" id="saveBanner" role="dialog" aria-label="Save your results" hidden>
+    <p id="saveBannerText">Want to keep your full results?</p>
+    <button class="btn" type="button" id="saveBannerBtn">Save as PDF</button>
+    <button class="save-banner-close" type="button" id="saveBannerClose" aria-label="Close">&times;</button>
+  </div>
 
   <div class="quiz-footer" id="quizFooter" hidden>
     <button class="back" id="backBtn" aria-label="Previous question">
@@ -784,7 +844,7 @@
 
   <script src="./vendor/supabase-js-2.39.3.min.js"></script>
   <script type="module">
-    import { QUIZ } from './quiz-data.js?v=3';
+    import { QUIZ } from './quiz-data.js?v=4';
     import { supabase, waitForAuthReady } from './supabase-client.js';
 
     const $ = id => document.getElementById(id);
@@ -887,7 +947,6 @@
       const q = QUIZ.questions[state.current];
       const selected = state.answers[state.current];
 
-      $('quizHint').hidden = state.current !== 0;
       applyImage($('questionImg'), q.img);
       $('questionTitle').textContent = q.title;
       $('feedbackThanks').hidden = true;
@@ -1101,7 +1160,7 @@
 
       const coreCount = QUIZ.coreQuestionsCount ?? QUIZ.questions.length;
       $('gateProgress').textContent =
-        `That's all ${coreCount} questions — one step away from your result.`;
+        `That's all ${coreCount} questions, one step away from your result.`;
       $('gateSubmit').textContent = 'See my result';
 
       show('screenGate');
@@ -1325,7 +1384,8 @@
       $('tagThanksNote').hidden = true;
 
       show('screenResult');
-      loadSummary();
+      buildPrintResults();  /* early, so the photos are loaded before saving */
+      scheduleSaveBanner();
     }
 
     $('tagYesBtn').addEventListener('click', () => {
@@ -1356,38 +1416,139 @@
       }
     }
 
-    /* ── AI situation summary ──────────────────────────────────────────────── */
-    async function loadSummary() {
-      if (!state.leadId) return;
-      $('summaryBlock').hidden = false;
+    /* ── Save as PDF ───────────────────────────────────────────────────────── */
+    /* The screen shows one result's details at a time, so printing it as-is
+       would lose the 2nd and 3rd matches. Instead, build a print-only copy with
+       every match written out in full, and let the print stylesheet show only
+       that. Uses the browser's own print screen, which offers "Save as PDF". */
+    const MATCH_LABELS = ['Your top style', 'Your 2nd match', 'Your 3rd match'];
 
-      try {
-        const { data, error } = await supabase.functions.invoke(AI_FN, {
-          body: { action: 'summary', run_id: state.runId },
-        });
-        if (error) throw error;
-        const s = data?.summary;
-        if (!s) throw new Error('No summary returned');
+    /* In-app browsers (Instagram, Facebook, TikTok...) often ignore print. */
+    const IN_APP_BROWSER =
+      /FBAN|FBAV|FB_IAB|Instagram|TikTok|musical_ly|Bytedance|Snapchat|Line\/|LinkedInApp/i
+        .test(navigator.userAgent);
+    const OPEN_IN_BROWSER_MSG =
+      'To save as PDF, open this page in Safari or Chrome (tap the menu and choose Open in browser).';
 
-        $('summaryHeadline').textContent = s.headline || '';
-        $('summarySituation').innerHTML = String(s.situation || '')
-          .split(/\n{2,}/).filter(Boolean).map(par => `<p>${esc(par)}</p>`).join('');
-
-        $('summaryChallenges').innerHTML = (s.challenges || [])
-          .map(c => `<div class="card"><strong>${esc(c.title)}</strong><span>${esc(c.detail)}</span></div>`)
-          .join('');
-        $('summaryTopics').innerHTML = (s.topics || [])
-          .map(t => `<div class="card"><strong>${esc(t.title)}</strong><span>${esc(t.why)}</span></div>`)
-          .join('');
-
-        $('summaryLoading').hidden = true;
-        $('summaryContent').hidden = false;
-      } catch (e) {
-        console.error('[enm-quiz] summary failed', e);
-        /* The scored result is the product; the summary is a bonus. Drop the
-           whole block rather than leaving a broken spinner on the page. */
-        $('summaryBlock').hidden = true;
+    /* Same framing as applyImage(), but as a real <img>: unlike a background
+       image, it starts loading while hidden, so it is ready when printing. */
+    function printImage(img) {
+      if (!img) return '';
+      const c = img.crop;
+      let style = 'width:100%;height:100%;left:0;top:0;object-fit:cover';
+      if (c && c.width && c.height) {
+        const w = 10000 / c.width, h = 10000 / c.height;
+        const left = c.width >= 100 ? (100 - w) / 2 : -(c.x / c.width) * 100;
+        const top = c.height >= 100 ? (100 - h) / 2 : -(c.y / c.height) * 100;
+        style = `width:${w}%;height:${h}%;left:${left}%;top:${top}%`;
       }
+      return `<div class="pr-img"><img src="${esc(img.src)}" alt="" style="${style}"></div>`;
+    }
+
+    /* The one-line tagline each description opens with, for the overview. */
+    function tagline(result) {
+      const h = new DOMParser().parseFromString(result.description || '', 'text/html').querySelector('h2');
+      return h ? h.textContent.trim() : '';
+    }
+
+    function buildPrintResults() {
+      const list = state.finalTop;
+      if (!list || !list.length) return false;
+      const top = list.slice(0, 3).map(({ result, points }, i) => ({
+        result, label: MATCH_LABELS[i],
+        pct: state.finalTotal ? Math.round((points / state.finalTotal) * 100) : 0,
+      }));
+      const showPct = top.length > 1;
+
+      const name = $('firstName').value.trim();
+      const date = new Date().toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' });
+      const head =
+        `<header class="pr-head"><img class="pr-logo" src="./img/swoon-logo.png" alt="Swoon">` +
+        `<p class="pr-kicker">Your ENM style results</p>` +
+        `<h1>Hi ${esc(name || 'there')}, thanks for taking the quiz.</h1>` +
+        `<p class="pr-intro">${top.length > 1
+          ? 'Here are your top matches. Each one is explained in full on the pages that follow.'
+          : 'Here is your result. It is explained in full on the next page.'}</p>` +
+        `<p class="pr-date">${esc(date)}</p></header>`;
+
+      const overview = '<ol class="pr-overview">' + top.map(({ result, label, pct }, i) => {
+        const line = tagline(result);
+        return `<li><span class="pr-rank">${i + 1}</span><div class="pr-ov-body">` +
+          `<p class="pr-ov-label">${label}</p>` +
+          `<p class="pr-ov-title">${esc(result.title)}${showPct ? ` <span>${pct}%</span>` : ''}</p>` +
+          (line ? `<p class="pr-ov-tagline">${esc(line)}</p>` : '') +
+          (result.cta ? `<a class="pr-ov-link" href="${esc(result.cta.url)}">${esc(result.cta.label)}</a>` : '') +
+          `</div></li>`;
+      }).join('') + '</ol>';
+
+      const results = top.map(({ result, label, pct }) => {
+        const cta = result.cta
+          ? `<div class="pr-cta"><a class="btn" href="${esc(result.cta.url)}">${esc(result.cta.label)}</a>` +
+            `<p class="pr-url">${esc(result.cta.url)}</p></div>`
+          : '';
+        return `<section class="pr-result">${printImage(result.img)}` +
+          `<p class="pr-label">${label}${showPct ? ` (${pct}%)` : ''}</p>` +
+          `<h2 class="pr-title">${esc(result.title)}</h2>` +
+          `<div class="rich">${result.description}</div>${cta}</section>`;
+      }).join('');
+
+      /* Only rewrite when something changed. Rewriting recreates the photos,
+         and a photo created as printing starts can come out blank. */
+      const root = $('printResults');
+      const html = head + overview + results +
+        '<p class="pr-footer">Your ENM style results from swoon.coach</p>';
+      if (root.dataset.html !== html) {
+        root.innerHTML = html;
+        root.dataset.html = html;
+      }
+      document.body.classList.add('print-ready');
+      return true;
+    }
+
+    /* Also covers printing from the browser menu or Ctrl/Cmd+P. */
+    window.addEventListener('beforeprint', buildPrintResults);
+
+    function saveAsPdf(showMessage) {
+      hideSaveBanner();
+      if (IN_APP_BROWSER || typeof window.print !== 'function') {
+        showMessage(OPEN_IN_BROWSER_MSG);
+        return;
+      }
+      if (!buildPrintResults()) return;
+      track('save_pdf');
+      window.print();
+    }
+
+    $('savePdfBtn').addEventListener('click', () => saveAsPdf(msg => {
+      $('savePdfNote').textContent = msg;
+      $('savePdfNote').hidden = false;
+    }));
+
+    $('saveBannerBtn').addEventListener('click', () => saveAsPdf(msg => {
+      /* Swap the banner into the message rather than closing it. */
+      $('saveBannerText').textContent = msg;
+      $('saveBannerBtn').hidden = true;
+      $('saveBanner').hidden = false;
+    }));
+
+    $('saveBannerClose').addEventListener('click', hideSaveBanner);
+
+    const BANNER_SEEN_KEY = 'enmquiz.saveBannerSeen';
+    let bannerTimer = null;
+
+    function scheduleSaveBanner() {
+      let seen = false;
+      try { seen = sessionStorage.getItem(BANNER_SEEN_KEY) === '1'; } catch { /* storage blocked */ }
+      if (seen || bannerTimer) return;
+      bannerTimer = setTimeout(() => {
+        if ($('screenResult').classList.contains('active')) $('saveBanner').hidden = false;
+      }, 8000);
+    }
+
+    function hideSaveBanner() {
+      clearTimeout(bannerTimer);
+      $('saveBanner').hidden = true;
+      try { sessionStorage.setItem(BANNER_SEEN_KEY, '1'); } catch { /* storage blocked */ }
     }
 
     /* ── Partner invite ────────────────────────────────────────────────────── */

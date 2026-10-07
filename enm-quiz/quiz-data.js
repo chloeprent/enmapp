@@ -131,7 +131,7 @@ export const QUIZ = {
         },
         {
           "uid": "a_ouHVAQhCyn",
-          "text": "A real, regular part of life — not an occasional thing.",
+          "text": "A real, regular part of life, not an occasional thing.",
           "result": [[3, 2], [2, 1]]
         },
         {
@@ -178,7 +178,7 @@ export const QUIZ = {
     },
     {
       "uid": "q_qQxmbqtPEk",
-      "title": "Picture your partner really hitting it off with someone else — a great date, real chemistry, obvious happiness. Your honest gut reaction?",
+      "title": "Picture your partner really hitting it off with someone else, a great date, real chemistry, obvious happiness. Your honest gut reaction?",
       "answerType": "text",
       "multi": false,
       "min": 1,
@@ -186,12 +186,12 @@ export const QUIZ = {
       "options": [
         {
           "uid": "a_za3EkPYpae",
-          "text": "Happy for them — their joy feels good to me, not a threat.",
+          "text": "Happy for them, their joy feels good to me, not a threat.",
           "result": [[3, 3]]
         },
         {
           "uid": "a_TIeJp-ILGP",
-          "text": "Okay — a wobble at first, but I'd manage and talk it through.",
+          "text": "Okay, a wobble at first, but I'd manage and talk it through.",
           "result": [[2, 2]]
         },
         {
@@ -246,11 +246,11 @@ export const QUIZ = {
           "freeform": true
         }
       ],
-      "img": { "src": "img/q6-watching.webp" }
+      "img": { "src": "img/q6-watching-v2.webp" }
     },
     {
       "uid": "q_2SoZCLKDoU",
-      "title": "If the idea of your partner being with someone else appeals to you — when you picture it, what's the turn on?",
+      "title": "If the idea of your partner being with someone else appeals to you, when you picture it, what's the turn on?",
       "answerType": "text",
       "multi": false,
       "min": 1,
@@ -258,7 +258,7 @@ export const QUIZ = {
       "options": [
         {
           "uid": "a_o22r_N2a7M",
-          "text": "Pride — I love seeing how wanted they are.",
+          "text": "Pride, I love seeing how wanted they are.",
           "result": [[5, 8]]
         },
         {
@@ -268,7 +268,7 @@ export const QUIZ = {
         },
         {
           "uid": "a_-zJJTRw2Vb",
-          "text": "Neither — the idea of watching my partner doesn't especially excite me",
+          "text": "Neither, the idea of watching my partner doesn't especially excite me",
           "result": 0
         },
         {
@@ -313,15 +313,7 @@ export const QUIZ = {
           "freeform": true
         }
       ],
-      "img": {
-        "src": "img/q11-c012c1.jpg",
-        "crop": {
-          "x": -5.246178401880751e-14,
-          "y": 47.62228241971675,
-          "width": 100.00000000000004,
-          "height": 29.629629629629623
-        }
-      }
+      "img": { "src": "img/q8-couple-piggyback.webp" }
     },
     {
       "uid": "q_4ho6eLjlBJ",
@@ -333,17 +325,17 @@ export const QUIZ = {
       "options": [
         {
           "uid": "a_796OIi4A4B",
-          "text": "One person is my anchor — a primary partner I build my life with — and the others matter, but they orbit that center.",
+          "text": "One person is my anchor, a primary partner I build my life with, and the others matter, but they orbit that center.",
           "result": [[8, 3]]
         },
         {
           "uid": "a_4VxbUdzXqy",
-          "text": "I keep my independence. No merging into a couple-unit, no \"primary\" outranking the rest — I'm my own home base.",
+          "text": "I keep my independence. No merging into a couple-unit, no \"primary\" outranking the rest, I'm my own home base.",
           "result": [[10, 3]]
         },
         {
           "uid": "a_8q4598qFgy",
-          "text": "I refuse to rank them at all — a deep friendship can weigh as much as a romance, and every bond writes its own rules.",
+          "text": "I refuse to rank them at all, a deep friendship can weigh as much as a romance, and every bond writes its own rules.",
           "result": [[9, 3]]
         },
         {
@@ -357,7 +349,7 @@ export const QUIZ = {
           "result": [[7, 2]]
         }
       ],
-      "img": { "src": "img/q9-poly-couple.webp" }
+      "img": { "src": "img/q9-couple-kiss.webp" }
     },
     {
       "uid": "q_iVBwBebqvd",
@@ -405,22 +397,22 @@ export const QUIZ = {
       "options": [
         {
           "uid": "a__U_gy0a68P",
-          "text": "Detailed, explicit agreements — we talk things through regularly and keep clear structure so we know where everyone stands.",
+          "text": "Detailed, explicit agreements, we talk things through regularly and keep clear structure so we know where everyone stands.",
           "result": [[8, 3]]
         },
         {
           "uid": "a_r_dBrSKPbC",
-          "text": "A separate understanding built fresh with each connection — no one template. Every relationship is unique.",
+          "text": "A separate understanding built fresh with each connection, no one template. Every relationship is unique.",
           "result": [[9, 3]]
         },
         {
           "uid": "a_qQoi7F046C",
-          "text": "Loose and evolving — we stay flexible and figure out our own flavor as we go, together.",
+          "text": "Loose and evolving, we stay flexible and figure out our own flavor as we go, together.",
           "result": [[2, 2]]
         },
         {
           "uid": "a_h8XQIi_GFs",
-          "text": "Simple, clear guardrails and contained fun — not something we need to keep processing.",
+          "text": "Simple, clear guardrails and contained fun, not something we need to keep processing.",
           "result": [[4, 3], [5, 2], [7, 2]]
         }
       ]
@@ -440,7 +432,7 @@ export const QUIZ = {
         },
         {
           "uid": "a_pjr6eLeSuH",
-          "text": "Grounded with my partner, occasionally lit up by something extra — not a second life, just the rare spark",
+          "text": "Grounded with my partner, occasionally lit up by something extra, not a second life, just the rare spark",
           "result": [[7, 3]]
         },
         {
@@ -450,14 +442,11 @@ export const QUIZ = {
         },
         {
           "uid": "a_JGGlfBAKQp",
-          "text": "Light and unattached to a plan — free to say yes when connections present, enjoying the ride with my partner. ",
+          "text": "Light and unattached to a plan, free to say yes when connections present, enjoying the ride with my partner. ",
           "result": [[2, 2]]
         }
       ],
-      "img": {
-        "src": "img/q12-couple-poly.webp",
-        "crop": { "x": 20, "y": 0, "width": 80, "height": 100 }
-      }
+      "img": { "src": "img/q12-tattoo-couple-v2.webp" }
     },
     {
       "uid": "q_Kp2mNvXtYr",
@@ -469,22 +458,22 @@ export const QUIZ = {
       "options": [
         {
           "uid": "a_Kp2mNvXtYs",
-          "text": "My partner's — I love the idea of them out there, being desired, while I hold the base.",
+          "text": "My partner's, I love the idea of them out there, being desired, while I hold the base.",
           "result": [[5, 8]]
         },
         {
           "uid": "a_Kp2mNvXtYt",
-          "text": "My own — I want to be the one having adventures, with my partner's awareness.",
+          "text": "My own, I want to be the one having adventures, with my partner's awareness.",
           "result": [[11, 3], [10, 1]]
         },
         {
           "uid": "a_Kp2mNvXtYu",
-          "text": "Both equally — same freedom for both of us, whether together or separately.",
+          "text": "Both equally, same freedom for both of us, whether together or separately.",
           "result": [[4, 3], [2, 2]]
         },
         {
           "uid": "a_Kp2mNvXtYv",
-          "text": "Whoever finds something real first — I'm not into assigning roles.",
+          "text": "Whoever finds something real first, I'm not into assigning roles.",
           "result": [[3, 2], [9, 1]]
         }
       ]
@@ -499,7 +488,7 @@ export const QUIZ = {
       "options": [
         {
           "uid": "a_Rz9qWsLfBn",
-          "text": "We're basically monogamous — this would be rare, an occasional thrill.",
+          "text": "We're basically monogamous, this would be rare, an occasional thrill.",
           "result": [[7, 6]]
         },
         {
@@ -509,7 +498,7 @@ export const QUIZ = {
         },
         {
           "uid": "a_Rz9qWsLfBp",
-          "text": "I want the option of separate connections, experiences we have together, a range of possibilities — without putting strict limits on it.",
+          "text": "I want the option of separate connections, experiences we have together, a range of possibilities, without putting strict limits on it.",
           "result": [[2, 3]]
         },
         {
@@ -529,7 +518,7 @@ export const QUIZ = {
       "options": [
         {
           "uid": "a_Hx4jCpVdNf",
-          "text": "An erotic experience you're both in on — no deeper meaning than that.",
+          "text": "An erotic experience you're both in on, no deeper meaning than that.",
           "result": [[4, 3], [2, 1], [7, 2]]
         },
         {
@@ -539,7 +528,7 @@ export const QUIZ = {
         },
         {
           "uid": "a_Hx4jCpVdNh",
-          "text": "Someone who holds something you can't provide — and that gap is part of the turn-on.",
+          "text": "Someone who holds something you can't provide, and that gap is part of the turn-on.",
           "result": [[6, 6]]
         },
         {
@@ -738,7 +727,7 @@ export const QUIZ = {
         },
         {
           "uid": "a_vKLtSHwCU_",
-          "text": "Not over-planning it — we'd rather stay open to different kinds of connection and let our agreement evolve as we go, together.",
+          "text": "Not over-planning it, we'd rather stay open to different kinds of connection and let our agreement evolve as we go, together.",
           "result": 2
         }
       ],
@@ -814,7 +803,7 @@ export const QUIZ = {
       "uid": "r_Q23t28UcGsm",
       "index": 2,
       "title": "Open Relationship",
-      "description": "<h2 style=\"text-align:center\"><em>Committed to </em><strong><em>us</em></strong><em> and </em><strong><em>open </em></strong><em>to more.</em></h2><hr /><h2 style=\"text-align:center\"><strong>This is you if:</strong></h2><h3 style=\"text-align:left\">Your relationship comes first, <strong>always, </strong>but you're curious about connections<strong> outside it</strong>: dates, chemistry, maybe even someone you grow fond of, <strong>without</strong> wanting to blow up the life you've built.</h3><h3 style=\"text-align:left\">You might be wary of labels and would rather explore together than define everything upfront. Your goal is to discover what feels fun, expansive, and authentic to your values - not heavy, dramatic, or meaningless.</h3><h3 style=\"text-align:left\">You're <strong>not</strong> looking to fall in love with other people or turn your life upside down. You want a little freedom, a little adventure, and a lot of honesty, with your partner as home base. This is where most thoughtful couples begin, and it's a beautiful place to start.</h3><hr /><h2 style=\"text-align:left\"><strong>Your customized Get Started pathway:</strong></h2><p data-rep=\"true\" style=\"text-align:left\"><em>Inside the guide.</em></p><p data-rep=\"true\" style=\"text-align:left\">Shows you exactly how to open up without the chaos:</p><ul style=\"text-align:center\"><li><p data-rep=\"true\" style=\"text-align:left\">the right apps for primary-first couples,</p></li><li><p data-rep=\"true\" style=\"text-align:left\">how to educate yourselves,</p></li><li><p data-rep=\"true\" style=\"text-align:left\">find your people, uncover your blind spots, and</p></li><li><p data-rep=\"true\" style=\"text-align:left\">take the first steps with confidence.</p></li></ul>",
+      "description": "<h2 style=\"text-align:center\"><em>Committed to </em><strong><em>us</em></strong><em> and </em><strong><em>open </em></strong><em>to more.</em></h2><hr /><h2 style=\"text-align:center\"><strong>This is you if:</strong></h2><p data-rep=\"true\" style=\"text-align:left\">Your relationship comes first, <strong>always, </strong>but you're curious about connections<strong> outside it</strong>: dates, chemistry, maybe even someone you grow fond of, <strong>without</strong> wanting to blow up the life you've built.</p><p data-rep=\"true\" style=\"text-align:left\">You might be wary of labels and would rather <strong>explore together</strong> than define everything upfront. Your goal is to discover what feels <strong>fun, expansive, and authentic</strong> to your values - not heavy, dramatic, or meaningless.</p><p data-rep=\"true\" style=\"text-align:left\">You're <strong>not</strong> looking to fall in love with other people or turn your life upside down. You want a little freedom, a little adventure, and <strong>a lot of honesty</strong>, with your partner as <strong>home base</strong>. This is where most thoughtful couples begin, and it's a beautiful place to start.</p><hr /><h2 style=\"text-align:left\"><strong>Your customized Get Started pathway:</strong></h2><p data-rep=\"true\" style=\"text-align:left\"><em>Inside the guide.</em></p><p data-rep=\"true\" style=\"text-align:left\">Shows you exactly how to open up without the chaos:</p><ul style=\"text-align:center\"><li><p data-rep=\"true\" style=\"text-align:left\">the right apps for primary-first couples,</p></li><li><p data-rep=\"true\" style=\"text-align:left\">how to educate yourselves,</p></li><li><p data-rep=\"true\" style=\"text-align:left\">find your people, uncover your blind spots, and</p></li><li><p data-rep=\"true\" style=\"text-align:left\">take the first steps with confidence.</p></li></ul>",
       "img": {
         "src": "img/r2-88c1d3.jpg",
         "crop": {
@@ -834,7 +823,7 @@ export const QUIZ = {
       "uid": "r_zSSpoo1B8J",
       "index": 3,
       "title": "Polyamory",
-      "description": "<h2 style=\"text-align:center\"><em>Love </em><strong><em>doesn't </em></strong><em>have to be </em><strong><em>limited</em></strong><em> to one.</em></h2><hr /><h2 style=\"text-align:center\"><strong>You're a match if:</strong></h2><p data-rep=\"true\" style=\"text-align:left\">You genuinely want <strong><em>more than one</em></strong><em> loving relationship</em>, real emotional connections,<strong> not </strong>just play and you believe you have the heart (and the calendar) for it.</p><p data-rep=\"true\" style=\"text-align:justify\">You're drawn to the deep end of ENM, and that takes real courage.</p><p data-rep=\"true\" style=\"text-align:justify\">Polyamory is about building <strong>multiple</strong> meaningful relationships with <strong>honesty and care.</strong> It's the most communication-intensive style and for the right people, the <strong>most rewarding.</strong></p><hr /><h2 style=\"text-align:left\"><strong>Your customized Get Started pathway:</strong></h2><p data-rep=\"true\" style=\"text-align:left\">Meets you where you are:</p><ul style=\"text-align:center\"><li><p data-rep=\"true\" style=\"text-align:left\">the values-aligned apps that emphasize emotional connection and community,</p></li><li><p data-rep=\"true\" style=\"text-align:left\">the resources and books that make poly click, and</p></li><li><p data-rep=\"true\" style=\"text-align:left\">the communication habits that keep multiple relationships healthy from day one.</p></li></ul><p data-rep=\"true\" style=\"text-align:left\"><em>Inside the guide.</em></p><hr /><h4 style=\"text-align:center\"><em>(If you're </em><strong><em>poly-CURIOUS </em></strong><em>but not sure you want full multiple relationships yet, that's </em><strong><em>common and completely okay.</em></strong><em> Your pathway will show you how to explore the feelings-side gently, at your pace.)</em></h4>",
+      "description": "<h2 style=\"text-align:center\"><em>Love </em><strong><em>doesn't </em></strong><em>have to be </em><strong><em>limited</em></strong><em> to one.</em></h2><hr /><h2 style=\"text-align:center\"><strong>You're a match if:</strong></h2><p data-rep=\"true\" style=\"text-align:left\">You genuinely want <strong><em>more than one</em></strong><em> loving relationship</em>, real emotional connections,<strong> not </strong>just play and you believe you have the heart (and the calendar) for it.</p><p data-rep=\"true\" style=\"text-align:justify\">You're drawn to the deep end of ENM, and that takes real courage.</p><p data-rep=\"true\" style=\"text-align:justify\">Polyamory is about building <strong>multiple</strong> meaningful relationships with <strong>honesty and care.</strong> It's the most communication-intensive style and for the right people, the <strong>most rewarding.</strong></p><hr /><h2 style=\"text-align:left\"><strong>Your customized Get Started pathway:</strong></h2><p data-rep=\"true\" style=\"text-align:left\">Meets you where you are:</p><ul style=\"text-align:center\"><li><p data-rep=\"true\" style=\"text-align:left\">the values-aligned apps that emphasize emotional connection and community,</p></li><li><p data-rep=\"true\" style=\"text-align:left\">the resources and books that make poly click, and</p></li><li><p data-rep=\"true\" style=\"text-align:left\">the communication habits that keep multiple relationships healthy from day one.</p></li></ul><p data-rep=\"true\" style=\"text-align:left\"><em>Inside the guide.</em></p><hr /><p data-rep=\"true\" style=\"text-align:center\"><em>(If you're </em><strong><em>poly-CURIOUS </em></strong><em>but not sure you want full multiple relationships yet, that's </em><strong><em>common and completely okay.</em></strong><em> Your pathway will show you how to explore the feelings-side gently, at your pace.)</em></p>",
       "img": {
         "src": "img/r3-c8ee66.jpg",
         "crop": {
@@ -854,7 +843,7 @@ export const QUIZ = {
       "uid": "r_a_57itxla3f",
       "index": 4,
       "title": "Swinging / The Lifestyle",
-      "description": "<h2 style=\"text-align:center\"><em>We </em><strong><em>play</em></strong><em> together. Socially. For </em><strong><em>fun.</em></strong></h2><hr /><h2 style=\"text-align:center\"><strong>This is you if:</strong></h2><h3 style=\"text-align:left\">The<strong> <em>sexy</em></strong> and the<strong> <em>social</em> </strong>sides of non-monogamy light you up, parties, other couples, shared adventure and you want to explore alongside your partner, together, more for fun than for feelings.</h3><p data-rep=\"true\" style=\"text-align:justify\">You're the <strong>social butterfly</strong> of ENM. This isn't about romance with other people; it's <u>play</u>, <u>novelty</u>, and a <u>whole community</u> of couples who get it. Your bond is home base; the lifestyle is where you go out to play, together.</p><hr /><h2 style=\"text-align:left\"><strong>Your customized Get Started pathway</strong></h2><p data-rep=\"true\" style=\"text-align:justify\">Hands you the real playbook:</p><ul style=\"text-align:center\"><li><p data-rep=\"true\" style=\"text-align:justify\">which lifestyle apps and sites actually work,</p></li><li><p data-rep=\"true\" style=\"text-align:justify\">how to find your first meet &amp; greet,</p></li><li><p data-rep=\"true\" style=\"text-align:justify\">the etiquette that makes you instantly welcome, </p></li><li><p data-rep=\"true\" style=\"text-align:justify\">how to ease in at your own pace, and </p></li><li><p data-rep=\"true\" style=\"text-align:justify\">parties, cruises, resorts, and a host of fun down the line!</p></li></ul><p data-rep=\"true\" style=\"text-align:justify\">Inside the guide.</p>",
+      "description": "<h2 style=\"text-align:center\"><em>We </em><strong><em>play</em></strong><em> together. Socially. For </em><strong><em>fun.</em></strong></h2><hr /><h2 style=\"text-align:center\"><strong>This is you if:</strong></h2><p data-rep=\"true\" style=\"text-align:left\">The<strong> <em>sexy</em></strong> and the<strong> <em>social</em> </strong>sides of non-monogamy light you up, parties, other couples, shared adventure and you want to explore alongside your partner, together, more for fun than for feelings.</p><p data-rep=\"true\" style=\"text-align:justify\">You're the <strong>social butterfly</strong> of ENM. This isn't about romance with other people; it's <u>play</u>, <u>novelty</u>, and a <u>whole community</u> of couples who get it. Your bond is home base; the lifestyle is where you go out to play, together.</p><hr /><h2 style=\"text-align:left\"><strong>Your customized Get Started pathway</strong></h2><p data-rep=\"true\" style=\"text-align:justify\">Hands you the real playbook:</p><ul style=\"text-align:center\"><li><p data-rep=\"true\" style=\"text-align:justify\">which lifestyle apps and sites actually work,</p></li><li><p data-rep=\"true\" style=\"text-align:justify\">how to find your first meet &amp; greet,</p></li><li><p data-rep=\"true\" style=\"text-align:justify\">the etiquette that makes you instantly welcome, </p></li><li><p data-rep=\"true\" style=\"text-align:justify\">how to ease in at your own pace, and </p></li><li><p data-rep=\"true\" style=\"text-align:justify\">parties, cruises, resorts, and a host of fun down the line!</p></li></ul><p data-rep=\"true\" style=\"text-align:justify\">Inside the guide.</p>",
       "img": {
         "src": "img/r4-4a157f.jpg",
         "crop": {
@@ -934,7 +923,7 @@ export const QUIZ = {
       "uid": "r_IlnWBruy-C",
       "index": 8,
       "title": "Hierarchical Polyamory",
-      "description": "<h2 style=\"text-align:center\"><strong><em>More than</em></strong><em> one love  with a</em><strong><em> clear</em></strong><em> anchor.</em></h2><hr /><h2 style=\"text-align:center\"><strong>This is you if:</strong> </h2><h3 style=\"text-align:left\">You want multiple loving relationships, <em>but</em> you want one primary/anchor partnership to stay at the center: the home, the big decisions, the long-term plans stay with your main person. </h3><h3 style=\"text-align:left\">But maybe there's another love in mind, or just the desire for more deep connection, and you know your heart can hold it.</h3><p data-rep=\"true\" style=\"text-align:justify\">You want the richness of poly with the security of a clear structure. Other relationships are genuine and cherished, but the hierarchy is named and agreed. </p><hr /><h2 style=\"text-align:left\"><strong>Your customized Get Started pathway:</strong> </h2><p data-rep=\"true\" style=\"text-align:justify\">Shows you how to protect your anchor while you explore: </p><ul style=\"text-align:center\"><li><p data-rep=\"true\" style=\"text-align:justify\">the right apps for deep connection and community, </p></li><li><p data-rep=\"true\" style=\"text-align:justify\">how to introduce the hierarchy honestly (so no one gets hurt), and </p></li><li><p data-rep=\"true\" style=\"text-align:justify\">the safeguards that help keep your primary bond rock-solid. </p></li></ul><p data-rep=\"true\" style=\"text-align:justify\"><em>Inside the guide.</em></p>",
+      "description": "<h2 style=\"text-align:center\"><strong><em>More than</em></strong><em> one love  with a</em><strong><em> clear</em></strong><em> anchor.</em></h2><hr /><h2 style=\"text-align:center\"><strong>This is you if:</strong> </h2><p data-rep=\"true\" style=\"text-align:left\">You want multiple loving relationships, <em>but</em> you want <strong>one primary/anchor partnership</strong> to stay at the center: the home, the big decisions, the long-term plans stay with your main person. </p><p data-rep=\"true\" style=\"text-align:left\">But maybe there's another love in mind, or just the desire for more deep connection, and you know <strong>your heart can hold it.</strong></p><p data-rep=\"true\" style=\"text-align:justify\">You want the richness of poly with the security of a clear structure. Other relationships are genuine and cherished, but the hierarchy is named and agreed. </p><hr /><h2 style=\"text-align:left\"><strong>Your customized Get Started pathway:</strong> </h2><p data-rep=\"true\" style=\"text-align:justify\">Shows you how to protect your anchor while you explore: </p><ul style=\"text-align:center\"><li><p data-rep=\"true\" style=\"text-align:justify\">the right apps for deep connection and community, </p></li><li><p data-rep=\"true\" style=\"text-align:justify\">how to introduce the hierarchy honestly (so no one gets hurt), and </p></li><li><p data-rep=\"true\" style=\"text-align:justify\">the safeguards that help keep your primary bond rock-solid. </p></li></ul><p data-rep=\"true\" style=\"text-align:justify\"><em>Inside the guide.</em></p>",
       "img": {
         "src": "img/r8-f018b0.jpg",
         "crop": {
@@ -954,7 +943,7 @@ export const QUIZ = {
       "uid": "r_lsP7N-LvTv",
       "index": 9,
       "title": "Relationship Anarchy",
-      "description": "<h2 style=\"text-align:center\"><strong><em>No </em></strong><em>rankings. Every connection, designed from scratch.</em></h2><hr /><h2 style=\"text-align:center\"><strong>This is you if:</strong> </h2><p data-rep=\"true\" style=\"text-align:left\">You <strong>reject</strong> the idea that any relationship should <strong><em>automatically</em> outrank </strong>another, including romantic over platonic and you'd rather build each bond on its own terms, free of inherited scripts.</p><p data-rep=\"true\" style=\"text-align:left\">You<strong> avoid</strong> automatically <strong>following cultural norms </strong>and build your relationships based on how they feel and the individual needs within them.</p><p data-rep=\"true\" style=\"text-align:left\">You're <strong>not</strong> anti-commitment; you're<em> anti-assumption. </em></p><p data-rep=\"true\" style=\"text-align:left\">You <strong>question</strong> the<em> \"relationship escalator\"</em> and design your connections intentionally, giving friendship and love equal footing. Done well, RA is <strong><em>more</em> </strong>thoughtful than most relationships, just <strong>without the default rules.</strong></p><hr /><h2 style=\"text-align:left\"><strong>Your customized Get Started pathway</strong> </h2><h3 style=\"text-align:left\">hands you the RA toolkit: </h3><ul style=\"text-align:left\"><li><p data-rep=\"true\" style=\"text-align:left\">the founding manifesto, </p></li><li><p data-rep=\"true\" style=\"text-align:left\">the \"smorgasbord\" for designing each connection, </p></li><li><p data-rep=\"true\" style=\"text-align:left\">the values-aligned apps, and </p></li><li><p data-rep=\"true\" style=\"text-align:left\">the communities where this philosophy lives. </p></li></ul><h3 style=\"text-align:left\"><em>Inside the guide.</em></h3>",
+      "description": "<h2 style=\"text-align:center\"><strong><em>No </em></strong><em>rankings. Every connection, designed from scratch.</em></h2><hr /><h2 style=\"text-align:center\"><strong>This is you if:</strong> </h2><p data-rep=\"true\" style=\"text-align:left\">You <strong>reject</strong> the idea that any relationship should <strong><em>automatically</em> outrank </strong>another, including romantic over platonic and you'd rather build each bond on its own terms, free of inherited scripts.</p><p data-rep=\"true\" style=\"text-align:left\">You<strong> avoid</strong> automatically <strong>following cultural norms </strong>and build your relationships based on how they feel and the individual needs within them.</p><p data-rep=\"true\" style=\"text-align:left\">You're <strong>not</strong> anti-commitment; you're<em> anti-assumption. </em></p><p data-rep=\"true\" style=\"text-align:left\">You <strong>question</strong> the<em> \"relationship escalator\"</em> and design your connections intentionally, giving friendship and love equal footing. Done well, RA is <strong><em>more</em> </strong>thoughtful than most relationships, just <strong>without the default rules.</strong></p><hr /><h2 style=\"text-align:left\"><strong>Your customized Get Started pathway</strong> </h2><p data-rep=\"true\" style=\"text-align:left\">hands you the RA toolkit: </p><ul style=\"text-align:left\"><li><p data-rep=\"true\" style=\"text-align:left\">the founding manifesto, </p></li><li><p data-rep=\"true\" style=\"text-align:left\">the \"smorgasbord\" for designing each connection, </p></li><li><p data-rep=\"true\" style=\"text-align:left\">the values-aligned apps, and </p></li><li><p data-rep=\"true\" style=\"text-align:left\">the communities where this philosophy lives. </p></li></ul><p data-rep=\"true\" style=\"text-align:left\"><em>Inside the guide.</em></p>",
       "img": {
         "src": "img/r9-a374e3.jpg",
         "crop": {
