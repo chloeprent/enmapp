@@ -1,12 +1,12 @@
 {
-  "version": "v261007.03 6:15p",
-  "release": 3,
-  "sha": "0ff5cf5",
-  "fullSha": "0ff5cf59ff048a5c827d41f311e8a2569bf02a37",
+  "version": "v261009.01 3:55p",
+  "release": 1,
+  "sha": "71eb519",
+  "fullSha": "71eb519af53d826947c24bb1acdd86af459861f5",
   "actor": "chloeprent",
   "source": "cloudflare-pages-deploy",
   "model": "ci",
   "machine": "runnervmmprz5",
-  "pushedAt": "2026-10-08T02:14:47+08:00",
-  "commits": [{"sha":"0ff5cf5","message":"enm-quiz: fuller link-preview tags for Facebook and Messenger (#28)","author":"chloeprent"}]
+  "pushedAt": "2026-10-09T23:55:03+08:00",
+  "commits": [{"sha":"71eb519","message":"Quiz dashboard phase 1: tabs, link tracking, People and Feedback (#29)","author":"chloeprent"}]
 }
