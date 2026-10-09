@@ -58,8 +58,10 @@
       font-family: 'Inter', sans-serif; font-size: 0.7rem; font-weight: 500;
       color: var(--faint); letter-spacing: .04em; display: block; margin-top: 1px;
     }
-    .topbar-controls { display: flex; gap: 8px; align-items: center; }
-    select, .btn-sm {
+    .topbar-controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+    .custom-dates { display: inline-flex; gap: 6px; align-items: center; font-size: 0.8rem; color: var(--faint); }
+    .custom-dates[hidden] { display: none; }
+    select, .btn-sm, .custom-dates input {
       font-family: inherit; font-size: 0.8rem; font-weight: 500;
       background: var(--surface); border: 1px solid var(--border);
       border-radius: 7px; padding: 6px 11px; cursor: pointer; color: var(--text);
@@ -278,7 +280,12 @@
           <option value="30">Last 30 days</option>
           <option value="90">Last 90 days</option>
           <option value="0">All time</option>
+          <option value="custom">Custom dates</option>
         </select>
+        <span class="custom-dates" id="customDates" hidden>
+          <input type="date" id="fromDate" aria-label="From date"> to
+          <input type="date" id="toDate" aria-label="To date">
+        </span>
         <button type="button" class="btn-sm" id="refreshBtn">Refresh</button>
         <button type="button" class="btn-link" id="signOutBtn">Sign out</button>
       </div>
@@ -496,8 +503,15 @@
       const sel = $('rangeSel').value;
       const days = Number(sel);
       const to = new Date(Date.now() + 864e5);
-      const from = sel === 'launch' ? new Date(LAUNCH_AT)
+      let from = sel === 'launch' ? new Date(LAUNCH_AT)
         : days ? new Date(Date.now() - days * 864e5) : new Date('2020-01-01');
+      if (sel === 'custom') {
+        /* Whole days in the viewer's time zone; the To day is included. */
+        const f = $('fromDate').value, t = $('toDate').value;
+        from = f ? new Date(f + 'T00:00:00') : new Date('2020-01-01');
+        const end = t ? new Date(t + 'T00:00:00') : null;
+        if (end) to.setTime(end.getTime() + 864e5);
+      }
       return { p_from: from.toISOString(), p_to: to.toISOString(), p_exclude_tests: $('excludeTests').checked };
     }
     async function rpc(name, args) {
@@ -553,7 +567,30 @@
       loadTab();
     }));
     const reloadAll = () => { ui.peopleOffset = 0; ui.fbOffset = 0; loadTab(); };
-    $('rangeSel').addEventListener('change', reloadAll);
+    const ymd = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    const RANGE_KEY = 'quizdash.range';
+    function saveRange() {
+      try { localStorage.setItem(RANGE_KEY, JSON.stringify({ sel: $('rangeSel').value, from: $('fromDate').value, to: $('toDate').value })); } catch { /* storage blocked */ }
+    }
+    function showCustom() {
+      const on = $('rangeSel').value === 'custom';
+      $('customDates').hidden = !on;
+      if (on && !$('fromDate').value) $('fromDate').value = LAUNCH_AT.slice(0, 10);
+      if (on && !$('toDate').value) $('toDate').value = ymd(new Date());
+    }
+    try {
+      const r = JSON.parse(localStorage.getItem(RANGE_KEY) || 'null');
+      if (r && [...$('rangeSel').options].some(o => o.value === r.sel)) {
+        $('rangeSel').value = r.sel; $('fromDate').value = r.from || ''; $('toDate').value = r.to || '';
+      }
+    } catch { /* storage blocked */ }
+    showCustom();
+    $('rangeSel').addEventListener('change', () => { showCustom(); saveRange(); reloadAll(); });
+    ['fromDate', 'toDate'].forEach(id => $(id).addEventListener('change', () => {
+      const f = $('fromDate'), t = $('toDate');
+      if (f.value && t.value && f.value > t.value) [f.value, t.value] = [t.value, f.value];
+      saveRange(); reloadAll();
+    }));
     $('excludeTests').addEventListener('change', reloadAll);
     $('refreshBtn').addEventListener('click', loadTab);
 
@@ -673,7 +710,7 @@
     async function loadPeople() {
       const d = await rpc('enm_dash_people', peopleArgs(PAGE, ui.peopleOffset));
       const total = d.people_total || 0;
-      $('stagesSub').textContent = `${ppl(total)} (one per email) whose latest quiz falls in this period.`;
+      $('stagesSub').textContent = `${ppl(total)} (one per email) who took the quiz in this period.`;
       $('stages').innerHTML = STAGES.map(([s, live]) => {
         const n = d.stages?.[s] || 0;
         return `<div class="dist-row${live ? '' : ' soon-row'}">

@@ -188,10 +188,15 @@ BEGIN
     RAISE EXCEPTION 'Not on the quiz admin allowlist';
   END IF;
 
-  WITH base AS (
-    SELECT * FROM enm_quiz_people_v
-    WHERE last_quiz_at >= p_from AND last_quiz_at < p_to
-      AND NOT (p_exclude_tests AND enm_is_test_email(email))
+  -- Everyone who took the quiz in the period (same rule as the Overview counts).
+  WITH in_range AS (
+    SELECT DISTINCT email FROM enm_quiz_runs_v
+    WHERE session_id IS NOT NULL AND email IS NOT NULL
+      AND first_at >= p_from AND first_at < p_to
+  ),
+  base AS (
+    SELECT p.* FROM enm_quiz_people_v p JOIN in_range USING (email)
+    WHERE NOT (p_exclude_tests AND enm_is_test_email(p.email))
   ),
   filtered AS (
     SELECT * FROM base
