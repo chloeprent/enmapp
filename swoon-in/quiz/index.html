@@ -273,8 +273,9 @@
       <div class="topbar-controls">
         <label class="toggle" title="Hide internal and test emails"><input type="checkbox" id="excludeTests" checked>Exclude tests</label>
         <select id="rangeSel" aria-label="Date range">
+          <option value="launch" selected>Since launch (Tue 13 Oct)</option>
           <option value="7">Last 7 days</option>
-          <option value="30" selected>Last 30 days</option>
+          <option value="30">Last 30 days</option>
           <option value="90">Last 90 days</option>
           <option value="0">All time</option>
         </select>
@@ -463,6 +464,8 @@
     const pct = (n, base) => base ? Math.round((n / base) * 100) : 0;
     const SELF_URL = location.origin + location.pathname;
     const PAGE = 50;
+    /* Default reporting start: the live launch. Earlier data stays in the database and shows under "All time". */
+    const LAUNCH_AT = '2026-10-13T00:00:00';
     const ppl = n => `${fmt(n)} ${Number(n) === 1 ? 'person' : 'people'}`;
     const clk = n => `${fmt(n)} ${Number(n) === 1 ? 'click' : 'clicks'}`;
 
@@ -490,9 +493,11 @@
     /* ── Filters shared by every tab ── */
     const ui = { tab: 'overview', peopleOffset: 0, fbOffset: 0 };
     function range() {
-      const days = Number($('rangeSel').value);
+      const sel = $('rangeSel').value;
+      const days = Number(sel);
       const to = new Date(Date.now() + 864e5);
-      const from = days ? new Date(Date.now() - days * 864e5) : new Date('2020-01-01');
+      const from = sel === 'launch' ? new Date(LAUNCH_AT)
+        : days ? new Date(Date.now() - days * 864e5) : new Date('2020-01-01');
       return { p_from: from.toISOString(), p_to: to.toISOString(), p_exclude_tests: $('excludeTests').checked };
     }
     async function rpc(name, args) {
