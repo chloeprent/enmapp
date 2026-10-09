@@ -486,8 +486,8 @@
       ['r_wo9ZhTvshw', 'Mono/Poly'],
     ];
     const shortStyle = t => String(t || '').split(' (')[0];
-    const SOURCES = ['Email', 'Blog', 'Instagram DMs (ManyChat)', 'Instagram bio', 'Facebook',
-      'TikTok', 'Website', 'Direct / unknown', 'Other'];
+    const SOURCES = ['Email', 'Blog', 'Instagram DMs (ManyChat)', 'Instagram bio',
+      'Facebook DMs (ManyChat)', 'Facebook bio', 'TikTok', 'Website', 'Direct / unknown', 'Other'];
     /* Furthest stage first; the ones that need Stripe, Kit or TidyCal come later. */
     const STAGES = [
       ['Booked a call', false], ['Bought Bundle + 7 Conversations', false], ['Bought Bundle', false],
@@ -647,7 +647,10 @@
       }).join('');
 
       const bySource = new Map((d.sources || []).map(s => [s.source, s]));
-      const srcRows = SOURCES.filter(s => s !== 'Other' || bySource.has('Other')).map(s => ({
+      /* Known groups in a fixed order, then any group the server adds later. */
+      const srcNames = [...SOURCES.filter(s => s !== 'Other' || bySource.has('Other')),
+        ...[...bySource.keys()].filter(k => !SOURCES.includes(k))];
+      const srcRows = srcNames.map(s => ({
         label: s, n: bySource.get(s)?.completions || 0,
         extra: bySource.get(s) ? `${fmt(bySource.get(s).visits)} visits` : '',
       }));
