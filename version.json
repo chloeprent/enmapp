@@ -1,12 +1,12 @@
 {
-  "version": "v261009.01 3:55p",
-  "release": 1,
-  "sha": "71eb519",
-  "fullSha": "71eb519af53d826947c24bb1acdd86af459861f5",
+  "version": "v261009.02 4:43p",
+  "release": 2,
+  "sha": "e3bbc18",
+  "fullSha": "e3bbc18301efca4da3bd84f90ecc6615127cc16b",
   "actor": "chloeprent",
   "source": "cloudflare-pages-deploy",
   "model": "ci",
   "machine": "runnervmmprz5",
-  "pushedAt": "2026-10-09T23:55:03+08:00",
-  "commits": [{"sha":"71eb519","message":"Quiz dashboard phase 1: tabs, link tracking, People and Feedback (#29)","author":"chloeprent"}]
+  "pushedAt": "2026-10-10T00:43:05+08:00",
+  "commits": [{"sha":"e3bbc18","message":"Quiz dashboard: split Facebook into ManyChat DMs and bio; dm counts as ManyChat (#30)","author":"chloeprent"}]
 }
