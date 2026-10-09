@@ -31,5 +31,5 @@ SELECT enm_dash_overview('2020-01-01', now(), true) IS NOT NULL AS should_not_pr
 
 -- == G. Source groups (Facebook split like Instagram)
 SELECT enm_source_group('facebook', 'manychat') AS fb_manychat, enm_source_group('facebook', 'bio') AS fb_bio,
-       enm_source_group('instagram', 'manychat') AS ig_manychat, enm_source_group('instagram', 'bio') AS ig_bio,
+       enm_source_group('instagram', 'manychat') AS ig_manychat, enm_source_group('instagram', 'bio') AS ig_bio, enm_source_group('instagram', 'dm') AS ig_dm,
        enm_source_group('kit', 'email') AS email, enm_source_group('blog', 'blog') AS blog;
