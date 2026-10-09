@@ -1,0 +1,23 @@
+# Read-only look at the live database for the quiz dashboard work.
+# Runs only when the check files change on the working branch. The script
+# sends SELECT statements only and prints structure and counts (no personal data).
+name: DB read-only check
+
+on:
+  push:
+    branches: [claude/elegant-cannon-bdq3j0]
+    paths:
+      - "supabase/checks/**"
+      - ".github/scripts/run_readonly_sql.py"
+      - ".github/workflows/db-readonly-check.yml"
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run read-only check
+        env:
+          RAW_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: python3 .github/scripts/run_readonly_sql.py ohcdjvbveokyyilceenf supabase/checks/dashboard_readonly_check.sql
