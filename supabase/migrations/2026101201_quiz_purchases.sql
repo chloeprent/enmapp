@@ -290,3 +290,7 @@ REVOKE EXECUTE ON FUNCTION enm_dash_purchases(TIMESTAMPTZ, TIMESTAMPTZ, BOOLEAN)
 GRANT EXECUTE ON FUNCTION enm_dash_purchases(TIMESTAMPTZ, TIMESTAMPTZ, BOOLEAN),
   enm_dash_people(TIMESTAMPTZ, TIMESTAMPTZ, BOOLEAN, TEXT, TEXT, TEXT, TEXT, INT, INT, TEXT),
   enm_dash_person(TEXT) TO authenticated;
+
+-- Nothing was on sale before the launch, so earlier checkouts were tests.
+-- The function skips them too (QUIZ_PURCHASES_FROM).
+DELETE FROM quiz_purchases WHERE purchased_at < '2026-10-13T00:00:00Z';

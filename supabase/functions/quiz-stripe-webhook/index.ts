@@ -9,12 +9,15 @@
 //                    Signed with QUIZ_STRIPE_WEBHOOK_SECRET.
 //   backfill         (service role only) load every past paid checkout.
 //
-// Free ($0) checkouts are skipped on purpose: they were test purchases.
+// Free ($0) checkouts are skipped on purpose: they were test purchases. So is
+// anything before the launch (QUIZ_PURCHASES_FROM, default Tue 13 Oct 2026).
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 
 const STRIPE = "https://api.stripe.com/v1";
+const PURCHASES_FROM = Date.parse(Deno.env.get("QUIZ_PURCHASES_FROM") || "2026-10-13T00:00:00Z");
+const beforeLaunch = (session: any) => session.created * 1000 < PURCHASES_FROM;
 
 const db = () =>
   createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
@@ -120,7 +123,7 @@ const intentId = (pi: any) => (typeof pi === "string" ? pi : pi?.id) || null;
 
 // Paid line items of one completed checkout, ready for quiz_purchases.
 function rowsFor(session: any, lineItems: any[], source: "webhook" | "backfill", refunded = false) {
-  if (session.payment_status !== "paid" || !session.amount_total) return [];
+  if (session.payment_status !== "paid" || !session.amount_total || beforeLaunch(session)) return [];
   return lineItems.filter((li) => (li.amount_total || 0) > 0).map((li) => ({
     id: `${session.id}:${li.id}`,
     session_id: session.id,
@@ -155,9 +158,10 @@ async function backfill() {
   await syncProducts(await stripeList("/products", {}, 1000));
   const sessions = await stripeList("/checkout/sessions",
     { status: "complete", "expand[]": "data.payment_intent.latest_charge" });
-  let paid = 0, free = 0, saved = 0, refunded = 0;
+  let paid = 0, free = 0, early = 0, saved = 0, refunded = 0;
   for (const s of sessions) {
     if (s.payment_status !== "paid" || !s.amount_total) { free++; continue; }
+    if (beforeLaunch(s)) { early++; continue; }
     paid++;
     const items = await stripeList(`/checkout/sessions/${s.id}/line_items`, {}, 100);
     const charge = s.payment_intent?.latest_charge;
@@ -167,7 +171,8 @@ async function backfill() {
     await savePurchases(rows);
     saved += rows.length;
   }
-  return { checkouts_seen: sessions.length, paid_checkouts: paid, skipped_free: free, rows_saved: saved, refunded };
+  return { checkouts_seen: sessions.length, skipped_free: free, skipped_before_launch: early,
+           paid_checkouts: paid, rows_saved: saved, refunded };
 }
 
 async function handleEvent(event: any) {
@@ -176,6 +181,7 @@ async function handleEvent(event: any) {
     case "checkout.session.completed":
     case "checkout.session.async_payment_succeeded": {
       if (obj.payment_status !== "paid" || !obj.amount_total) return "skipped (free or unpaid)";
+      if (beforeLaunch(obj)) return "skipped (before launch)";
       const items = await stripeList(`/checkout/sessions/${obj.id}/line_items`, {}, 100);
       const rows = rowsFor(obj, items, "webhook");
       await savePurchases(rows);
