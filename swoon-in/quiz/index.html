@@ -349,16 +349,6 @@
         </div>
 
         <div class="card">
-          <div class="card-head"><h2>Where they come from</h2></div>
-          <p class="card-sub">Quiz completions by source, from the link they arrived on.</p>
-          <div id="sources"></div>
-          <details class="inline">
-            <summary>By campaign</summary>
-            <div class="table-wrap"><table class="mini"><thead><tr><th>Source</th><th>Campaign</th><th class="num">Completions</th></tr></thead><tbody id="campaigns"></tbody></table></div>
-          </details>
-        </div>
-
-        <div class="card">
           <div class="card-head"><h2>Results</h2></div>
           <p class="card-sub" id="resultsSub"></p>
           <div id="results"></div>
@@ -373,6 +363,18 @@
           <p class="card-sub" id="buySub"></p>
           <div id="buyKinds"></div>
         </div>
+
+        <details class="card">
+          <summary>Where they come from</summary>
+          <div class="body">
+            <p class="card-sub">Quiz completions by source, from the link they arrived on.</p>
+            <div id="sources"></div>
+            <details class="inline">
+              <summary>By campaign</summary>
+              <div class="table-wrap"><table class="mini"><thead><tr><th>Source</th><th>Campaign</th><th class="num">Completions</th></tr></thead><tbody id="campaigns"></tbody></table></div>
+            </details>
+          </div>
+        </details>
 
         <details class="card">
           <summary>Question drop-off</summary>
