@@ -1,12 +1,12 @@
 {
-  "version": "v261012.01 2:27p",
-  "release": 1,
-  "sha": "db4d25d",
-  "fullSha": "db4d25d400d09a6cdb4263489ea479fb784579d4",
+  "version": "v261012.02 4:31p",
+  "release": 2,
+  "sha": "3112d02",
+  "fullSha": "3112d02d088504e318b3f5f052c636785108e6a3",
   "actor": "chloeprent",
   "source": "cloudflare-pages-deploy",
   "model": "ci",
   "machine": "runnervmmprz5",
-  "pushedAt": "2026-10-12T22:27:40+08:00",
-  "commits": [{"sha":"db4d25d","message":"Quiz: short bio links that open the landing page with a source tag (#31)","author":"chloeprent"}]
+  "pushedAt": "2026-10-13T00:31:09+08:00",
+  "commits": [{"sha":"3112d02","message":"Quiz dashboard phase 2: Stripe purchases (#32)","author":"chloeprent"}]
 }
