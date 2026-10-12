@@ -118,6 +118,27 @@ async function backfill() {
   return { poll_tags: per, rows_offered: saved };
 }
 
+// Past sequence members from Kit, so people who got the results email (or
+// started the non-buyer emails) before these webhooks existed are counted.
+// Only entries older than 30 minutes count as sent; the results sequence is a
+// single email that goes out within minutes of joining.
+async function history() {
+  const out: Record<string, unknown> = {};
+  const cutoff = Date.now() - 30 * 60 * 1000;
+  for (const [seq, event] of [[RESULTS_SEQUENCE, "results_sent"], [NON_BUYER_SEQUENCE, "nb_started"]] as const) {
+    let subs: any[] = [];
+    try { subs = await kitList(`/sequences/${seq}/subscribers`, "subscribers"); }
+    catch (e) { out[event] = { error: String((e as Error).message).slice(0, 200) }; continue; }
+    const rows = subs
+      .map((s: any) => ({ email: s.email_address, at: s.added_at || s.subscribed_at || s.created_at }))
+      .filter((r) => r.email && r.at && Date.parse(r.at) < cutoff);
+    await save(rows.map((r) => ({ ...r, event })));
+    out[event] = { in_sequence: subs.length, saved_or_kept: rows.length,
+      sample_fields: subs[0] ? Object.keys(subs[0]) : [] };
+  }
+  return out;
+}
+
 async function discover() {
   const webhooks = await kitList("/webhooks", "webhooks");
   return {
@@ -156,7 +177,7 @@ serve(async (req) => {
   try {
     if (!(await isServiceRole(req))) return json({ error: "Not allowed" }, 401);
     if (body.action === "setup") return json(await setup());
-    if (body.action === "backfill") return json(await backfill());
+    if (body.action === "backfill") return json({ polls: await backfill(), sequences: await history() });
     if (body.action === "discover") return json(await discover());
     return json({ error: "Unknown request" }, 400);
   } catch (e) {
