@@ -69,7 +69,8 @@ b AS (
          bool_or(kind = 'solo')                  AS has_solo,
          bool_or(kind = 'bundle')                AS has_bundle,
          bool_or(kind = 'conversations')         AS has_conv,
-         min(purchased_at)                       AS first_purchase_at
+         min(purchased_at)                       AS first_purchase_at,
+         array_agg(DISTINCT kind)                AS kinds
   FROM enm_quiz_purchases_v
   GROUP BY email
 ),
@@ -95,10 +96,62 @@ SELECT
   CASE WHEN b.has_bundle THEN 'bundle' WHEN b.has_solo THEN 'solo'
        WHEN b.has_conv THEN 'conversations' END  AS top_purchase,
   coalesce(c.calls, 0)                           AS calls,
-  c.first_call_booked_at
+  c.first_call_booked_at,
+  coalesce(b.kinds, '{}')                        AS bought_kinds
 FROM q
 LEFT JOIN b ON b.email = q.email
 LEFT JOIN c ON c.email = q.email;
+
+-- ── People list: the purchase filter looks at what they bought, not the stage
+-- (a buyer who later books a call is still a buyer).
+CREATE OR REPLACE FUNCTION enm_dash_people(
+  p_from TIMESTAMPTZ, p_to TIMESTAMPTZ, p_exclude_tests BOOLEAN DEFAULT true,
+  p_search TEXT DEFAULT NULL, p_stage TEXT DEFAULT NULL, p_style TEXT DEFAULT NULL,
+  p_source TEXT DEFAULT NULL, p_limit INT DEFAULT 50, p_offset INT DEFAULT 0,
+  p_purchase TEXT DEFAULT NULL
+) RETURNS JSONB
+LANGUAGE plpgsql STABLE AS $$
+DECLARE
+  v_out JSONB;
+BEGIN
+  IF NOT enm_is_quiz_admin() THEN
+    RAISE EXCEPTION 'Not on the quiz admin allowlist';
+  END IF;
+
+  WITH in_range AS (
+    SELECT DISTINCT email FROM enm_quiz_runs_v
+    WHERE session_id IS NOT NULL AND email IS NOT NULL
+      AND first_at >= p_from AND first_at < p_to
+  ),
+  base AS (
+    SELECT p.* FROM enm_quiz_people_v p JOIN in_range USING (email)
+    WHERE NOT (p_exclude_tests AND enm_is_test_email(p.email))
+  ),
+  filtered AS (
+    SELECT * FROM base
+    WHERE (coalesce(p_search, '') = ''
+           OR email ILIKE '%' || p_search || '%' OR name ILIKE '%' || p_search || '%')
+      AND (coalesce(p_stage, '')  = '' OR stage  = p_stage)
+      AND (coalesce(p_style, '')  = '' OR top_uid = p_style)
+      AND (coalesce(p_source, '') = '' OR source = p_source)
+      AND (coalesce(p_purchase, '') = ''
+           OR (p_purchase = 'any'  AND purchases > 0)
+           OR (p_purchase = 'none' AND purchases = 0)
+           OR p_purchase = ANY (bought_kinds))
+  )
+  SELECT jsonb_build_object(
+    'people_total', (SELECT count(*) FROM base),
+    'stages', coalesce((SELECT jsonb_object_agg(stage, n) FROM (
+        SELECT stage, count(*) AS n FROM base GROUP BY stage) x), '{}'),
+    'total', (SELECT count(*) FROM filtered),
+    'rows', coalesce((SELECT jsonb_agg(to_jsonb(r) - 'top_uid' - 'bought_kinds' ORDER BY r.last_quiz_at DESC) FROM (
+        SELECT * FROM filtered ORDER BY last_quiz_at DESC
+        LIMIT greatest(1, least(p_limit, 5000)) OFFSET greatest(0, p_offset)) r), '[]')
+  ) INTO v_out;
+
+  RETURN v_out;
+END;
+$$;
 
 -- ── Overview: calls block ──────────────────────────────────────────────────
 CREATE OR REPLACE FUNCTION enm_dash_calls(
