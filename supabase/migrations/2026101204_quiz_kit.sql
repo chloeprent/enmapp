@@ -147,6 +147,7 @@ BEGIN
     'stages', coalesce((SELECT jsonb_object_agg(stage, n) FROM (
         SELECT stage, count(*) AS n FROM base GROUP BY stage) x), '{}'),
     'needs_attention', (SELECT count(*) FROM base WHERE needs_attention),
+    'results_sent',    (SELECT count(*) FROM base WHERE results_sent_at IS NOT NULL),
     'unsubscribed',    (SELECT count(*) FROM base WHERE unsubscribed_at IS NOT NULL),
     'total', (SELECT count(*) FROM filtered),
     'rows', coalesce((SELECT jsonb_agg(to_jsonb(r) - 'top_uid' - 'bought_kinds' ORDER BY r.last_quiz_at DESC) FROM (

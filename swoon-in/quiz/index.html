@@ -773,7 +773,7 @@
     async function loadPeople() {
       const d = await rpc('enm_dash_people', peopleArgs(PAGE, ui.peopleOffset));
       const total = d.people_total || 0;
-      $('stagesSub').textContent = `${ppl(total)} (one per email) who took the quiz in this period.`;
+      $('stagesSub').textContent = `${ppl(total)} (one per email) who took the quiz in this period. Each person is counted once, at the furthest step they reached.`;
       $('stages').innerHTML = STAGES.map(([s, live]) => {
         const n = d.stages?.[s] || 0;
         return `<div class="dist-row${live ? '' : ' soon-row'}">
@@ -784,7 +784,8 @@
 
       $('flags').innerHTML =
         `<button type="button" class="flag${d.needs_attention ? ' warn' : ''}" data-flag="attention" title="Took the quiz over an hour ago and the results email is not marked as sent">Needs attention: <b>${fmt(d.needs_attention)}</b></button>` +
-        `<button type="button" class="flag" data-flag="unsubscribed">Unsubscribed: <b>${fmt(d.unsubscribed)}</b></button>`;
+        `<button type="button" class="flag" data-flag="unsubscribed">Unsubscribed: <b>${fmt(d.unsubscribed)}</b></button>` +
+        `<span class="flag" style="cursor:default" title="Everyone Kit reported as sent the results email, wherever they are now">Got the results email: <b>${fmt(d.results_sent)} of ${fmt(total)}</b></span>`;
       $('peopleBody').innerHTML = (d.rows || []).map(p => `<tr class="clickable" data-email="${esc(p.email)}">
           <td>${esc(p.name || '')}</td>
           <td class="td-email">${esc(p.email)}</td>
