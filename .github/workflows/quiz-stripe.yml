@@ -1,0 +1,36 @@
+# Quiz dashboard, Stripe purchases (Phase 2). Deploys quiz-stripe-webhook on
+# pushes to the working branch, then runs the read-only Stripe summary.
+# --no-verify-jwt because Stripe calls the webhook without a Supabase token;
+# the function checks Stripe's signature, or the service role for admin tasks.
+name: Quiz Stripe
+
+on:
+  push:
+    branches: [claude/elegant-cannon-bdq3j0]
+    paths:
+      - "supabase/functions/quiz-stripe-webhook/**"
+      - ".github/scripts/call_quiz_function.py"
+      - ".github/workflows/quiz-stripe.yml"
+  workflow_dispatch:
+
+jobs:
+  deploy-and-discover:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: quiz-stripe
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - name: Deploy function
+        env:
+          RAW_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          export SUPABASE_ACCESS_TOKEN="$(printf '%s' "$RAW_TOKEN" | grep -oi 'sbp_[A-Za-z0-9_]*' | head -n1 | sed 's/^[Ss][Bb][Pp]_/sbp_/' || true)"
+          supabase functions deploy quiz-stripe-webhook --project-ref ohcdjvbveokyyilceenf --no-verify-jwt --use-api
+      - name: Stripe summary (read-only, no customer details)
+        env:
+          RAW_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: python3 .github/scripts/call_quiz_function.py ohcdjvbveokyyilceenf quiz-stripe-webhook '{"action":"discover"}'
