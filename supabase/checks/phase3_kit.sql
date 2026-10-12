@@ -40,3 +40,8 @@ LEFT JOIN enm_quiz_sessions s ON s.run_id = r.run_id
 LEFT JOIN enm_quiz_leads l ON l.id = s.lead_id
 WHERE r.first_at >= now() - interval '30 hours'
 ORDER BY r.first_at;
+
+-- == K7. Quiz takers still without a results email (no personal data)
+SELECT p.first_quiz_at::date AS first_quiz, p.quizzes, enm_is_test_email(p.email) AS test_email,
+       (p.email LIKE 'chloeprent%') AS owner_test
+FROM enm_quiz_people_v p WHERE p.results_sent_at IS NULL ORDER BY 1;

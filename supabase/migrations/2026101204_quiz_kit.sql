@@ -65,7 +65,9 @@ c AS (
 ),
 k AS (
   SELECT email,
-         min(at) FILTER (WHERE event = 'results_sent') AS results_sent_at,
+         -- Kit only starts the non-buyer emails after the results email, so a
+         -- later step also means the results email went out.
+         min(at) FILTER (WHERE event IN ('results_sent', 'nb_started', 'nb_finished')) AS results_sent_at,
          min(at) FILTER (WHERE event = 'nb_started')   AS nb_started_at,
          min(at) FILTER (WHERE event = 'nb_finished')  AS nb_finished_at,
          min(at) FILTER (WHERE event = 'unsubscribed') AS unsubscribed_at
