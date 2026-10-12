@@ -1,0 +1,47 @@
+# Quiz dashboard, calls (Phase 3). On pushes to the working branch: deploys
+# quiz-calls and runs it. Prints counts only, never names or emails.
+# --no-verify-jwt: the function checks for the service role itself.
+name: Quiz Calls
+
+on:
+  push:
+    branches: [claude/elegant-cannon-bdq3j0]
+    paths:
+      - "supabase/functions/quiz-calls/**"
+      - "supabase/migrations/2026101202_quiz_calls.sql"
+      - "supabase/migrations/2026101203_quiz_calls_cron.sql"
+      - "supabase/checks/phase3_calls.sql"
+      - ".github/workflows/quiz-calls.yml"
+  workflow_dispatch:
+
+jobs:
+  deploy-and-run:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: quiz-calls
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - name: Apply calls migrations
+        env:
+          RAW_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          python3 .github/scripts/apply_sql_file.py ohcdjvbveokyyilceenf supabase/migrations/2026101202_quiz_calls.sql
+          python3 .github/scripts/apply_sql_file.py ohcdjvbveokyyilceenf supabase/migrations/2026101203_quiz_calls_cron.sql
+      - name: Deploy function
+        env:
+          RAW_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          export SUPABASE_ACCESS_TOKEN="$(printf '%s' "$RAW_TOKEN" | grep -oi 'sbp_[A-Za-z0-9_]*' | head -n1 | sed 's/^[Ss][Bb][Pp]_/sbp_/' || true)"
+          supabase functions deploy quiz-calls --project-ref ohcdjvbveokyyilceenf --no-verify-jwt --use-api
+      - name: Copy bookings (counts only)
+        env:
+          RAW_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: python3 .github/scripts/call_quiz_function.py ohcdjvbveokyyilceenf quiz-calls '{"action":"sync"}'
+      - name: Totals (read-only)
+        env:
+          RAW_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: python3 .github/scripts/run_readonly_sql.py ohcdjvbveokyyilceenf supabase/checks/phase3_calls.sql
