@@ -676,7 +676,7 @@
 
       const base = f.visited || 0;
       const steps = [
-        ['Visited quiz', f.visited], ['Started', f.started], ['Completed the quiz', f.finished],
+        ['Quiz visit', f.visited], ['Started', f.started], ['Completed the quiz', f.finished],
         ['Bought (after the quiz)', b.funnel_bought ?? 0], ['Booked a call (after the quiz)', c.funnel_booked ?? 0],
       ];
       $('funnel').innerHTML = steps.map(([label, n]) => {
