@@ -15,6 +15,7 @@ on:
       - "supabase/migrations/2026101204_quiz_kit.sql"
       - "supabase/checks/phase3_kit.sql"
       - ".github/scripts/ensure_secret.py"
+      - "supabase/fixes/2026101205_owner_test_source.sql"
       - ".github/workflows/quiz-kit.yml"
   workflow_dispatch:
     inputs:
@@ -40,6 +41,8 @@ jobs:
         run: python3 .github/scripts/ensure_secret.py ohcdjvbveokyyilceenf QUIZ_KIT_WEBHOOK_TOKEN
       - name: Apply Kit migration
         run: python3 .github/scripts/apply_sql_file.py ohcdjvbveokyyilceenf supabase/migrations/2026101204_quiz_kit.sql
+      - name: Owner test record correction (one email only)
+        run: python3 .github/scripts/apply_sql_file.py ohcdjvbveokyyilceenf supabase/fixes/2026101205_owner_test_source.sql
       - name: Deploy function
         run: |
           export SUPABASE_ACCESS_TOKEN="$(printf '%s' "$RAW_TOKEN" | grep -oi 'sbp_[A-Za-z0-9_]*' | head -n1 | sed 's/^[Ss][Bb][Pp]_/sbp_/' || true)"
