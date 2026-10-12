@@ -4,9 +4,16 @@
 // uses) and keeps one clean row per booking in quiz_calls. The CRM's own
 // tidycal-sync is left untouched.
 //
+//   sync      copy every TidyCal booking into quiz_calls. Open to the cron job
+//             without a key: it returns counts only and runs at most once a
+//             minute.
 //   discover  (service role only) counts and field names, no personal data.
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
+
+const db = () =>
+  createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
 
 const TIDYCAL = "https://tidycal.com/api/bookings";
 
@@ -63,12 +70,45 @@ async function discover() {
   };
 }
 
+async function sync() {
+  const supabase = db();
+  const { data: last } = await supabase.from("quiz_calls").select("synced_at")
+    .order("synced_at", { ascending: false }).limit(1).maybeSingle();
+  if (last && Date.now() - Date.parse(last.synced_at) < 60_000) return { skipped: "synced less than a minute ago" };
+
+  // starts_at in the past includes old bookings; TidyCal pages 100 at a time.
+  const rows: any[] = [];
+  for (let page = 1; page <= 100; page++) {
+    const r = await tidycal({ starts_at: "2020-01-01T00:00:00Z", page: String(page) });
+    for (const b of r.data || []) {
+      if (!b.created_at) continue;
+      rows.push({
+        booking_id: String(b.id),
+        email: (b.contact?.email || "").trim().toLowerCase() || null,
+        name: b.contact?.name || null,
+        booking_type: b.booking_type?.title || null,
+        booked_at: b.created_at,
+        starts_at: b.starts_at || null,
+        cancelled_at: b.cancelled_at || null,
+        synced_at: new Date().toISOString(),
+      });
+    }
+    if (!r.last_page || page >= r.last_page) break;
+  }
+  for (let i = 0; i < rows.length; i += 500) {
+    const { error } = await supabase.from("quiz_calls").upsert(rows.slice(i, i + 500), { onConflict: "booking_id" });
+    if (error) throw new Error(`quiz_calls: ${error.message}`);
+  }
+  return { bookings: rows.length, cancelled: rows.filter((r) => r.cancelled_at).length };
+}
+
 serve(async (req) => {
   if (req.method !== "POST") return json({ error: "POST only" }, 405);
   let body: any = {};
   try { body = JSON.parse(await req.text() || "{}"); } catch { /* not JSON */ }
-  if (!(await isServiceRole(req))) return json({ error: "Not allowed" }, 401);
   try {
+    if (body.action === "sync") return json(await sync());
+    if (!(await isServiceRole(req))) return json({ error: "Not allowed" }, 401);
     if (body.action === "discover") return json(await discover());
     return json({ error: "Unknown request" }, 400);
   } catch (e) {
