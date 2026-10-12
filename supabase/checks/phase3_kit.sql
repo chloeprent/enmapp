@@ -21,3 +21,12 @@ UNION ALL
 SELECT 'stage', NULL, stage || CASE WHEN needs_attention THEN ' (needs attention)' ELSE '' END
 FROM enm_quiz_people_v WHERE email = 'chloeprent+testenm90@gmail.com'
 ORDER BY 2 NULLS LAST;
+
+-- == K5. Owner's test email: tags and referrer recorded for the visit
+SELECT l.created_at, l.utm_source, l.utm_medium, l.utm_campaign, l.referrer
+FROM enm_quiz_leads l WHERE lower(l.email) = 'chloeprent+testenm90@gmail.com';
+SELECT e.event, e.created_at, e.meta -> 'utm' AS utm, e.referrer
+FROM enm_quiz_events e
+WHERE e.run_id IN (SELECT run_id FROM enm_quiz_runs_v WHERE email = 'chloeprent+testenm90@gmail.com')
+  AND e.event IN ('page_view', 'start', 'gate')
+ORDER BY e.created_at;
