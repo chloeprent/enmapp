@@ -12,7 +12,10 @@ mgmt = "sbp_" + m.group(0)[4:]
 req = urllib.request.Request(f"https://api.supabase.com/v1/projects/{ref}/api-keys?reveal=true",
                              headers={"Authorization": f"Bearer {mgmt}"})
 keys = json.load(urllib.request.urlopen(req, timeout=60))
-service = next((k.get("api_key") for k in keys if k.get("name") == "service_role"), None)
+print("Project key names:", ", ".join(f"{k.get('name')} ({k.get('type')})" for k in keys))
+# Prefer a new-style secret key, fall back to the legacy service_role key.
+service = next((k.get("api_key") for k in keys if k.get("type") == "secret" and k.get("api_key")), None) \
+    or next((k.get("api_key") for k in keys if k.get("name") == "service_role"), None)
 if not service:
     sys.exit("No service_role key found for the project")
 print(f"::add-mask::{service}")

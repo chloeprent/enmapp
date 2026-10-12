@@ -37,10 +37,17 @@ async function stripeList(path: string, params: Record<string, string> = {}, max
   return out;
 }
 
-function isServiceRole(req: Request): boolean {
+// Admin tasks need the project's service role (or secret) key. Asking Supabase
+// Auth's admin API is the check, so it works whichever key format is in use.
+async function isServiceRole(req: Request): Promise<boolean> {
   const token = (req.headers.get("Authorization") || "").replace(/^Bearer\s+/i, "");
-  const service = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
-  return !!token && !!service && token === service;
+  if (!token) return false;
+  if (token === Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")) return true;
+  const res = await fetch(`${Deno.env.get("SUPABASE_URL")}/auth/v1/admin/users?per_page=1`, {
+    headers: { apikey: token, Authorization: `Bearer ${token}` },
+  });
+  await res.body?.cancel();
+  return res.ok;
 }
 
 const day = (unix: number) => new Date(unix * 1000).toISOString().slice(0, 10);
@@ -119,7 +126,7 @@ serve(async (req) => {
   try { body = JSON.parse(await req.text() || "{}"); } catch { /* not JSON */ }
 
   if (body.action === "discover") {
-    if (!isServiceRole(req)) return json({ error: "Not allowed" }, 401);
+    if (!(await isServiceRole(req))) return json({ error: "Not allowed" }, 401);
     try { return json(await discover()); } catch (e) { return json({ error: String((e as Error).message) }, 500); }
   }
 
