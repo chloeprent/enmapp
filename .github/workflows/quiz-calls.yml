@@ -1,5 +1,6 @@
 # Quiz dashboard, calls (Phase 3). On pushes to the working branch: deploys
 # quiz-calls and runs it. Prints counts only, never names or emails.
+# --no-verify-jwt: the function checks for the service role itself.
 name: Quiz Calls
 
 on:
@@ -26,7 +27,7 @@ jobs:
           RAW_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
         run: |
           export SUPABASE_ACCESS_TOKEN="$(printf '%s' "$RAW_TOKEN" | grep -oi 'sbp_[A-Za-z0-9_]*' | head -n1 | sed 's/^[Ss][Bb][Pp]_/sbp_/' || true)"
-          supabase functions deploy quiz-calls --project-ref ohcdjvbveokyyilceenf --use-api
+          supabase functions deploy quiz-calls --project-ref ohcdjvbveokyyilceenf --no-verify-jwt --use-api
       - name: TidyCal summary (counts only)
         env:
           RAW_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
