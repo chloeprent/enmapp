@@ -1008,6 +1008,16 @@
         const v = (params.get('utm_' + k) || '').trim();
         if (v) utm[k] = v.slice(0, 120);
       });
+      /* Safety net: arrived from swoon.coach on a link with no tags (for example
+         the site's tagging script did not run), so it came from the website. */
+      if (!Object.keys(utm).length) {
+        try {
+          if (/(^|\.)swoon\.coach$/.test(new URL(document.referrer).hostname) &&
+              !/(^|\.)quiz\.swoon\.coach$/.test(new URL(document.referrer).hostname)) {
+            utm = { source: 'website', medium: 'landing' };
+          }
+        } catch { /* no referrer */ }
+      }
       try {
         if (Object.keys(utm).length) sessionStorage.setItem(KEY, JSON.stringify(utm));
         else utm = JSON.parse(sessionStorage.getItem(KEY) || '{}') || {};

@@ -1,0 +1,29 @@
+<script>
+/* Swoon quiz links: pass the visitor's utm tags on to the quiz.
+   No tags on the page? Mark them as coming from the website landing page.
+   Tags links when the page loads, when new links appear, and again at the
+   moment of the click, so buttons that load late are covered too. */
+(function () {
+  var here = new URLSearchParams(location.search);
+  var QUIZ = /(^|\.)quiz\.swoon\.coach$|^swoon-quiz\.pages\.dev$/;
+  function tagLink(a) {
+    if (!a || !a.href) return;
+    var url;
+    try { url = new URL(a.href, location.href); } catch (e) { return; }
+    if (!QUIZ.test(url.hostname)) return;
+    if (url.searchParams.get('utm_source')) return; /* already tagged */
+    ['utm_source', 'utm_medium', 'utm_campaign'].forEach(function (k) {
+      if (here.get(k)) url.searchParams.set(k, here.get(k));
+    });
+    if (!url.searchParams.get('utm_source')) { url.searchParams.set('utm_source', 'website'); url.searchParams.set('utm_medium', 'landing'); }
+    a.href = url.toString();
+  }
+  function tagAll() { document.querySelectorAll('a[href]').forEach(tagLink); }
+  ['pointerdown', 'mousedown', 'touchstart', 'keydown', 'click', 'auxclick'].forEach(function (ev) {
+    window.addEventListener(ev, function (e) { tagLink(e.target && e.target.closest && e.target.closest('a[href]')); }, true);
+  });
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', tagAll); else tagAll();
+  window.addEventListener('load', tagAll);
+  if (window.MutationObserver) new MutationObserver(tagAll).observe(document.documentElement, { childList: true, subtree: true });
+})();
+</script>
