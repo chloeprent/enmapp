@@ -1,7 +1,10 @@
 # Quiz dashboard, Kit email steps and polls (Phase 3). On pushes to the working
-# branch: deploys quiz-kit and runs it. Prints names and counts only.
+# branch: makes sure the webhook token secret exists, applies the migration,
+# deploys quiz-kit, loads existing poll tags and prints totals only.
+# Creating the Kit webhooks ("setup") only runs when started by hand with
+# run_setup = true, after the owner's OK.
 # --no-verify-jwt: Kit calls the webhook without a Supabase token; the function
-# checks a per-webhook token, or the service role for admin tasks.
+# checks QUIZ_KIT_WEBHOOK_TOKEN, or the service role for admin tasks.
 name: Quiz Kit
 
 on:
@@ -9,8 +12,16 @@ on:
     branches: [claude/elegant-cannon-bdq3j0]
     paths:
       - "supabase/functions/quiz-kit/**"
+      - "supabase/migrations/2026101204_quiz_kit.sql"
+      - "supabase/checks/phase3_kit.sql"
+      - ".github/scripts/ensure_secret.py"
       - ".github/workflows/quiz-kit.yml"
   workflow_dispatch:
+    inputs:
+      run_setup:
+        description: "Create the Kit webhooks (only after the owner's OK)"
+        type: boolean
+        default: false
 
 jobs:
   deploy-and-run:
@@ -18,18 +29,27 @@ jobs:
     concurrency:
       group: quiz-kit
       cancel-in-progress: false
+    env:
+      RAW_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
     steps:
       - uses: actions/checkout@v4
       - uses: supabase/setup-cli@v1
         with:
           version: latest
+      - name: Webhook token secret
+        run: python3 .github/scripts/ensure_secret.py ohcdjvbveokyyilceenf QUIZ_KIT_WEBHOOK_TOKEN
+      - name: Apply Kit migration
+        run: python3 .github/scripts/apply_sql_file.py ohcdjvbveokyyilceenf supabase/migrations/2026101204_quiz_kit.sql
       - name: Deploy function
-        env:
-          RAW_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
         run: |
           export SUPABASE_ACCESS_TOKEN="$(printf '%s' "$RAW_TOKEN" | grep -oi 'sbp_[A-Za-z0-9_]*' | head -n1 | sed 's/^[Ss][Bb][Pp]_/sbp_/' || true)"
           supabase functions deploy quiz-kit --project-ref ohcdjvbveokyyilceenf --no-verify-jwt --use-api
-      - name: Kit summary (names and counts only)
-        env:
-          RAW_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      - name: Create Kit webhooks
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.run_setup }}
+        run: python3 .github/scripts/call_quiz_function.py ohcdjvbveokyyilceenf quiz-kit '{"action":"setup"}'
+      - name: Load existing poll answers
+        run: python3 .github/scripts/call_quiz_function.py ohcdjvbveokyyilceenf quiz-kit '{"action":"backfill"}'
+      - name: Kit webhooks in place
         run: python3 .github/scripts/call_quiz_function.py ohcdjvbveokyyilceenf quiz-kit '{"action":"discover"}'
+      - name: Totals (read-only)
+        run: python3 .github/scripts/run_readonly_sql.py ohcdjvbveokyyilceenf supabase/checks/phase3_kit.sql
