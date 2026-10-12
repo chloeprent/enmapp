@@ -1,12 +1,12 @@
 {
-  "version": "v261012.02 4:31p",
-  "release": 2,
-  "sha": "3112d02",
-  "fullSha": "3112d02d088504e318b3f5f052c636785108e6a3",
+  "version": "v261012.03 4:56p",
+  "release": 3,
+  "sha": "e48aeff",
+  "fullSha": "e48aeff00ff0911f172677da1882c64fb8d52f3b",
   "actor": "chloeprent",
   "source": "cloudflare-pages-deploy",
   "model": "ci",
   "machine": "runnervmmprz5",
-  "pushedAt": "2026-10-13T00:31:09+08:00",
-  "commits": [{"sha":"3112d02","message":"Quiz dashboard phase 2: Stripe purchases (#32)","author":"chloeprent"}]
+  "pushedAt": "2026-10-13T00:56:12+08:00",
+  "commits": [{"sha":"e48aeff","message":"Quiz dashboard phase 3: calls booked (TidyCal) (#33)","author":"chloeprent"}]
 }
