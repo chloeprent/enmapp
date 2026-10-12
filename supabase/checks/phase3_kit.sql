@@ -30,3 +30,13 @@ FROM enm_quiz_events e
 WHERE e.run_id IN (SELECT run_id FROM enm_quiz_runs_v WHERE email = 'chloeprent+testenm90@gmail.com')
   AND e.event IN ('page_view', 'start', 'gate')
 ORDER BY e.created_at;
+
+-- == K6. Today's visits: tags at first page view, tags saved with the email (no personal data)
+SELECT r.first_at, pv.meta -> 'utm' AS tags_at_first_view, l.utm_source AS saved_source, l.utm_medium AS saved_medium,
+       pv.referrer, (r.session_id IS NOT NULL) AS finished, r.email LIKE 'chloeprent%' AS owner_test
+FROM enm_quiz_runs_v r
+LEFT JOIN LATERAL (SELECT meta, referrer FROM enm_quiz_events e WHERE e.run_id = r.run_id ORDER BY created_at LIMIT 1) pv ON true
+LEFT JOIN enm_quiz_sessions s ON s.run_id = r.run_id
+LEFT JOIN enm_quiz_leads l ON l.id = s.lead_id
+WHERE r.first_at >= now() - interval '30 hours'
+ORDER BY r.first_at;
