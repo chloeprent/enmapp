@@ -1,12 +1,12 @@
 {
-  "version": "v261009.02 4:43p",
-  "release": 2,
-  "sha": "e3bbc18",
-  "fullSha": "e3bbc18301efca4da3bd84f90ecc6615127cc16b",
+  "version": "v261012.01 2:27p",
+  "release": 1,
+  "sha": "db4d25d",
+  "fullSha": "db4d25d400d09a6cdb4263489ea479fb784579d4",
   "actor": "chloeprent",
   "source": "cloudflare-pages-deploy",
   "model": "ci",
   "machine": "runnervmmprz5",
-  "pushedAt": "2026-10-10T00:43:05+08:00",
-  "commits": [{"sha":"e3bbc18","message":"Quiz dashboard: split Facebook into ManyChat DMs and bio; dm counts as ManyChat (#30)","author":"chloeprent"}]
+  "pushedAt": "2026-10-12T22:27:40+08:00",
+  "commits": [{"sha":"db4d25d","message":"Quiz: short bio links that open the landing page with a source tag (#31)","author":"chloeprent"}]
 }
