@@ -81,10 +81,10 @@ SELECT
     WHEN b.has_solo AND b.has_conv   THEN 'Bought Solo + 7 Conversations'
     WHEN b.has_solo                  THEN 'Bought Solo'
     WHEN b.has_conv                  THEN 'Bought 7 Conversations only'
-    WHEN k.nb_finished_at IS NOT NULL THEN 'Finished non-buyer emails (no purchase)'
-    WHEN k.nb_started_at IS NOT NULL  THEN 'In non-buyer emails'
-    WHEN k.results_sent_at IS NOT NULL THEN 'Results email sent'
-    ELSE 'Took the quiz'
+    WHEN k.nb_finished_at IS NOT NULL THEN 'Non-buyer sequence completed'
+    WHEN k.nb_started_at IS NOT NULL  THEN 'Non-buyer sequence started'
+    WHEN k.results_sent_at IS NOT NULL THEN 'Results Email Sent'
+    ELSE 'Quiz Completed'
   END                                            AS stage,
   coalesce(b.purchases, 0)                       AS purchases,
   coalesce(b.spent_cents, 0)                     AS spent_cents,
@@ -195,7 +195,7 @@ BEGIN
   ),
   items AS (
     SELECT r.completed_at AS at,
-           CASE WHEN row_number() OVER (ORDER BY r.completed_at) = 1 THEN 'Took the quiz' ELSE 'Retook the quiz' END AS what,
+           CASE WHEN row_number() OVER (ORDER BY r.completed_at) = 1 THEN 'Quiz Completed' ELSE 'Retook the quiz' END AS what,
            r.result_title || coalesce(' (source: ' || enm_source_group(r.utm_source, r.utm_medium)
              || coalesce(', ' || nullif(r.utm_campaign, ''), '') || ')', '') AS detail
     FROM runs r
@@ -239,9 +239,9 @@ BEGIN
     UNION ALL
     SELECT k.at,
            CASE k.event
-             WHEN 'results_sent' THEN 'Results email sent'
-             WHEN 'nb_started'   THEN 'Started the non-buyer emails'
-             WHEN 'nb_finished'  THEN 'Finished the non-buyer emails'
+             WHEN 'results_sent' THEN 'Results Email Sent'
+             WHEN 'nb_started'   THEN 'Non-buyer sequence started'
+             WHEN 'nb_finished'  THEN 'Non-buyer sequence completed'
              WHEN 'unsubscribed' THEN 'Unsubscribed from emails'
              WHEN 'poll'         THEN 'Answered a poll'
            END,

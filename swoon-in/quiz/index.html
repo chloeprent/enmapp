@@ -520,8 +520,8 @@
     const STAGES = [
       ['Booked a call', true], ['Bought Bundle + 7 Conversations', true], ['Bought Bundle', true],
       ['Bought Solo + 7 Conversations', true], ['Bought Solo', true], ['Bought 7 Conversations only', true],
-      ['Finished non-buyer emails (no purchase)', true], ['In non-buyer emails', true],
-      ['Results email sent', true], ['Took the quiz', true],
+      ['Non-buyer sequence completed', true], ['Non-buyer sequence started', true],
+      ['Results Email Sent', true], ['Quiz Completed', true],
     ];
     const ANSWERS = { spot_on: 'Spot on', partly: 'Partly', not_really: 'Not really' };
     /* Kit poll tags and the answer people tapped. */
@@ -878,7 +878,7 @@
       try {
         const d = await rpc('enm_dash_people', peopleArgs(5000, 0));
         downloadCsv('quiz-people.csv',
-          ['Name', 'Email', 'First quiz', 'Latest quiz', 'Times taken', 'Top style', 'Source', 'Campaign', 'Stage', 'Purchases', 'Spent', 'Saved PDF', 'Gave feedback', 'Booked a call', 'Results email sent', 'Unsubscribed', 'Needs attention'],
+          ['Name', 'Email', 'First quiz', 'Latest quiz', 'Times taken', 'Top style', 'Source', 'Campaign', 'Stage', 'Purchases', 'Spent', 'Saved PDF', 'Gave feedback', 'Booked a call', 'Results Email Sent', 'Unsubscribed', 'Needs attention'],
           (d.rows || []).map(p => [p.name, p.email, p.first_quiz_at, p.last_quiz_at, p.quizzes, shortStyle(p.top_style),
             p.source, p.campaign, p.stage, p.purchases, (Number(p.spent_cents || 0) / 100).toFixed(2),
             p.saved_pdf ? 'yes' : 'no', p.gave_feedback ? 'yes' : 'no', p.calls > 0 ? 'yes' : 'no',
