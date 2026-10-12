@@ -20,6 +20,10 @@ jobs:
         env:
           RAW_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
         run: python3 .github/scripts/list_secret_names.py ohcdjvbveokyyilceenf
+      - name: Webhook answers (expects Bad signature, never processes anything)
+        run: |
+          curl -s -X POST https://ohcdjvbveokyyilceenf.supabase.co/functions/v1/quiz-stripe-webhook \
+            -H 'Stripe-Signature: t=1,v1=not-a-real-signature' -d '{}' ; echo
       - name: Tables
         env:
           RAW_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
