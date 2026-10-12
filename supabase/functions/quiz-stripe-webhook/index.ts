@@ -78,7 +78,20 @@ async function discover() {
   const byProduct: Record<string, { count: number; first: string; last: string }> = {};
   const byLink: Record<string, number> = {};
   const sessionIntents = new Set<string>();
+  const paymentStatus: Record<string, number> = {};
+  const byMonth: Record<string, { count: number; total: number }> = {};
+  const emails = new Set<string>();
+  let zero = 0, total = 0, livemode = 0;
   for (const s of sessions) {
+    paymentStatus[s.payment_status] = (paymentStatus[s.payment_status] || 0) + 1;
+    if (!s.amount_total) zero++;
+    total += s.amount_total || 0;
+    if (s.livemode) livemode++;
+    const email = (s.customer_details?.email || s.customer_email || "").toLowerCase();
+    if (email) emails.add(email);
+    const m = day(s.created).slice(0, 7);
+    const mm = byMonth[m] ||= { count: 0, total: 0 };
+    mm.count++; mm.total += (s.amount_total || 0) / 100;
     if (s.payment_intent) sessionIntents.add(typeof s.payment_intent === "string" ? s.payment_intent : s.payment_intent.id);
     byLink[s.payment_link || "(no payment link)"] = (byLink[s.payment_link || "(no payment link)"] || 0) + 1;
     for (const i of s.line_items?.data || []) {
@@ -108,13 +121,12 @@ async function discover() {
 
   return {
     mode,
-    products: products.map((p) => ({ id: p.id, name: p.name, active: p.active })),
-    prices: prices.map((p) => ({
-      product: productName.get(p.product) || p.product, amount: (p.unit_amount ?? 0) / 100,
-      currency: p.currency, recurring: !!p.recurring, active: p.active,
-    })),
-    payment_links: paymentLinks,
-    checkouts: { completed: sessions.length, by_product: byProduct, by_payment_link: byLink },
+    products: products.length, prices: prices.length, payment_links: paymentLinks.length,
+    checkouts: {
+      completed: sessions.length, livemode, payment_status: paymentStatus, zero_amount: zero,
+      total_paid: total / 100, distinct_buyers: emails.size, by_month: byMonth,
+      by_product: byProduct, by_payment_link: byLink,
+    },
     charges: { succeeded: paid, with_refund: refunded, not_from_checkout: other },
   };
 }
