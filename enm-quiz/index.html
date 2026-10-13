@@ -1029,7 +1029,18 @@
     /* One tiny row per step: page_view, start, question_answered (1..N), gate,
        result. Read by the admin analytics page at /quiz on in.swoon.coach.
        Fire-and-forget — a tracking failure must never touch the quiz itself. */
+    /* A random id kept in this browser, so the dashboard counts each visitor
+       once however often they reload or come back. No personal data. */
+    const VISITOR = (() => {
+      try {
+        let v = localStorage.getItem('enmquiz.vid');
+        if (!v) { v = crypto.randomUUID(); localStorage.setItem('enmquiz.vid', v); }
+        return v;
+      } catch { return null; } /* storage blocked: counted per page load */
+    })();
+
     function track(event, meta = {}, questionNumber = null) {
+      if (VISITOR) meta = { ...meta, vid: VISITOR };
       supabase.from('enm_quiz_events').insert({
         run_id: state.runId,
         event,
