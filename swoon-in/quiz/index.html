@@ -344,7 +344,7 @@
 
         <div class="card">
           <div class="card-head"><h2>Journey</h2></div>
-          <p class="card-sub">Everyone who opened the quiz in this period, and how far they got.</p>
+          <p class="card-sub">Everyone who opened the quiz in this period, and how far they got. Each visitor is counted once, even if they reload or come back.</p>
           <div id="funnel"></div>
         </div>
 
@@ -408,7 +408,7 @@
         <details class="card">
           <summary>Devices</summary>
           <div class="body">
-            <div class="table-wrap"><table class="mini"><thead><tr><th>Device</th><th class="num">Visits</th><th class="num">Completions</th><th class="num">Completion rate</th></tr></thead><tbody id="devices"></tbody></table></div>
+            <div class="table-wrap"><table class="mini"><thead><tr><th>Device</th><th class="num">Visitors</th><th class="num">Completions</th><th class="num">Completion rate</th></tr></thead><tbody id="devices"></tbody></table></div>
           </div>
         </details>
       </section>
@@ -676,7 +676,7 @@
 
       const base = f.visited || 0;
       const steps = [
-        ['Quiz visit', f.visited], ['Started', f.started], ['Completed the quiz', f.finished],
+        ['Quiz visitors', f.visited], ['Started', f.started], ['Completed the quiz', f.finished],
         ['Bought (after the quiz)', b.funnel_bought ?? 0], ['Booked a call (after the quiz)', c.funnel_booked ?? 0],
       ];
       $('funnel').innerHTML = steps.map(([label, n]) => {
@@ -695,7 +695,7 @@
         ...[...bySource.keys()].filter(k => !SOURCES.includes(k))];
       const srcRows = srcNames.map(s => ({
         label: s, n: bySource.get(s)?.completions || 0,
-        extra: bySource.get(s) ? `${fmt(bySource.get(s).visits)} visits` : '',
+        extra: bySource.get(s) ? `${fmt(bySource.get(s).visits)} ${bySource.get(s).visits === 1 ? 'visitor' : 'visitors'}` : '',
       }));
       $('sources').innerHTML = bars(srcRows, { total: d.completions });
       $('campaigns').innerHTML = (d.campaigns || []).length
@@ -746,7 +746,7 @@
 
       $('devices').innerHTML = (d.devices || []).map(x =>
         `<tr><td>${esc(x.device)}</td><td class="num">${fmt(x.visits)}</td><td class="num">${fmt(x.completions)}</td><td class="num">${pct(x.completions, x.visits)}%</td></tr>`).join('')
-        || '<tr><td colspan="4" class="td-muted">No visits yet.</td></tr>';
+        || '<tr><td colspan="4" class="td-muted">No visitors yet.</td></tr>';
     }
 
     /* ── People ── */
