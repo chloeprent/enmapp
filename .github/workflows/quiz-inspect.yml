@@ -8,8 +8,6 @@ on:
     branches: [claude/elegant-cannon-bdq3j0]
     paths:
       - ".github/workflows/quiz-inspect.yml"
-      - "supabase/functions/quiz-stripe-webhook/**"
-      - "supabase/functions/quiz-kit/**"
   workflow_dispatch:
 
 jobs:
