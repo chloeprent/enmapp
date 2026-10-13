@@ -175,6 +175,38 @@ async function backfill() {
            paid_checkouts: paid, rows_saved: saved, refunded };
 }
 
+// Read-only look at checkouts since launch, to explain why one is or is not on
+// the dashboard. Only test emails are shown in full.
+const isTest = (e: string) => /chloeprent|cristinemata25|\+test|test\+|@swoon\.coach$/i.test(e);
+const mask = (e: string) => (!e ? "" : isTest(e) ? e : `***@${e.split("@")[1] || ""}`);
+
+async function inspect() {
+  const since = String(Math.floor(PURCHASES_FROM / 1000));
+  const sessions = await stripeList("/checkout/sessions", { "created[gte]": since }, 300);
+  const out = [];
+  for (const s of sessions) {
+    let items: any[] = [];
+    try { items = await stripeList(`/checkout/sessions/${s.id}/line_items`, {}, 20); } catch { /* ignore */ }
+    out.push({
+      created: new Date(s.created * 1000).toISOString(), status: s.status, payment_status: s.payment_status,
+      amount_total: s.amount_total, livemode: s.livemode, payment_link: s.payment_link || null,
+      email: mask((s.customer_details?.email || s.customer_email || "").toLowerCase()),
+      items: items.map((li) => `${li.description} x${li.quantity} = ${li.amount_total}`),
+      would_save: rowsFor(s, items, "backfill").length,
+    });
+  }
+  const { data: saved } = await db().from("quiz_purchases").select("purchased_at, email, product_name, amount_cents, source")
+    .gte("purchased_at", new Date(PURCHASES_FROM).toISOString()).order("purchased_at");
+  let events: unknown = null;
+  try {
+    const ev = await stripeGet("/events", { limit: "20", "created[gte]": since });
+    events = ev.data.map((e: any) => ({ type: e.type, created: new Date(e.created * 1000).toISOString(),
+      pending_webhooks: e.pending_webhooks }));
+  } catch (e) { events = String((e as Error).message); }
+  return { key_mode: (Deno.env.get("STRIPE_API_KEY") || "").slice(0, 8), checkouts_since_launch: out,
+    saved_since_launch: (saved || []).map((r: any) => ({ ...r, email: mask(r.email || "") })), recent_events: events };
+}
+
 async function handleEvent(event: any) {
   const obj = event.data?.object || {};
   switch (event.type) {
@@ -224,6 +256,10 @@ serve(async (req) => {
   // Admin tasks
   let body: any = {};
   try { body = JSON.parse(raw || "{}"); } catch { /* not JSON */ }
+  if (body.action === "inspect") {
+    if (!(await isServiceRole(req))) return json({ error: "Not allowed" }, 401);
+    try { return json(await inspect()); } catch (e) { return json({ error: String((e as Error).message) }, 500); }
+  }
   if (body.action === "backfill") {
     if (!(await isServiceRole(req))) return json({ error: "Not allowed" }, 401);
     try { return json(await backfill()); } catch (e) { return json({ error: String((e as Error).message) }, 500); }

@@ -139,6 +139,21 @@ async function history() {
   return out;
 }
 
+// Read-only: Kit's purchase tags and who got them recently (only test emails in full).
+async function inspect() {
+  const isTest = (e: string) => /chloeprent|cristinemata25|\+test|test\+|@swoon\.coach$/i.test(e);
+  const tags = (await kitList("/tags", "tags")).filter((t: any) => /purchas|bought|buyer|paid/i.test(t.name));
+  const out: Record<string, unknown> = {};
+  for (const t of tags) {
+    const subs = await kitList(`/tags/${t.id}/subscribers`, "subscribers");
+    out[t.name] = { total: subs.length, recent: subs
+      .filter((x: any) => Date.parse(x.tagged_at || x.created_at || 0) > Date.now() - 3 * 864e5)
+      .map((x: any) => ({ at: x.tagged_at || x.created_at,
+        email: isTest(x.email_address || "") ? x.email_address : `***@${(x.email_address || "").split("@")[1] || ""}` })) };
+  }
+  return out;
+}
+
 async function discover() {
   const webhooks = await kitList("/webhooks", "webhooks");
   return {
@@ -179,6 +194,7 @@ serve(async (req) => {
     if (body.action === "setup") return json(await setup());
     if (body.action === "backfill") return json({ polls: await backfill(), sequences: await history() });
     if (body.action === "discover") return json(await discover());
+    if (body.action === "inspect") return json(await inspect());
     return json({ error: "Unknown request" }, 400);
   } catch (e) {
     return json({ error: String((e as Error).message) }, 500);
