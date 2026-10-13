@@ -13,7 +13,8 @@ sql = f"""select timestamp, request.method, response.status_code, request.url
 from function_edge_logs cross join unnest(metadata) as m cross join unnest(m.request) as request
 cross join unnest(m.response) as response
 where request.url like '%/{fn}%' order by timestamp desc limit 60"""
-qs = urllib.parse.urlencode({"sql": sql, "iso_timestamp_start": start.isoformat(), "iso_timestamp_end": end.isoformat()})
+iso = lambda d: d.strftime("%Y-%m-%dT%H:%M:%S.000Z")
+qs = urllib.parse.urlencode({"sql": sql, "iso_timestamp_start": iso(start), "iso_timestamp_end": iso(end)})
 req = urllib.request.Request(f"https://api.supabase.com/v1/projects/{ref}/analytics/endpoints/logs?{qs}",
                              headers={"Authorization": f"Bearer {token}"})
 try:

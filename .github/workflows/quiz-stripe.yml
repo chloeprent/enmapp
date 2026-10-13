@@ -12,7 +12,6 @@ on:
     paths:
       - "supabase/functions/quiz-stripe-webhook/**"
       - "supabase/migrations/2026101302_quiz_stripe_sync_cron.sql"
-      - ".github/scripts/function_logs.py"
       - "supabase/checks/phase2_after.sql"
       - ".github/scripts/call_quiz_function.py"
       - ".github/workflows/quiz-stripe.yml"
@@ -51,7 +50,3 @@ jobs:
         env:
           RAW_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
         run: python3 .github/scripts/call_quiz_function.py ohcdjvbveokyyilceenf quiz-stripe-webhook '{"action":"inspect"}'
-      - name: Webhook calls received (last 24h)
-        env:
-          RAW_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-        run: python3 .github/scripts/function_logs.py ohcdjvbveokyyilceenf quiz-stripe-webhook 24 || true
