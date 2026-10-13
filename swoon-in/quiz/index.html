@@ -243,6 +243,16 @@
     .pager { display: flex; gap: 10px; align-items: center; justify-content: flex-end; margin-top: 12px; font-size: .78rem; color: var(--muted); }
     .stage-list .dist-fill { background: var(--rose); }
     .stage-list .soon-row .dist-label, .stage-list .soon-row .dist-val { color: var(--faint); }
+    .flag-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+    .flag { font: inherit; font-size: .8rem; border: 1px solid var(--border); background: var(--surface);
+      border-radius: 999px; padding: 5px 12px; cursor: pointer; color: var(--text); }
+    .flag b { font-weight: 600; }
+    .flag.warn { border-color: #e9a23b; background: #fff6e8; }
+    .badge { display: inline-block; font-size: .68rem; font-weight: 600; border-radius: 999px; padding: 1px 7px; margin-top: 3px; }
+    .badge.warn { background: #fff0d9; color: #8a5300; }
+    .badge.muted { background: #eee; color: #666; }
+    .poll { margin-bottom: 18px; }
+    .poll h3 { font-size: .9rem; font-weight: 600; margin: 0 0 8px; }
 
     /* ── Person timeline panel ── */
     .panel-backdrop { position: fixed; inset: 0; background: rgba(40,30,30,.35); z-index: 40; }
@@ -339,16 +349,6 @@
         </div>
 
         <div class="card">
-          <div class="card-head"><h2>Where they come from</h2></div>
-          <p class="card-sub">Quiz completions by source, from the link they arrived on.</p>
-          <div id="sources"></div>
-          <details class="inline">
-            <summary>By campaign</summary>
-            <div class="table-wrap"><table class="mini"><thead><tr><th>Source</th><th>Campaign</th><th class="num">Completions</th></tr></thead><tbody id="campaigns"></tbody></table></div>
-          </details>
-        </div>
-
-        <div class="card">
           <div class="card-head"><h2>Results</h2></div>
           <p class="card-sub" id="resultsSub"></p>
           <div id="results"></div>
@@ -363,6 +363,18 @@
           <p class="card-sub" id="buySub"></p>
           <div id="buyKinds"></div>
         </div>
+
+        <details class="card">
+          <summary>Where they come from</summary>
+          <div class="body">
+            <p class="card-sub">Quiz completions by source, from the link they arrived on.</p>
+            <div id="sources"></div>
+            <details class="inline">
+              <summary>By campaign</summary>
+              <div class="table-wrap"><table class="mini"><thead><tr><th>Source</th><th>Campaign</th><th class="num">Completions</th></tr></thead><tbody id="campaigns"></tbody></table></div>
+            </details>
+          </div>
+        </details>
 
         <details class="card">
           <summary>Question drop-off</summary>
@@ -387,7 +399,10 @@
 
         <details class="card">
           <summary>What people told us (polls)</summary>
-          <div class="body"><p class="card-sub soon">Coming soon, once Kit is connected.</p></div>
+          <div class="body">
+            <p class="card-sub">Answers people tapped in the emails, in this period. Tests are hidden when Exclude tests is on.</p>
+            <div id="polls"></div>
+          </div>
         </details>
 
         <details class="card">
@@ -404,6 +419,7 @@
           <div class="card-head"><h2>Where people are</h2></div>
           <p class="card-sub" id="stagesSub"></p>
           <div class="stage-list" id="stages"></div>
+          <div class="flag-row" id="flags"></div>
         </div>
 
         <div class="card">
@@ -412,6 +428,10 @@
             <select id="pStage" aria-label="Stage"></select>
             <select id="pStyle" aria-label="Top style"></select>
             <select id="pSource" aria-label="Source"></select>
+            <select id="pFlag" aria-label="Flags">
+              <option value="">No flag filter</option><option value="attention">Needs attention</option>
+              <option value="unsubscribed">Unsubscribed</option>
+            </select>
             <select id="pPurchase" aria-label="Purchase type">
               <option value="">Any purchase status</option><option value="any">Bought something</option>
               <option value="none">No purchase</option><option value="solo">Bought Solo</option>
@@ -500,10 +520,22 @@
     const STAGES = [
       ['Booked a call', true], ['Bought Bundle + 7 Conversations', true], ['Bought Bundle', true],
       ['Bought Solo + 7 Conversations', true], ['Bought Solo', true], ['Bought 7 Conversations only', true],
-      ['Finished non-buyer emails (no purchase)', false], ['In non-buyer emails', false],
-      ['Results email sent', false], ['Took the quiz', true],
+      ['Non-buyer sequence completed', true], ['Non-buyer sequence started', true],
+      ['Results Email Sent', true], ['Quiz Completed', true],
     ];
     const ANSWERS = { spot_on: 'Spot on', partly: 'Partly', not_really: 'Not really' };
+    /* Kit poll tags and the answer people tapped. */
+    const POLLS = [
+      ['What is your biggest concern right now?', [
+        ['stuck-alignment', "My partner and I aren't fully aligned"], ['stuck-firststep', "I don't know what to do first"],
+        ['stuck-jealousy', "I'm nervous about jealousy or things going wrong"],
+        ['stuck-people', "I don't know if we'll find good people in our area"],
+        ['stuck-judgment', "I'm worried other people will find out"]]],
+      ['What would you want help with most in a live workshop?', [
+        ['webinar-agreements', 'Agreements and boundaries'], ['webinar-jealousy', 'Handling jealousy'],
+        ['webinar-people', 'Attracting the right people'], ['webinar-conflict', 'Repair and handling conflict']]],
+    ];
+    const POLL_LABEL = Object.fromEntries(POLLS.flatMap(([, answers]) => answers));
     const KINDS = { solo: 'Solo roadmap', bundle: 'Bundle (3 roadmaps)', conversations: '7 Essential Conversations', other: 'Other' };
     const money = cents => '$' + (Number(cents || 0) / 100).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 });
 
@@ -632,8 +664,8 @@
 
     /* ── Overview ── */
     async function loadOverview() {
-      const [d, b, c] = await Promise.all([rpc('enm_dash_overview', range()), rpc('enm_dash_purchases', range()),
-        rpc('enm_dash_calls', range())]);
+      const [d, b, c, polls] = await Promise.all([rpc('enm_dash_overview', range()), rpc('enm_dash_purchases', range()),
+        rpc('enm_dash_calls', range()), rpc('enm_dash_polls', range())]);
       const f = d.funnel || {};
       const retakes = Math.max(0, (d.completions || 0) - (d.unique_people || 0));
       $('statsRow').innerHTML =
@@ -644,7 +676,7 @@
 
       const base = f.visited || 0;
       const steps = [
-        ['Visited quiz', f.visited], ['Started', f.started], ['Finished (gave email)', f.finished],
+        ['Quiz visit', f.visited], ['Started', f.started], ['Completed the quiz', f.finished],
         ['Bought (after the quiz)', b.funnel_bought ?? 0], ['Booked a call (after the quiz)', c.funnel_booked ?? 0],
       ];
       $('funnel').innerHTML = steps.map(([label, n]) => {
@@ -697,6 +729,12 @@
         .sort((x, y) => (y[1].total || 0) - (x[1].total || 0))
         .map(([t, r]) => `<tr><td>${esc(t)}</td><td class="num">${fmt(r.solo)}</td><td class="num">${fmt(r.bundle)}</td><td class="num">${fmt(r.total)}</td><td class="num">${money(r.revenue_cents)}</td></tr>`).join('');
 
+      $('polls').innerHTML = POLLS.map(([q, answers]) => {
+        const n = answers.reduce((t, [tag]) => t + (polls?.[tag] || 0), 0);
+        return `<div class="poll"><h3>${esc(q)} <span class="soon">(${fmt(n)} ${n === 1 ? 'answer' : 'answers'})</span></h3>
+          ${bars(answers.map(([tag, label]) => ({ label, n: polls?.[tag] || 0 })), { total: n })}</div>`;
+      }).join('');
+
       const a = d.actions || {};
       $('actions').innerHTML = [
         ['Saved their results (PDF)', `${ppl(a.pdf_people)} (${clk(a.pdf_clicks)})`],
@@ -723,11 +761,11 @@
     const peopleArgs = (limit, offset) => ({
       ...range(), p_search: $('pSearch').value.trim() || null, p_stage: $('pStage').value || null,
       p_style: $('pStyle').value || null, p_source: $('pSource').value || null,
-      p_purchase: $('pPurchase').value || null, p_limit: limit, p_offset: offset,
+      p_purchase: $('pPurchase').value || null, p_flag: $('pFlag').value || null, p_limit: limit, p_offset: offset,
     });
     let pTimer = null;
     $('pSearch').addEventListener('input', () => { clearTimeout(pTimer); pTimer = setTimeout(() => { ui.peopleOffset = 0; loadTab(); }, 350); });
-    ['pStage', 'pStyle', 'pSource', 'pPurchase'].forEach(id => $(id).addEventListener('change', () => { ui.peopleOffset = 0; loadTab(); }));
+    ['pStage', 'pStyle', 'pSource', 'pPurchase', 'pFlag'].forEach(id => $(id).addEventListener('change', () => { ui.peopleOffset = 0; loadTab(); }));
     $('pPrev').addEventListener('click', () => { ui.peopleOffset = Math.max(0, ui.peopleOffset - PAGE); loadTab(); });
     $('pNext').addEventListener('click', () => { ui.peopleOffset += PAGE; loadTab(); });
 
@@ -735,7 +773,7 @@
     async function loadPeople() {
       const d = await rpc('enm_dash_people', peopleArgs(PAGE, ui.peopleOffset));
       const total = d.people_total || 0;
-      $('stagesSub').textContent = `${ppl(total)} (one per email) who took the quiz in this period.`;
+      $('stagesSub').textContent = `${ppl(total)} (one per email) who took the quiz in this period. Each person is counted once, at the furthest step they reached.`;
       $('stages').innerHTML = STAGES.map(([s, live]) => {
         const n = d.stages?.[s] || 0;
         return `<div class="dist-row${live ? '' : ' soon-row'}">
@@ -744,13 +782,17 @@
           <div class="dist-val">${live ? `${fmt(n)} &middot; ${pct(n, total)}%` : 'Coming soon'}</div></div>`;
       }).join('');
 
+      $('flags').innerHTML =
+        `<button type="button" class="flag${d.needs_attention ? ' warn' : ''}" data-flag="attention" title="Took the quiz over an hour ago and the results email is not marked as sent">Needs attention: <b>${fmt(d.needs_attention)}</b></button>` +
+        `<button type="button" class="flag" data-flag="unsubscribed">Unsubscribed: <b>${fmt(d.unsubscribed)}</b></button>` +
+        `<span class="flag" style="cursor:default" title="Everyone Kit reported as sent the results email, wherever they are now">Got the results email: <b>${fmt(d.results_sent)} of ${fmt(total)}</b></span>`;
       $('peopleBody').innerHTML = (d.rows || []).map(p => `<tr class="clickable" data-email="${esc(p.email)}">
           <td>${esc(p.name || '')}</td>
           <td class="td-email">${esc(p.email)}</td>
           <td class="td-muted">${esc(date(p.last_quiz_at))}${p.quizzes > 1 ? ` <span class="soon">(${p.quizzes} times)</span>` : ''}</td>
           <td><span class="result-pill">${esc(shortStyle(p.top_style))}</span></td>
           <td class="td-muted">${esc(p.source)}${p.campaign ? `<br><span class="soon">${esc(p.campaign)}</span>` : ''}</td>
-          <td>${esc(p.stage)}</td>
+          <td>${esc(p.stage)}${p.needs_attention ? '<br><span class="badge warn">Needs attention</span>' : ''}${p.unsubscribed_at ? '<br><span class="badge muted">Unsubscribed</span>' : ''}</td>
           <td class="num">${p.purchases ? fmt(p.purchases) : '<span class="dash">&middot;</span>'}</td>
           <td class="num">${p.spent_cents ? money(p.spent_cents) : '<span class="dash">&middot;</span>'}</td>
           <td>${yes(p.saved_pdf)}</td><td>${yes(p.gave_feedback)}</td><td>${yes(p.calls > 0)}</td>
@@ -761,6 +803,10 @@
       $('pPrev').disabled = ui.peopleOffset === 0;
       $('pNext').disabled = ui.peopleOffset + PAGE >= shown;
     }
+    $('flags').addEventListener('click', (e) => {
+      const b = e.target.closest('[data-flag]');
+      if (b) { $('pFlag').value = b.dataset.flag; ui.peopleOffset = 0; loadTab(); }
+    });
     $('peopleBody').addEventListener('click', (e) => {
       const row = e.target.closest('tr[data-email]');
       if (row) openPerson(row.dataset.email);
@@ -778,8 +824,7 @@
         $('panelItems').innerHTML = (d.items || []).map(i => `<li>
             <div class="when">${esc(dateTime(i.at))}</div>
             <div class="what">${esc(i.what)}</div>
-            ${i.detail ? `<div class="detail">${esc(i.detail)}</div>` : ''}</li>`).join('')
-          + '<li><div class="what soon">Results email and email steps: coming soon</div></li>';
+            ${i.detail ? `<div class="detail">${esc(POLL_LABEL[i.detail] || i.detail)}</div>` : ''}</li>`).join('');
       } catch (e) { $('panelSub').textContent = e.message; }
     }
     const closePanel = () => { $('panel').hidden = $('panelBackdrop').hidden = true; };
@@ -833,10 +878,11 @@
       try {
         const d = await rpc('enm_dash_people', peopleArgs(5000, 0));
         downloadCsv('quiz-people.csv',
-          ['Name', 'Email', 'First quiz', 'Latest quiz', 'Times taken', 'Top style', 'Source', 'Campaign', 'Stage', 'Purchases', 'Spent', 'Saved PDF', 'Gave feedback', 'Booked a call'],
+          ['Name', 'Email', 'First quiz', 'Latest quiz', 'Times taken', 'Top style', 'Source', 'Campaign', 'Stage', 'Purchases', 'Spent', 'Saved PDF', 'Gave feedback', 'Booked a call', 'Results Email Sent', 'Unsubscribed', 'Needs attention'],
           (d.rows || []).map(p => [p.name, p.email, p.first_quiz_at, p.last_quiz_at, p.quizzes, shortStyle(p.top_style),
             p.source, p.campaign, p.stage, p.purchases, (Number(p.spent_cents || 0) / 100).toFixed(2),
-            p.saved_pdf ? 'yes' : 'no', p.gave_feedback ? 'yes' : 'no', p.calls > 0 ? 'yes' : 'no']));
+            p.saved_pdf ? 'yes' : 'no', p.gave_feedback ? 'yes' : 'no', p.calls > 0 ? 'yes' : 'no',
+            p.results_sent_at || '', p.unsubscribed_at ? 'yes' : 'no', p.needs_attention ? 'yes' : 'no']));
       } catch (e) { alert(e.message); }
     });
     $('fCsv').addEventListener('click', async () => {
