@@ -1,12 +1,12 @@
 {
-  "version": "v261013.01 3:53a",
-  "release": 1,
-  "sha": "ff97f70",
-  "fullSha": "ff97f7044287b00311125279bfdee94711819a5f",
+  "version": "v261013.02 4:11a",
+  "release": 2,
+  "sha": "28804f9",
+  "fullSha": "28804f9f8dd4e551a2f25a9714175bc67cf8e82c",
   "actor": "chloeprent",
   "source": "cloudflare-pages-deploy",
   "model": "ci",
   "machine": "runnervmmprz5",
-  "pushedAt": "2026-10-13T11:53:16+08:00",
-  "commits": [{"sha":"ff97f70","message":"Quiz dashboard Phase 3: Kit email stages, polls, flags and source fixes (#34)","author":"chloeprent"}]
+  "pushedAt": "2026-10-13T12:11:31+08:00",
+  "commits": [{"sha":"28804f9","message":"Dashboard: count quiz visitors once per browser, not per page load (#35)","author":"chloeprent"}]
 }
