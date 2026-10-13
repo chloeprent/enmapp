@@ -1,6 +1,6 @@
 # Read-only look at purchases: Stripe checkouts since launch, what the dashboard
-# saved, and Kit's purchase tags. Deploys the two functions (which add a
-# read-only "inspect" action) and prints only test emails in full.
+# saved, Kit's purchase tags, and the webhook calls Stripe made. Prints only
+# test emails in full.
 name: Quiz inspect purchases
 
 on:
@@ -18,16 +18,6 @@ jobs:
       cancel-in-progress: false
     steps:
       - uses: actions/checkout@v4
-      - uses: supabase/setup-cli@v1
-        with:
-          version: latest
-      - name: Deploy functions
-        env:
-          RAW_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-        run: |
-          export SUPABASE_ACCESS_TOKEN="$(printf '%s' "$RAW_TOKEN" | grep -oi 'sbp_[A-Za-z0-9_]*' | head -n1 | sed 's/^[Ss][Bb][Pp]_/sbp_/' || true)"
-          supabase functions deploy quiz-stripe-webhook --project-ref ohcdjvbveokyyilceenf --no-verify-jwt --use-api
-          supabase functions deploy quiz-kit --project-ref ohcdjvbveokyyilceenf --no-verify-jwt --use-api
       - name: Stripe checkouts since launch
         env:
           RAW_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
@@ -36,3 +26,7 @@ jobs:
         env:
           RAW_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
         run: python3 .github/scripts/call_quiz_function.py ohcdjvbveokyyilceenf quiz-kit '{"action":"inspect"}'
+      - name: Webhook calls received (last 24h)
+        env:
+          RAW_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: python3 .github/scripts/function_logs.py ohcdjvbveokyyilceenf quiz-stripe-webhook 24

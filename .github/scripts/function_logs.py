@@ -14,7 +14,7 @@ from function_edge_logs cross join unnest(metadata) as m cross join unnest(m.req
 cross join unnest(m.response) as response
 where request.url like '%/{fn}%' order by timestamp desc limit 60"""
 qs = urllib.parse.urlencode({"sql": sql, "iso_timestamp_start": start.isoformat(), "iso_timestamp_end": end.isoformat()})
-req = urllib.request.Request(f"https://api.supabase.com/v1/projects/{ref}/analytics/endpoints/logs.all?{qs}",
+req = urllib.request.Request(f"https://api.supabase.com/v1/projects/{ref}/analytics/endpoints/logs?{qs}",
                              headers={"Authorization": f"Bearer {token}"})
 try:
     data = json.load(urllib.request.urlopen(req, timeout=60))
