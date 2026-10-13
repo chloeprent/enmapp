@@ -21,3 +21,6 @@ FROM quiz_purchases GROUP BY source ORDER BY 1;
 
 -- == P6. Safety-net schedule
 SELECT jobname, schedule, active FROM cron.job WHERE jobname IN ('quiz-stripe-sync', 'quiz-calls-sync') ORDER BY 1;
+
+-- == P7. Webhook calls from Stripe (latest first)
+SELECT received_at, type, result FROM quiz_stripe_events ORDER BY received_at DESC LIMIT 20;

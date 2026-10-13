@@ -233,6 +233,12 @@ async function inspect() {
     saved_since_launch: (saved || []).map((r: any) => ({ ...r, email: mask(r.email || "") })), recent_events: events };
 }
 
+// Notes each webhook call in quiz_stripe_events. Never blocks the webhook.
+async function note(eventId: string | null, type: string | null, result: string) {
+  try { await db().from("quiz_stripe_events").insert({ event_id: eventId, type, result }); }
+  catch (e) { console.error("note failed", e); }
+}
+
 async function handleEvent(event: any) {
   const obj = event.data?.object || {};
   switch (event.type) {
@@ -267,14 +273,20 @@ serve(async (req) => {
   if (signature) {
     const secret = Deno.env.get("QUIZ_STRIPE_WEBHOOK_SECRET");
     if (!secret) return json({ error: "Webhook secret not set" }, 500);
-    if (!(await verifySignature(raw, signature, secret))) return json({ error: "Bad signature" }, 400);
+    if (!(await verifySignature(raw, signature, secret))) {
+      await note(null, null, "bad signature");
+      return json({ error: "Bad signature" }, 400);
+    }
+    let event: any = {};
     try {
-      const event = JSON.parse(raw);
+      event = JSON.parse(raw);
       const result = await handleEvent(event);
       console.log("stripe", event.type, event.id, result);
+      await note(event.id, event.type, result);
       return json({ received: true, result });
     } catch (e) {
       console.error("stripe webhook failed", e);
+      await note(event.id, event.type, `failed: ${String((e as Error).message).slice(0, 200)}`);
       return json({ error: "Processing failed" }, 500); // Stripe retries
     }
   }
