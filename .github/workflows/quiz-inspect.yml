@@ -8,6 +8,7 @@ on:
     branches: [claude/elegant-cannon-bdq3j0]
     paths:
       - ".github/workflows/quiz-inspect.yml"
+      - "supabase/checks/phase2_after.sql"
   workflow_dispatch:
 
 jobs:

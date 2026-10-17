@@ -24,3 +24,12 @@ SELECT jobname, schedule, active FROM cron.job WHERE jobname IN ('quiz-stripe-sy
 
 -- == P7. Webhook calls from Stripe (latest first)
 SELECT received_at, type, result FROM quiz_stripe_events ORDER BY received_at DESC LIMIT 20;
+
+-- == P8. Each purchase since launch: product, how it is counted, buyer's quiz result (no emails)
+SELECT p.purchased_at, p.product, p.kind, pr.label AS mapped_label, p.result_uid AS mapped_style_uid,
+       p.amount_cents, (t.email IS NOT NULL) AS took_quiz, t.top_style AS buyer_quiz_result,
+       enm_is_test_email(p.email) AS test
+FROM enm_quiz_purchases_v p
+LEFT JOIN quiz_products pr ON pr.product_id = p.product_id
+LEFT JOIN enm_quiz_people_v t ON t.email = lower(p.email)
+WHERE p.purchased_at >= '2026-10-13T00:00:00Z' ORDER BY p.purchased_at;
