@@ -667,6 +667,10 @@
     /* Why someone has no results email, and what to check. Short on purpose. */
     function attentionReason(p) {
       const when = new Date(p.first_quiz_at).toLocaleDateString(undefined, { day: 'numeric', month: 'short' });
+      if (p.purchases > 0) {
+        const what = { solo: 'Solo', bundle: 'Bundle', conversations: '7 Conversations' }[p.top_purchase] || 'purchase';
+        return `Quiz ${when}. Might not have got the results email, but already moved on to the ${what} purchase follow-up.`;
+      }
       const why = p.unsubscribed_at ? 'Unsubscribed, so Kit cannot email them.'
         : 'Check the Kit results automation, or their email may have bounced.';
       return `Quiz ${when}, Kit never sent the results email. ${why}`;

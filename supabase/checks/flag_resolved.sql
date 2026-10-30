@@ -1,8 +1,8 @@
--- Read-only: the "No results email" flag after buyers stopped counting (no emails).
+-- Read-only: the "No results email" flag (no emails printed).
 -- == R1. Flagged now, tests left out
 SELECT count(*) FILTER (WHERE needs_attention) AS flagged_now,
        count(*) FILTER (WHERE results_sent_at IS NULL AND first_quiz_at >= '2026-10-13T00:00:00Z'
-                         AND first_quiz_at < now() - interval '1 hour' AND purchases > 0) AS buyers_no_longer_flagged,
+                         AND first_quiz_at < now() - interval '1 hour' AND purchases > 0) AS flagged_buyers,
        count(*) FILTER (WHERE attention_resolved_at IS NOT NULL) AS resolved_by_hand
 FROM enm_quiz_people_v WHERE NOT enm_is_test_email(email);
 

@@ -1,5 +1,4 @@
--- "No results email" flag: buyers are no longer flagged (they get the purchase
--- emails instead), and an admin can mark anyone else as resolved by hand.
+-- "No results email" flag: an admin can mark a person as resolved by hand.
 -- Adds one small admin-only table and one column at the end of the people view.
 
 CREATE TABLE IF NOT EXISTS quiz_flag_resolved (
@@ -88,7 +87,6 @@ SELECT
   k.results_sent_at, k.nb_started_at, k.nb_finished_at, k.unsubscribed_at,
   (k.results_sent_at IS NULL AND q.first_quiz_at >= '2026-10-13T00:00:00Z'
    AND q.first_quiz_at < now() - interval '1 hour'
-   AND coalesce(b.purchases, 0) = 0           -- buyers get the purchase emails
    AND r.email IS NULL) AS needs_attention,   -- not marked resolved by hand
   r.resolved_at AS attention_resolved_at
 FROM q
