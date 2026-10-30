@@ -4,6 +4,10 @@
 name: Quiz customer lookup
 
 on:
+  push:
+    branches: [claude/elegant-cannon-bdq3j0]
+    paths:
+      - ".github/workflows/quiz-lookup.yml"
   workflow_dispatch:
     inputs:
       email_sha256:
@@ -15,6 +19,7 @@ env:
 
 jobs:
   lookup:
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
