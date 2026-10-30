@@ -1,0 +1,53 @@
+# Read-only health check of the live quiz dashboard: the pages load, every
+# dashboard data call works for the admin, and each data source is fresh.
+name: Quiz dashboard check
+
+on:
+  push:
+    branches: [claude/elegant-cannon-bdq3j0]
+    paths:
+      - ".github/workflows/quiz-dash-check.yml"
+      - ".github/scripts/dash_smoke.py"
+      - "supabase/checks/data_freshness.sql"
+      - "supabase/checks/funnel_analysis.sql"
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Live pages load
+        run: |
+          for u in https://in.swoon.coach/quiz/ https://quiz.swoon.coach/ https://in.swoon.coach/version.json; do
+            printf '%s -> ' "$u"; curl -s -o /tmp/p -w '%{http_code} %{size_download} bytes\n' "$u"
+          done
+          echo "Live version: $(curl -s https://in.swoon.coach/version.json | python3 -c 'import json,sys; print(json.load(sys.stdin).get("version"))' 2>/dev/null)"
+          curl -s https://in.swoon.coach/quiz/ | grep -o 'Quiz visitors\|enm_dash_overview\|Where people are' | sort | uniq -c
+      - name: Dashboard data calls (as the admin)
+        env:
+          RAW_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: python3 .github/scripts/dash_smoke.py ohcdjvbveokyyilceenf chloeprent@gmail.com
+      - name: Data freshness and background jobs
+        if: always()
+        env:
+          RAW_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: python3 .github/scripts/run_readonly_sql.py ohcdjvbveokyyilceenf supabase/checks/data_freshness.sql
+      - name: Funnel analysis (since launch, read-only)
+        if: always()
+        env:
+          RAW_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: python3 .github/scripts/run_readonly_sql.py ohcdjvbveokyyilceenf supabase/checks/funnel_analysis.sql
+      - name: Stripe checkouts since launch (opened vs paid)
+        if: always()
+        env:
+          RAW_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          python3 .github/scripts/call_quiz_function.py ohcdjvbveokyyilceenf quiz-stripe-webhook '{"action":"inspect"}' > /tmp/s.txt
+          python3 - <<'PY'
+          import json
+          t = open('/tmp/s.txt').read(); d = json.loads(t[t.index('{'):])
+          for c in d["checkouts_since_launch"]:
+              test = any(k in c["email"] for k in ("chloeprent", "swoon.coach"))
+              print(c["created"][:16], c["status"], c["payment_status"], c["amount_total"], "TEST" if test else "", "; ".join(c["items"]))
+          PY

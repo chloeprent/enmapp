@@ -8,9 +8,14 @@
 //                    the paid line items; charge.refunded marks them refunded.
 //                    Signed with QUIZ_STRIPE_WEBHOOK_SECRET.
 //   backfill         (service role only) load every past paid checkout.
+//   sync             reload checkouts from the last 2 days, in case a webhook
+//                    was missed. Open to the cron job (counts only, at most
+//                    once a minute).
 //
-// Free ($0) checkouts are skipped on purpose: they were test purchases. So is
-// anything before the launch (QUIZ_PURCHASES_FROM, default Tue 13 Oct 2026).
+// Checkouts paid with a 100% discount ($0) are kept as purchases with $0
+// revenue, so tests and free copies show; test emails are hidden by the
+// dashboard's Exclude tests. Anything before the launch is skipped
+// (QUIZ_PURCHASES_FROM, default Tue 13 Oct 2026).
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
@@ -18,6 +23,9 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 const STRIPE = "https://api.stripe.com/v1";
 const PURCHASES_FROM = Date.parse(Deno.env.get("QUIZ_PURCHASES_FROM") || "2026-10-13T00:00:00Z");
 const beforeLaunch = (session: any) => session.created * 1000 < PURCHASES_FROM;
+// Stripe marks a fully discounted checkout "paid" or "no_payment_required".
+const isPaid = (session: any) => session.status === "complete" &&
+  (session.payment_status === "paid" || session.payment_status === "no_payment_required");
 
 const db = () =>
   createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
@@ -123,8 +131,8 @@ const intentId = (pi: any) => (typeof pi === "string" ? pi : pi?.id) || null;
 
 // Paid line items of one completed checkout, ready for quiz_purchases.
 function rowsFor(session: any, lineItems: any[], source: "webhook" | "backfill", refunded = false) {
-  if (session.payment_status !== "paid" || !session.amount_total || beforeLaunch(session)) return [];
-  return lineItems.filter((li) => (li.amount_total || 0) > 0).map((li) => ({
+  if (!isPaid(session) || beforeLaunch(session)) return [];
+  return lineItems.map((li) => ({
     id: `${session.id}:${li.id}`,
     session_id: session.id,
     payment_intent: intentId(session.payment_intent),
@@ -133,7 +141,7 @@ function rowsFor(session: any, lineItems: any[], source: "webhook" | "backfill",
     product_id: typeof li.price?.product === "string" ? li.price.product : li.price?.product?.id || null,
     product_name: li.description || null,
     quantity: li.quantity || 1,
-    amount_cents: li.amount_total,
+    amount_cents: li.amount_total || 0,
     currency: li.currency || session.currency,
     refunded,
     purchased_at: new Date(session.created * 1000).toISOString(),
@@ -154,25 +162,139 @@ async function savePurchases(rows: any[]) {
   if (error) throw new Error(`quiz_purchases: ${error.message}`);
 }
 
-async function backfill() {
-  await syncProducts(await stripeList("/products", {}, 1000));
+async function backfill(sinceMs = PURCHASES_FROM) {
+  const since = String(Math.floor(Math.max(sinceMs, PURCHASES_FROM) / 1000));
   const sessions = await stripeList("/checkout/sessions",
-    { status: "complete", "expand[]": "data.payment_intent.latest_charge" });
-  let paid = 0, free = 0, early = 0, saved = 0, refunded = 0;
+    { status: "complete", "created[gte]": since, "expand[]": "data.payment_intent.latest_charge" });
+  // Checkouts already saved (usually by the webhook) are left as they are,
+  // apart from a refund Stripe reports later.
+  const { data: known } = await db().from("quiz_purchases").select("session_id")
+    .in("session_id", sessions.map((s: any) => s.id));
+  const have = new Set((known || []).map((k: any) => k.session_id));
+  let paid = 0, free = 0, early = 0, saved = 0, refunded = 0, already = 0;
   for (const s of sessions) {
-    if (s.payment_status !== "paid" || !s.amount_total) { free++; continue; }
+    if (!isPaid(s)) continue;
     if (beforeLaunch(s)) { early++; continue; }
-    paid++;
-    const items = await stripeList(`/checkout/sessions/${s.id}/line_items`, {}, 100);
+    if (!s.amount_total) free++; else paid++;
     const charge = s.payment_intent?.latest_charge;
     const isRefunded = !!(charge && typeof charge === "object" && charge.refunded);
     if (isRefunded) refunded++;
+    if (have.has(s.id)) {
+      already++;
+      if (isRefunded) await db().from("quiz_purchases").update({ refunded: true, updated_at: new Date().toISOString() })
+        .eq("session_id", s.id).eq("refunded", false);
+      continue;
+    }
+    const items = await stripeList(`/checkout/sessions/${s.id}/line_items`, {}, 100);
     const rows = rowsFor(s, items, "backfill", isRefunded);
     await savePurchases(rows);
     saved += rows.length;
   }
-  return { checkouts_seen: sessions.length, skipped_free: free, skipped_before_launch: early,
-           paid_checkouts: paid, rows_saved: saved, refunded };
+  return { checkouts_seen: sessions.length, paid_checkouts: paid, free_checkouts: free,
+           skipped_before_launch: early, already_saved: already, rows_saved: saved, refunded };
+}
+
+let lastSync = 0;
+async function sync() {
+  if (Date.now() - lastSync < 60_000) return { skipped: "synced less than a minute ago" };
+  lastSync = Date.now();
+  return await backfill(Date.now() - 2 * 864e5);
+}
+
+// Read-only look at checkouts since launch, to explain why one is or is not on
+// the dashboard. Only test emails are shown in full.
+const isTest = (e: string) => /chloeprent|cristinemata25|\+test|test\+|@swoon\.coach$/i.test(e);
+const mask = (e: string) => (!e ? "" : isTest(e) ? e : `***@${e.split("@")[1] || ""}`);
+
+async function inspect() {
+  const since = String(Math.floor(PURCHASES_FROM / 1000));
+  const sessions = await stripeList("/checkout/sessions", { "created[gte]": since }, 300);
+  const out = [];
+  for (const s of sessions) {
+    let items: any[] = [];
+    try { items = await stripeList(`/checkout/sessions/${s.id}/line_items`, {}, 20); } catch { /* ignore */ }
+    out.push({
+      created: new Date(s.created * 1000).toISOString(), status: s.status, payment_status: s.payment_status,
+      amount_total: s.amount_total, livemode: s.livemode, payment_link: s.payment_link || null,
+      email: mask((s.customer_details?.email || s.customer_email || "").toLowerCase()),
+      items: items.map((li) => `${li.description} x${li.quantity} = ${li.amount_total}`),
+      would_save: rowsFor(s, items, "backfill").length,
+    });
+  }
+  const { data: saved } = await db().from("quiz_purchases").select("purchased_at, email, product_name, amount_cents, source")
+    .gte("purchased_at", new Date(PURCHASES_FROM).toISOString()).order("purchased_at");
+  let events: unknown = null;
+  try {
+    const ev = await stripeGet("/events", { limit: "20", "created[gte]": since });
+    events = ev.data.map((e: any) => ({ type: e.type, created: new Date(e.created * 1000).toISOString(),
+      pending_webhooks: e.pending_webhooks }));
+  } catch (e) { events = String((e as Error).message); }
+  return { key_mode: (Deno.env.get("STRIPE_API_KEY") || "").slice(0, 8), checkouts_since_launch: out,
+    saved_since_launch: (saved || []).map((r: any) => ({ ...r, email: mask(r.email || "") })), recent_events: events };
+}
+
+// Notes each webhook call in quiz_stripe_events. Never blocks the webhook.
+async function note(eventId: string | null, type: string | null, result: string) {
+  try { await db().from("quiz_stripe_events").insert({ event_id: eventId, type, result }); }
+  catch (e) { console.error("note failed", e); }
+}
+
+// Support lookup for one customer, found by the SHA-256 of their email so the
+// email itself never travels or prints. Returns dates, statuses, products and
+// amounts only.
+async function sha256(text: string) {
+  const d = new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text)));
+  return Array.from(d).map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+async function lookup(hash: string, days = 14) {
+  const since = String(Math.floor((Date.now() - days * 864e5) / 1000));
+  const sessions = await stripeList("/checkout/sessions", { "created[gte]": since }, 1000);
+  const mine = [];
+  for (const s of sessions) {
+    const email = (s.customer_details?.email || s.customer_email || "").trim().toLowerCase();
+    if (!email || (await sha256(email)) !== hash) continue;
+    let items: any[] = [];
+    try { items = await stripeList(`/checkout/sessions/${s.id}/line_items`, {}, 20); } catch { /* ignore */ }
+    let pi: any = null;
+    if (s.payment_intent) {
+      try { pi = await stripeGet(`/payment_intents/${typeof s.payment_intent === "string" ? s.payment_intent : s.payment_intent.id}`); } catch { /* ignore */ }
+    }
+    mine.push({
+      created: new Date(s.created * 1000).toISOString(), session_status: s.status, payment_status: s.payment_status,
+      amount_total: s.amount_total, currency: s.currency, payment_link: s.payment_link || null,
+      after_completion: s.after_completion?.type || null,
+      redirect: s.after_completion?.redirect?.url ? new URL(s.after_completion.redirect.url).host + new URL(s.after_completion.redirect.url).pathname : null,
+      items: items.map((li) => `${li.description} x${li.quantity} = ${li.amount_total}`),
+      payment_intent_status: pi?.status || null, last_error: pi?.last_payment_error?.code || null,
+      receipt_email_set: !!pi?.receipt_email,
+      // Choices made at checkout (e.g. the two extra bundle styles). Not personal data.
+      choices: (s.custom_fields || []).map((f: any) => ({
+        field: f.label?.custom || f.key,
+        value: f.dropdown?.value ? ((f.dropdown.options || []).find((o: any) => o.value === f.dropdown.value)?.label || f.dropdown.value)
+          : (f.text?.value ?? f.numeric?.value ?? null),
+      })),
+    });
+  }
+  const { data: saved } = await db().from("quiz_purchases").select("session_id, email, product_name, amount_cents, purchased_at, source, refunded")
+    .gte("purchased_at", new Date(Date.now() - days * 864e5).toISOString());
+  const savedMine = [];
+  for (const r of saved || []) if (r.email && (await sha256(r.email.trim().toLowerCase())) === hash)
+    savedMine.push({ purchased_at: r.purchased_at, product: r.product_name, amount_cents: r.amount_cents, source: r.source, refunded: r.refunded });
+  return { checkouts_seen_last_days: sessions.length, customer_checkouts: mine, saved_on_dashboard: savedMine };
+}
+
+// Product details (name, description, metadata) for products whose name
+// contains the given text. No customer data.
+async function productInfo(text: string) {
+  const { data } = await db().from("quiz_products").select("product_id, name, kind").ilike("name", `%${text}%`);
+  const out = [];
+  for (const p of data || []) {
+    const pr = await stripeGet(`/products/${p.product_id}`);
+    out.push({ name: pr.name, kind: p.kind, active: pr.active, description: pr.description, metadata: pr.metadata,
+      features: (pr.marketing_features || []).map((f: any) => f.name) });
+  }
+  return out;
 }
 
 async function handleEvent(event: any) {
@@ -180,7 +302,7 @@ async function handleEvent(event: any) {
   switch (event.type) {
     case "checkout.session.completed":
     case "checkout.session.async_payment_succeeded": {
-      if (obj.payment_status !== "paid" || !obj.amount_total) return "skipped (free or unpaid)";
+      if (!isPaid(obj)) return "skipped (not paid yet)";
       if (beforeLaunch(obj)) return "skipped (before launch)";
       const items = await stripeList(`/checkout/sessions/${obj.id}/line_items`, {}, 100);
       const rows = rowsFor(obj, items, "webhook");
@@ -209,14 +331,20 @@ serve(async (req) => {
   if (signature) {
     const secret = Deno.env.get("QUIZ_STRIPE_WEBHOOK_SECRET");
     if (!secret) return json({ error: "Webhook secret not set" }, 500);
-    if (!(await verifySignature(raw, signature, secret))) return json({ error: "Bad signature" }, 400);
+    if (!(await verifySignature(raw, signature, secret))) {
+      await note(null, null, "bad signature");
+      return json({ error: "Bad signature" }, 400);
+    }
+    let event: any = {};
     try {
-      const event = JSON.parse(raw);
+      event = JSON.parse(raw);
       const result = await handleEvent(event);
       console.log("stripe", event.type, event.id, result);
+      await note(event.id, event.type, result);
       return json({ received: true, result });
     } catch (e) {
       console.error("stripe webhook failed", e);
+      await note(event.id, event.type, `failed: ${String((e as Error).message).slice(0, 200)}`);
       return json({ error: "Processing failed" }, 500); // Stripe retries
     }
   }
@@ -224,6 +352,22 @@ serve(async (req) => {
   // Admin tasks
   let body: any = {};
   try { body = JSON.parse(raw || "{}"); } catch { /* not JSON */ }
+  if (body.action === "sync") {
+    try { return json(await sync()); } catch (e) { console.error("sync failed", e); return json({ error: "Sync failed" }, 500); }
+  }
+  if (body.action === "product") {
+    if (!(await isServiceRole(req))) return json({ error: "Not allowed" }, 401);
+    try { return json(await productInfo(String(body.text || "Bundle").slice(0, 60))); } catch (e) { return json({ error: String((e as Error).message) }, 500); }
+  }
+  if (body.action === "lookup") {
+    if (!(await isServiceRole(req))) return json({ error: "Not allowed" }, 401);
+    if (!/^[0-9a-f]{64}$/.test(body.hash || "")) return json({ error: "hash required" }, 400);
+    try { return json(await lookup(body.hash)); } catch (e) { return json({ error: String((e as Error).message) }, 500); }
+  }
+  if (body.action === "inspect") {
+    if (!(await isServiceRole(req))) return json({ error: "Not allowed" }, 401);
+    try { return json(await inspect()); } catch (e) { return json({ error: String((e as Error).message) }, 500); }
+  }
   if (body.action === "backfill") {
     if (!(await isServiceRole(req))) return json({ error: "Not allowed" }, 401);
     try { return json(await backfill()); } catch (e) { return json({ error: String((e as Error).message) }, 500); }

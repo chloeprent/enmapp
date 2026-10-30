@@ -139,6 +139,70 @@ async function history() {
   return out;
 }
 
+// Read-only: Kit's purchase tags and who got them recently (only test emails in full).
+async function inspect() {
+  const isTest = (e: string) => /chloeprent|cristinemata25|\+test|test\+|@swoon\.coach$/i.test(e);
+  const tags = (await kitList("/tags", "tags")).filter((t: any) => /purchas|bought|buyer|paid/i.test(t.name));
+  const out: Record<string, unknown> = {};
+  for (const t of tags) {
+    const subs = await kitList(`/tags/${t.id}/subscribers`, "subscribers");
+    out[t.name] = { total: subs.length, recent: subs
+      .filter((x: any) => Date.parse(x.tagged_at || x.created_at || 0) > Date.now() - 3 * 864e5)
+      .map((x: any) => ({ at: x.tagged_at || x.created_at,
+        email: isTest(x.email_address || "") ? x.email_address : `***@${(x.email_address || "").split("@")[1] || ""}` })) };
+  }
+  return out;
+}
+
+// Support lookup for one subscriber by the SHA-256 of their email: Kit state,
+// tags with dates (no email or name returned).
+async function lookup(hash: string) {
+  const sha = async (t: string) => Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(t))))
+    .map((b) => b.toString(16).padStart(2, "0")).join("");
+  const tags = await kitList("/tags", "tags");
+  const hits: any[] = [];
+  let subscriberId: number | null = null;
+  for (const t of tags) {
+    const subs = await kitList(`/tags/${t.id}/subscribers`, "subscribers", {}, 5000);
+    for (const x of subs) {
+      if (x.email_address && (await sha(x.email_address.trim().toLowerCase())) === hash) {
+        hits.push({ tag: t.name, tagged_at: x.tagged_at || null, state: x.state || null });
+        subscriberId = x.id;
+      }
+    }
+  }
+  // Which quiz sequences they are in, and when they were added.
+  const sequences: any[] = [];
+  for (const [seq, name] of [[RESULTS_SEQUENCE, "ENM Quiz Result"], [NON_BUYER_SEQUENCE, "Non Buyer Follow Up"]] as const) {
+    try {
+      for (const x of await kitList(`/sequences/${seq}/subscribers`, "subscribers")) {
+        if (x.email_address && (await sha(x.email_address.trim().toLowerCase())) === hash) {
+          sequences.push({ sequence: name, added_at: x.added_at || x.subscribed_at || x.created_at || null, state: x.state || null });
+          subscriberId = subscriberId || x.id;
+        }
+      }
+    } catch (e) { sequences.push({ sequence: name, error: String((e as Error).message).slice(0, 120) }); }
+  }
+  let subscriber: unknown = null, stats: unknown = null;
+  if (subscriberId) {
+    try { const r = await kit(`/subscribers/${subscriberId}`); subscriber = { state: r.subscriber?.state, created_at: r.subscriber?.created_at }; } catch (e) { subscriber = String((e as Error).message).slice(0, 120); }
+    try { stats = (await kit(`/subscribers/${subscriberId}/stats`)).subscriber?.stats ?? null; } catch (e) { stats = String((e as Error).message).slice(0, 120); }
+  }
+  // What the dashboard has for them.
+  const supabase = db();
+  const events: any[] = [];
+  const { data: ev } = await supabase.from("quiz_kit_events").select("email, event, detail, at");
+  for (const r of ev || []) if ((await sha(r.email)) === hash) events.push({ event: r.event, detail: r.detail, at: r.at });
+  const quiz: any[] = [];
+  const { data: runs } = await supabase.from("enm_quiz_runs_v").select("email, completed_at, result_title, utm_source, utm_medium")
+    .not("session_id", "is", null);
+  for (const r of runs || []) if (r.email && (await sha(r.email)) === hash)
+    quiz.push({ completed_at: r.completed_at, result: r.result_title, source: r.utm_source, medium: r.utm_medium });
+  return { found_in_kit: hits.length > 0 || sequences.some((x) => !x.error), subscriber, stats,
+    tags: hits.sort((a, b) => String(a.tagged_at).localeCompare(String(b.tagged_at))), sequences,
+    dashboard_kit_events: events, quiz_completions: quiz };
+}
+
 async function discover() {
   const webhooks = await kitList("/webhooks", "webhooks");
   return {
@@ -179,6 +243,8 @@ serve(async (req) => {
     if (body.action === "setup") return json(await setup());
     if (body.action === "backfill") return json({ polls: await backfill(), sequences: await history() });
     if (body.action === "discover") return json(await discover());
+    if (body.action === "inspect") return json(await inspect());
+    if (body.action === "lookup") return json(/^[0-9a-f]{64}$/.test(body.hash || "") ? await lookup(body.hash) : { error: "hash required" });
     return json({ error: "Unknown request" }, 400);
   } catch (e) {
     return json({ error: String((e as Error).message) }, 500);
