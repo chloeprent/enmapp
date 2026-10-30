@@ -171,7 +171,36 @@ async function lookup(hash: string) {
       }
     }
   }
-  return { found_in_kit: hits.length > 0, subscriber_id_known: !!subscriberId, tags: hits.sort((a, b) => String(a.tagged_at).localeCompare(String(b.tagged_at))) };
+  // Which quiz sequences they are in, and when they were added.
+  const sequences: any[] = [];
+  for (const [seq, name] of [[RESULTS_SEQUENCE, "ENM Quiz Result"], [NON_BUYER_SEQUENCE, "Non Buyer Follow Up"]] as const) {
+    try {
+      for (const x of await kitList(`/sequences/${seq}/subscribers`, "subscribers")) {
+        if (x.email_address && (await sha(x.email_address.trim().toLowerCase())) === hash) {
+          sequences.push({ sequence: name, added_at: x.added_at || x.subscribed_at || x.created_at || null, state: x.state || null });
+          subscriberId = subscriberId || x.id;
+        }
+      }
+    } catch (e) { sequences.push({ sequence: name, error: String((e as Error).message).slice(0, 120) }); }
+  }
+  let subscriber: unknown = null, stats: unknown = null;
+  if (subscriberId) {
+    try { const r = await kit(`/subscribers/${subscriberId}`); subscriber = { state: r.subscriber?.state, created_at: r.subscriber?.created_at }; } catch (e) { subscriber = String((e as Error).message).slice(0, 120); }
+    try { stats = (await kit(`/subscribers/${subscriberId}/stats`)).subscriber?.stats ?? null; } catch (e) { stats = String((e as Error).message).slice(0, 120); }
+  }
+  // What the dashboard has for them.
+  const supabase = db();
+  const events: any[] = [];
+  const { data: ev } = await supabase.from("quiz_kit_events").select("email, event, detail, at");
+  for (const r of ev || []) if ((await sha(r.email)) === hash) events.push({ event: r.event, detail: r.detail, at: r.at });
+  const quiz: any[] = [];
+  const { data: runs } = await supabase.from("enm_quiz_runs_v").select("email, completed_at, result_title, utm_source, utm_medium")
+    .not("session_id", "is", null);
+  for (const r of runs || []) if (r.email && (await sha(r.email)) === hash)
+    quiz.push({ completed_at: r.completed_at, result: r.result_title, source: r.utm_source, medium: r.utm_medium });
+  return { found_in_kit: hits.length > 0 || sequences.some((x) => !x.error), subscriber, stats,
+    tags: hits.sort((a, b) => String(a.tagged_at).localeCompare(String(b.tagged_at))), sequences,
+    dashboard_kit_events: events, quiz_completions: quiz };
 }
 
 async function discover() {
