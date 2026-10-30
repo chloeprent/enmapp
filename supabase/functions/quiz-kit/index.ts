@@ -154,6 +154,26 @@ async function inspect() {
   return out;
 }
 
+// Support lookup for one subscriber by the SHA-256 of their email: Kit state,
+// tags with dates (no email or name returned).
+async function lookup(hash: string) {
+  const sha = async (t: string) => Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(t))))
+    .map((b) => b.toString(16).padStart(2, "0")).join("");
+  const tags = await kitList("/tags", "tags");
+  const hits: any[] = [];
+  let subscriberId: number | null = null;
+  for (const t of tags) {
+    const subs = await kitList(`/tags/${t.id}/subscribers`, "subscribers", {}, 5000);
+    for (const x of subs) {
+      if (x.email_address && (await sha(x.email_address.trim().toLowerCase())) === hash) {
+        hits.push({ tag: t.name, tagged_at: x.tagged_at || null, state: x.state || null });
+        subscriberId = x.id;
+      }
+    }
+  }
+  return { found_in_kit: hits.length > 0, subscriber_id_known: !!subscriberId, tags: hits.sort((a, b) => String(a.tagged_at).localeCompare(String(b.tagged_at))) };
+}
+
 async function discover() {
   const webhooks = await kitList("/webhooks", "webhooks");
   return {
@@ -195,6 +215,7 @@ serve(async (req) => {
     if (body.action === "backfill") return json({ polls: await backfill(), sequences: await history() });
     if (body.action === "discover") return json(await discover());
     if (body.action === "inspect") return json(await inspect());
+    if (body.action === "lookup") return json(/^[0-9a-f]{64}$/.test(body.hash || "") ? await lookup(body.hash) : { error: "hash required" });
     return json({ error: "Unknown request" }, 400);
   } catch (e) {
     return json({ error: String((e as Error).message) }, 500);

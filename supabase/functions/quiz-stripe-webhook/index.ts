@@ -239,6 +239,45 @@ async function note(eventId: string | null, type: string | null, result: string)
   catch (e) { console.error("note failed", e); }
 }
 
+// Support lookup for one customer, found by the SHA-256 of their email so the
+// email itself never travels or prints. Returns dates, statuses, products and
+// amounts only.
+async function sha256(text: string) {
+  const d = new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text)));
+  return Array.from(d).map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+async function lookup(hash: string, days = 14) {
+  const since = String(Math.floor((Date.now() - days * 864e5) / 1000));
+  const sessions = await stripeList("/checkout/sessions", { "created[gte]": since }, 1000);
+  const mine = [];
+  for (const s of sessions) {
+    const email = (s.customer_details?.email || s.customer_email || "").trim().toLowerCase();
+    if (!email || (await sha256(email)) !== hash) continue;
+    let items: any[] = [];
+    try { items = await stripeList(`/checkout/sessions/${s.id}/line_items`, {}, 20); } catch { /* ignore */ }
+    let pi: any = null;
+    if (s.payment_intent) {
+      try { pi = await stripeGet(`/payment_intents/${typeof s.payment_intent === "string" ? s.payment_intent : s.payment_intent.id}`); } catch { /* ignore */ }
+    }
+    mine.push({
+      created: new Date(s.created * 1000).toISOString(), session_status: s.status, payment_status: s.payment_status,
+      amount_total: s.amount_total, currency: s.currency, payment_link: s.payment_link || null,
+      after_completion: s.after_completion?.type || null,
+      redirect: s.after_completion?.redirect?.url ? new URL(s.after_completion.redirect.url).host + new URL(s.after_completion.redirect.url).pathname : null,
+      items: items.map((li) => `${li.description} x${li.quantity} = ${li.amount_total}`),
+      payment_intent_status: pi?.status || null, last_error: pi?.last_payment_error?.code || null,
+      receipt_email_set: !!pi?.receipt_email,
+    });
+  }
+  const { data: saved } = await db().from("quiz_purchases").select("session_id, email, product_name, amount_cents, purchased_at, source, refunded")
+    .gte("purchased_at", new Date(Date.now() - days * 864e5).toISOString());
+  const savedMine = [];
+  for (const r of saved || []) if (r.email && (await sha256(r.email.trim().toLowerCase())) === hash)
+    savedMine.push({ purchased_at: r.purchased_at, product: r.product_name, amount_cents: r.amount_cents, source: r.source, refunded: r.refunded });
+  return { checkouts_seen_last_days: sessions.length, customer_checkouts: mine, saved_on_dashboard: savedMine };
+}
+
 async function handleEvent(event: any) {
   const obj = event.data?.object || {};
   switch (event.type) {
@@ -296,6 +335,11 @@ serve(async (req) => {
   try { body = JSON.parse(raw || "{}"); } catch { /* not JSON */ }
   if (body.action === "sync") {
     try { return json(await sync()); } catch (e) { console.error("sync failed", e); return json({ error: "Sync failed" }, 500); }
+  }
+  if (body.action === "lookup") {
+    if (!(await isServiceRole(req))) return json({ error: "Not allowed" }, 401);
+    if (!/^[0-9a-f]{64}$/.test(body.hash || "")) return json({ error: "hash required" }, 400);
+    try { return json(await lookup(body.hash)); } catch (e) { return json({ error: String((e as Error).message) }, 500); }
   }
   if (body.action === "inspect") {
     if (!(await isServiceRole(req))) return json({ error: "Not allowed" }, 401);
