@@ -31,3 +31,15 @@ jobs:
         env:
           RAW_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
         run: python3 .github/scripts/run_readonly_sql.py ohcdjvbveokyyilceenf supabase/checks/phase2_after.sql
+      - name: Bundle products (what each bundle contains)
+        if: always()
+        env:
+          RAW_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: python3 .github/scripts/call_quiz_function.py ohcdjvbveokyyilceenf quiz-stripe-webhook '{"action":"product","text":"Bundle"}'
+      - name: Sales pages mentioning the bundle
+        if: always()
+        run: |
+          for slug in open-relationship-roadmap swinging-roadmap monogamish-roadmap hotwife-roadmap; do
+            echo "== $slug"
+            curl -sL "https://www.swoon.coach/$slug" | python3 -c "import re,sys,html; t=re.sub(r'<(script|style)[^>]*>.*?</\\1>',' ',sys.stdin.read(),flags=re.S); t=html.unescape(re.sub(r'<[^>]+>',' ',t)); t=re.sub(r'\\s+',' ',t); [print('  ..', t[max(0,m.start()-200):m.end()+300]) for m in list(re.finditer(r'(?i)bundle|3 roadmaps',t))[:4]]"
+          done

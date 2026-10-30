@@ -278,6 +278,19 @@ async function lookup(hash: string, days = 14) {
   return { checkouts_seen_last_days: sessions.length, customer_checkouts: mine, saved_on_dashboard: savedMine };
 }
 
+// Product details (name, description, metadata) for products whose name
+// contains the given text. No customer data.
+async function productInfo(text: string) {
+  const { data } = await db().from("quiz_products").select("product_id, name, kind").ilike("name", `%${text}%`);
+  const out = [];
+  for (const p of data || []) {
+    const pr = await stripeGet(`/products/${p.product_id}`);
+    out.push({ name: pr.name, kind: p.kind, active: pr.active, description: pr.description, metadata: pr.metadata,
+      features: (pr.marketing_features || []).map((f: any) => f.name) });
+  }
+  return out;
+}
+
 async function handleEvent(event: any) {
   const obj = event.data?.object || {};
   switch (event.type) {
@@ -335,6 +348,10 @@ serve(async (req) => {
   try { body = JSON.parse(raw || "{}"); } catch { /* not JSON */ }
   if (body.action === "sync") {
     try { return json(await sync()); } catch (e) { console.error("sync failed", e); return json({ error: "Sync failed" }, 500); }
+  }
+  if (body.action === "product") {
+    if (!(await isServiceRole(req))) return json({ error: "Not allowed" }, 401);
+    try { return json(await productInfo(String(body.text || "Bundle").slice(0, 60))); } catch (e) { return json({ error: String((e as Error).message) }, 500); }
   }
   if (body.action === "lookup") {
     if (!(await isServiceRole(req))) return json({ error: "Not allowed" }, 401);
