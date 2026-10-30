@@ -268,6 +268,12 @@ async function lookup(hash: string, days = 14) {
       items: items.map((li) => `${li.description} x${li.quantity} = ${li.amount_total}`),
       payment_intent_status: pi?.status || null, last_error: pi?.last_payment_error?.code || null,
       receipt_email_set: !!pi?.receipt_email,
+      // Choices made at checkout (e.g. the two extra bundle styles). Not personal data.
+      choices: (s.custom_fields || []).map((f: any) => ({
+        field: f.label?.custom || f.key,
+        value: f.dropdown?.value ? ((f.dropdown.options || []).find((o: any) => o.value === f.dropdown.value)?.label || f.dropdown.value)
+          : (f.text?.value ?? f.numeric?.value ?? null),
+      })),
     });
   }
   const { data: saved } = await db().from("quiz_purchases").select("session_id, email, product_name, amount_cents, purchased_at, source, refunded")
